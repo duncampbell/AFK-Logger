@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -67,5 +69,40 @@ namespace AFKHostedService
             throw new NotImplementedException();
         }
 
+        public string DBTest()
+        {
+            string entID;
+            DataBaseEntry ent = new DataBaseEntry("Test","Test","TestID",DateTime.Now,true,TimeSpan.Zero) { };
+            string str = "Error";
+            using (IDocumentStore store = new Raven.Client.Documents.DocumentStore
+            {
+                Urls = new[]
+                {
+                    "http://192.168.10.153:8080"
+                },
+                Database = "TestDB",
+                Conventions = { }
+            })
+            {
+                try
+                { 
+                    store.Initialize();
+                    using (IDocumentSession session = store.OpenSession())
+                    {
+                        session.Store(ent);
+                        session.SaveChanges();
+
+                        DataBaseEntry loadedEnt = session.Load<DataBaseEntry>("DataBaseEntries/2-A");
+                        str = loadedEnt.DeviceID;
+                        
+                    }
+                    return str;
+                }
+                catch(Exception e)
+                {
+                    return e.Message;
+                }
+            }
+        }
     }
 }

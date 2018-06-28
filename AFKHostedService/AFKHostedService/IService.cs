@@ -36,6 +36,9 @@ namespace AFKHostedService
         [OperationContract]
         void AddEntry(DataBaseEntry entry);
 
+        [OperationContract]
+        string DBTest();
+
         
         // TODO: Add your service operations here
     }
