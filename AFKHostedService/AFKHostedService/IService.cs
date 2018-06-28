@@ -16,7 +16,7 @@ namespace AFKHostedService
         List<DataBaseEntry> GetEntries();
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesOfUser(string UserID);
+        System.Threading.Tasks.Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID);
 
         [OperationContract]
         List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end);

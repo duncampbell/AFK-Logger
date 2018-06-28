@@ -14,10 +14,22 @@ namespace AFKHostedService
     // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
     public class AFKHostedService : IService
     {
+        IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
+
+        public AFKHostedService()
+        {
+            ds.Initialize();
+        }
+
         public List<DataBaseEntry> GetEntries()
         {
             //Connect to database
-            //Get all entries
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                //Get all entries
+            }
+
+
 
             //Testing
             /*
@@ -35,22 +47,17 @@ namespace AFKHostedService
             throw new NotImplementedException();
         }
 
-        public List<DataBaseEntry> GetEntriesOfUser(string UserID)
+        public async System.Threading.Tasks.Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
         {
-            //Connect to database
-            //Return entries of a specific user
-
-            throw new NotImplementedException();
-
-
-            //Testing
-            /*
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            DataBaseEntry x = new DataBaseEntry("EventType", UserID, "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, false, new TimeSpan(15, 45, 50));
-            ret.Add(x);
-            ret.Add(x);
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                //Return entries of a specific user
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID).ToListAsync();
+            }
+
             return ret;
-            */
         }
 
         public List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end)
