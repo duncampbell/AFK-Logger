@@ -20,24 +20,83 @@ namespace AFKHostedService
             //Get all entries
 
             //Testing
-            DataBaseEntry x = new DataBaseEntry("EventType", "UserID", "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, new TimeSpan(15, 45, 50));
+            /*
+            DataBaseEntry x = new DataBaseEntry("Locked", "first", "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, false, new TimeSpan(7, 45, 50));
+            DataBaseEntry y = new DataBaseEntry("Unlocked", "second", "DeviceID", new DateTime(2018, 7, 27, 15, 30, 50), true, false, new TimeSpan(0, 45, 50));
+            DataBaseEntry z = new DataBaseEntry("Locked", "third", "DeviceID", new DateTime(2018, 6, 29, 15, 30, 50), true, false, new TimeSpan(3, 45, 50));
+
             List<DataBaseEntry> test = new List<DataBaseEntry>();
             test.Add(x);
+            test.Add(y);
+            test.Add(z);
             return test;
+            */
+
+            throw new NotImplementedException();
         }
 
         public List<DataBaseEntry> GetEntriesOfUser(string UserID)
         {
+            //Connect to database
+            //Return entries of a specific user
+
             throw new NotImplementedException();
+
+
+            //Testing
+            /*
+            List<DataBaseEntry> ret = new List<DataBaseEntry>();
+            DataBaseEntry x = new DataBaseEntry("EventType", UserID, "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, false, new TimeSpan(15, 45, 50));
+            ret.Add(x);
+            ret.Add(x);
+            return ret;
+            */
         }
 
         public List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end)
         {
+            //Connect to database
+            //Return all entries between a specific time period
+
             throw new NotImplementedException();
+           
+            
+            //Testing
+            /*
+            List<DataBaseEntry> db = GetEntries();
+            List<DataBaseEntry> ret = new List<DataBaseEntry>();
+            for(int i = 0; i < db.Count; i++)
+            {
+                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end)
+                {
+                    ret.Add(db.ElementAt(i));
+                }
+            }
+            return ret;
+            */
+
+
         }
 
         public List<DataBaseEntry> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
         {
+            //Connect to database
+            //Return all entries between a specific time period for a specific user
+
+            //Testing
+            /*
+            List<DataBaseEntry> db = GetEntries();
+            List<DataBaseEntry> ret = new List<DataBaseEntry>();
+            for (int i = 0; i < db.Count; i++)
+            {
+                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end && db.ElementAt(i).UserID.Equals(UserID))
+                {
+                    ret.Add(db.ElementAt(i));
+                }
+            }
+            return ret;
+            */
+
             throw new NotImplementedException();
         }
 
@@ -56,6 +115,19 @@ namespace AFKHostedService
 
         public List<Employee> GetEntriesForAlice()
         {
+           // Connect To both tables
+
+           // Get entries of device belonging database
+
+           // First get latest entry of each userID
+
+           // For each entry
+                //if userID on device matches up with their device
+                    //Instantiate object of Employee with DatabaseEntry
+                    //Add object to employee list that will be returned
+                //Else
+                    //Check for earlier entry of userID and add that to entries
+            
             throw new NotImplementedException();
         }
 
