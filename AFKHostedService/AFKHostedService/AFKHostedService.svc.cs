@@ -91,11 +91,24 @@ namespace AFKHostedService
             // Connect To db
             using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
+
+                // Get entries of devices in database
                 List<Device> devices = await s.Query<Device>("Devices_Search").ToListAsync();
-                
+                //List of users
+                List<string> users = await s.Query<Device>("Devices_Search").Select(x => x.UserID).Distinct().ToListAsync();
+
+                foreach (string u in users)
+                {
+                    //Get list of dataentries for user
+                    DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
+                    //Create Employee from Entry
+                    Employee emp = new Employee(entry);
+                    //Add to list
+                    ret.Add(emp);
+                }
             }
             return ret;
-            // Get entries of device belonging database
+
 
             // First get latest entry of each userID
 
@@ -113,14 +126,14 @@ namespace AFKHostedService
             return str.EventType + ", " + str.UserID + ", " + str.DeviceID + ", " + str.AutomaticLock + ", " + str.ETA.ToString() + ", " + str.TimeOfEvent.ToString();
         }
 
-        public void AddEntry(DataBaseEntry entry)
+        public async void AddEntry(DataBaseEntry entry)
         {
             //Connect to database
             using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
                 //Add to db and save
-                s.StoreAsync(entry);
-                s.SaveChangesAsync();
+                await s.StoreAsync(entry);
+                await s.SaveChangesAsync();
             }
 
             Employee emp = new Employee(entry);
