@@ -38,24 +38,25 @@ namespace AFKHostedService
 
         // TODO: Add your service operations here
     }
+
     [DataContract]
     public class Employee
     {
         string name;
-        bool locked;
+        bool atDesk;
         TimeSpan eta;
         DateTime time;
 
         public Employee(DataBaseEntry x)
         {
             name = getName(x.UserID);
-            if (x.EventType.Equals("Locked"))
+            if (x.EventType.Equals("Locked") || x.EventType.Equals("Logged Off") || x.RemoteAccess == true)//Change When We know session names
             {
-                locked = true;
+                atDesk = false;
             }
             else
             {
-                locked = false;
+                atDesk = true;
             }
             eta = x.ETA;
             time = x.TimeOfEvent;
@@ -67,10 +68,10 @@ namespace AFKHostedService
             set { name = value; }
         }
 
-        public bool Locked
+        public bool AtDesk
         {
-            get { return locked; }
-            set { locked = value; }
+            get { return atDesk; }
+            set { atDesk = value; }
         }
 
         public TimeSpan Eta
@@ -93,7 +94,6 @@ namespace AFKHostedService
 
     }
 
-
     [DataContract]
     public class DataBaseEntry
     {
@@ -103,16 +103,18 @@ namespace AFKHostedService
         string deviceID;
         DateTime timeOfEvent;
         bool automaticLock;
+        bool remoteAccess;
         TimeSpan eta;
 
 
-        public DataBaseEntry(string EventType, string UserID, string DeviceID, DateTime TimeofEvent, bool AutomaticLock, TimeSpan ETA)
+        public DataBaseEntry(string EventType, string UserID, string DeviceID, DateTime TimeofEvent, bool AutomaticLock, bool RemoteAccess, TimeSpan ETA)
         {
             eventType = EventType;
             userID = UserID;
             deviceID = DeviceID;
             timeOfEvent = TimeofEvent;
             automaticLock = AutomaticLock;
+            remoteAccess = RemoteAccess;
             eta = ETA;
         }
 
@@ -158,6 +160,11 @@ namespace AFKHostedService
             set { eta = value; }
         }
 
+        public bool RemoteAccess
+        {
+            get{ return remoteAccess;}
+            set{remoteAccess = value;}
+        }
     }
     // TODO: Add your service operations here
 }
