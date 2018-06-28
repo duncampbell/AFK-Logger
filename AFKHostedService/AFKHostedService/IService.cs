@@ -16,6 +16,7 @@ namespace AFKHostedService
         [OperationContract]
         string GetData(int value);
 
+        
         // TODO: Add your service operations here
     }
 }
