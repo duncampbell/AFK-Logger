@@ -144,7 +144,7 @@ namespace AFKHostedService
         public string DBTest()
         {
             string entID;
-            DataBaseEntry ent = new DataBaseEntry("Test","Test","TestID",DateTime.Now,true,TimeSpan.Zero) { };
+            DataBaseEntry ent = new DataBaseEntry("Test","Test","TestID",DateTime.Now,true,false, TimeSpan.Zero) { };
             string str = "Error";
             using (IDocumentStore store = new Raven.Client.Documents.DocumentStore
             {
