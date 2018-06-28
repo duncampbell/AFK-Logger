@@ -12,10 +12,7 @@ namespace AFKHostedService
     [ServiceContract]
     public interface IService
     {
-
-        [OperationContract]
-        string GetData(int value);
-
+        
         // TODO: Add your service operations here
     }
 }

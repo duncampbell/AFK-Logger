@@ -12,10 +12,7 @@ namespace AFKHostedService
     // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
     public class AFKHostedService : IService
     {
-        public string GetData(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
+       
 
     }
 }
