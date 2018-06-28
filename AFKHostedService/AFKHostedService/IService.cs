@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AFKHostedService
 {
@@ -16,13 +17,13 @@ namespace AFKHostedService
         List<DataBaseEntry> GetEntries();
 
         [OperationContract]
-        System.Threading.Tasks.Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID);
+        Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID);
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end);
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end);
 
         [OperationContract]
         TimeSpan RemainingTime(DataBaseEntry entry);

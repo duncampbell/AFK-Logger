@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AFKHostedService
 {
@@ -47,7 +48,7 @@ namespace AFKHostedService
             throw new NotImplementedException();
         }
 
-        public async System.Threading.Tasks.Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
+        public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             //Connect to database
@@ -60,51 +61,29 @@ namespace AFKHostedService
             return ret;
         }
 
-        public List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end)
         {
-            //Connect to database
-            //Return all entries between a specific time period
-
-            throw new NotImplementedException();
-           
-            
-            //Testing
-            /*
-            List<DataBaseEntry> db = GetEntries();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            for(int i = 0; i < db.Count; i++)
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
-                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end)
-                {
-                    ret.Add(db.ElementAt(i));
-                }
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
             }
+            //Return all entries between a specific time period
             return ret;
-            */
-
 
         }
 
-        public List<DataBaseEntry> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
         {
-            //Connect to database
-            //Return all entries between a specific time period for a specific user
-
-            //Testing
-            /*
-            List<DataBaseEntry> db = GetEntries();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            for (int i = 0; i < db.Count; i++)
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
-                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end && db.ElementAt(i).UserID.Equals(UserID))
-                {
-                    ret.Add(db.ElementAt(i));
-                }
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
             }
+            //Return all entries between a specific time period for a specific user
             return ret;
-            */
-
-            throw new NotImplementedException();
         }
 
         public TimeSpan RemainingTime(DataBaseEntry entry)
