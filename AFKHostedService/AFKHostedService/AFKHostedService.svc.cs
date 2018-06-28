@@ -85,6 +85,7 @@ namespace AFKHostedService
             }
         }
 
+        //Returns list of all employees with their latest logon details
         public async Task<List<Employee>> GetEntriesForAlice()
         {
             List<Employee> ret = new List<Employee>();
@@ -103,21 +104,13 @@ namespace AFKHostedService
                     DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
                     //Create Employee from Entry
                     Employee emp = new Employee(entry);
+                    //Get name of user
+                    emp.Name = await s.Query<User>("User_Search").Where(x => x.UserID == entry.UserID).Select(x => x.UserName).FirstOrDefaultAsync();
                     //Add to list
                     ret.Add(emp);
                 }
             }
             return ret;
-
-
-            // First get latest entry of each userID
-
-            // For each entry
-            //if userID on device matches up with their device
-            //Instantiate object of Employee with DatabaseEntry
-            //Add object to employee list that will be returned
-            //Else
-            //Check for earlier entry of userID and add that to entries
 
         }
 
@@ -137,6 +130,26 @@ namespace AFKHostedService
             }
 
             Employee emp = new Employee(entry);
+        }
+
+        public async void AddDevice(Device device)
+        {
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                await s.StoreAsync(device);
+                await s.SaveChangesAsync();
+            }
+        }
+
+        public async void AddUser(User user)
+        {
+            //connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                await s.StoreAsync(user);
+                await s.SaveChangesAsync();
+            }
         }
 
         public string DBTest()
