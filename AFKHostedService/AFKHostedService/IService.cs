@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AFKHostedService
 {
@@ -13,22 +14,22 @@ namespace AFKHostedService
     public interface IService
     {
         [OperationContract]
-        List<DataBaseEntry> GetEntries();
+        Task<List<DataBaseEntry>> GetAllEntries();
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesOfUser(string UserID);
+        Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID);
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end);
 
         [OperationContract]
-        List<DataBaseEntry> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end);
 
         [OperationContract]
         TimeSpan RemainingTime(DataBaseEntry entry);
 
         [OperationContract]
-        List<Employee> GetEntriesForAlice();
+        Task<List<Employee>> GetEntriesForAlice();
 
         [OperationContract]
         string EntryOutput(DataBaseEntry str);
@@ -170,6 +171,66 @@ namespace AFKHostedService
             set{remoteAccess = value;}
         }
     }
-    // TODO: Add your service operations here
+    
+    [DataContract]
+    public class Device
+    {
+        string deviceID;
+        string deviceName;
+        string userID;
+        bool vM;
+
+        public string DeviceID
+        {
+            get
+            {
+                return deviceID;
+            }
+
+            set
+            {
+                deviceID = value;
+            }
+        }
+
+        public string DeviceName
+        {
+            get
+            {
+                return deviceName;
+            }
+
+            set
+            {
+                deviceName = value;
+            }
+        }
+
+        public string UserID
+        {
+            get
+            {
+                return userID;
+            }
+
+            set
+            {
+                userID = value;
+            }
+        }
+
+        public bool VM
+        {
+            get
+            {
+                return VM;
+            }
+
+            set
+            {
+                vM = value;
+            }
+        }
+    }
 }
 

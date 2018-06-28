@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AFKHostedService
 {
@@ -14,90 +15,61 @@ namespace AFKHostedService
     // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
     public class AFKHostedService : IService
     {
-        public List<DataBaseEntry> GetEntries()
+        IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
+
+        public AFKHostedService()
         {
-            //Connect to database
-            //Get all entries
-
-            //Testing
-            /*
-            DataBaseEntry x = new DataBaseEntry("Locked", "first", "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, false, new TimeSpan(7, 45, 50));
-            DataBaseEntry y = new DataBaseEntry("Unlocked", "second", "DeviceID", new DateTime(2018, 7, 27, 15, 30, 50), true, false, new TimeSpan(0, 45, 50));
-            DataBaseEntry z = new DataBaseEntry("Locked", "third", "DeviceID", new DateTime(2018, 6, 29, 15, 30, 50), true, false, new TimeSpan(3, 45, 50));
-
-            List<DataBaseEntry> test = new List<DataBaseEntry>();
-            test.Add(x);
-            test.Add(y);
-            test.Add(z);
-            return test;
-            */
-
-            throw new NotImplementedException();
+            ds.Initialize();
         }
 
-        public List<DataBaseEntry> GetEntriesOfUser(string UserID)
+        public async Task<List<DataBaseEntry>> GetAllEntries()
         {
-            //Connect to database
-            //Return entries of a specific user
-
-            throw new NotImplementedException();
-
-
-            //Testing
-            /*
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            DataBaseEntry x = new DataBaseEntry("EventType", UserID, "DeviceID", new DateTime(2018, 6, 27, 15, 30, 50), true, false, new TimeSpan(15, 45, 50));
-            ret.Add(x);
-            ret.Add(x);
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                //Get all entries
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").ToListAsync();    
+            }
             return ret;
-            */
         }
 
-        public List<DataBaseEntry> GetEntriesBetween(DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
         {
+            List<DataBaseEntry> ret = new List<DataBaseEntry>();
             //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                //Return entries of a specific user
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID).ToListAsync();
+            }
+
+            return ret;
+        }
+
+        public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end)
+        {
+            List<DataBaseEntry> ret = new List<DataBaseEntry>();
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+            }
             //Return all entries between a specific time period
-
-            throw new NotImplementedException();
-           
-            
-            //Testing
-            /*
-            List<DataBaseEntry> db = GetEntries();
-            List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            for(int i = 0; i < db.Count; i++)
-            {
-                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end)
-                {
-                    ret.Add(db.ElementAt(i));
-                }
-            }
             return ret;
-            */
-
 
         }
 
-        public List<DataBaseEntry> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
         {
-            //Connect to database
-            //Return all entries between a specific time period for a specific user
-
-            //Testing
-            /*
-            List<DataBaseEntry> db = GetEntries();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            for (int i = 0; i < db.Count; i++)
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
-                if (db.ElementAt(i).TimeOfEvent >= start && db.ElementAt(i).TimeOfEvent <= end && db.ElementAt(i).UserID.Equals(UserID))
-                {
-                    ret.Add(db.ElementAt(i));
-                }
+                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
             }
+            //Return all entries between a specific time period for a specific user
             return ret;
-            */
-
-            throw new NotImplementedException();
         }
 
         public TimeSpan RemainingTime(DataBaseEntry entry)
@@ -113,22 +85,27 @@ namespace AFKHostedService
             }
         }
 
-        public List<Employee> GetEntriesForAlice()
+        public async Task<List<Employee>> GetEntriesForAlice()
         {
-           // Connect To both tables
+            List<Employee> ret = new List<Employee>();
+            // Connect To db
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                List<Device> devices = await s.Query<Device>("Devices_Search").ToListAsync();
+                
+            }
+            return ret;
+            // Get entries of device belonging database
 
-           // Get entries of device belonging database
+            // First get latest entry of each userID
 
-           // First get latest entry of each userID
+            // For each entry
+            //if userID on device matches up with their device
+            //Instantiate object of Employee with DatabaseEntry
+            //Add object to employee list that will be returned
+            //Else
+            //Check for earlier entry of userID and add that to entries
 
-           // For each entry
-                //if userID on device matches up with their device
-                    //Instantiate object of Employee with DatabaseEntry
-                    //Add object to employee list that will be returned
-                //Else
-                    //Check for earlier entry of userID and add that to entries
-            
-            throw new NotImplementedException();
         }
 
         public string EntryOutput(DataBaseEntry str)
@@ -138,13 +115,24 @@ namespace AFKHostedService
 
         public void AddEntry(DataBaseEntry entry)
         {
-            throw new NotImplementedException();
+            //Connect to database
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                //Add to db and save
+                s.StoreAsync(entry);
+                s.SaveChangesAsync();
+            }
+
+            Employee emp = new Employee(entry);
         }
 
         public string DBTest()
         {
-            string entID;
-            DataBaseEntry ent = new DataBaseEntry("Test","Test","TestID",DateTime.Now,true,false, TimeSpan.Zero) { };
+            Device d = new Device();
+            d.DeviceID = "TestDeviceID";
+            d.DeviceName = "InternBox4";
+            d.UserID = "TestUserID";
+            d.VM = false;
             string str = "Error";
             using (IDocumentStore store = new Raven.Client.Documents.DocumentStore
             {
@@ -161,7 +149,7 @@ namespace AFKHostedService
                     store.Initialize();
                     using (IDocumentSession session = store.OpenSession())
                     {
-                        session.Store(ent);
+                        session.Store(d);
                         session.SaveChanges();
 
                         DataBaseEntry loadedEnt = session.Load<DataBaseEntry>("DataBaseEntries/2-A");
