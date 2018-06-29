@@ -15,6 +15,9 @@ namespace AFKWindowsService
     {
         String deviceID;
         String userID;
+
+        System.Diagnostics.EventLog eL;
+
         public AFKLogger()
         {
             CanHandleSessionChangeEvent = true;
@@ -22,13 +25,27 @@ namespace AFKWindowsService
 
             deviceID = System.Environment.MachineName;
             userID = System.Environment.UserName;
+
+
+
+
+            eL = new EventLog();
+            if (!System.Diagnostics.EventLog.SourceExists("MySource"))
+            {
+                System.Diagnostics.EventLog.CreateEventSource("MySource", "AFKServiceLog");
+            }
+            eL.Source = "MySource";
+            eL.Log = "AFKServiceLog";
+
+
         }
 
         protected override void OnStart(string[] args)
         {
+            eL.WriteEntry("Started at " + DateTime.Now.ToShortTimeString() + "\n UserID: " + userID + "\n DeviceID: " + deviceID);
         }
 
-        protected override void OnSessionChange(SessionChangeDescription changeDescription)
+        protected async override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             using(ServiceClient c = new ServiceClient())
             {
@@ -40,8 +57,8 @@ namespace AFKWindowsService
                 dBE.AutomaticLock = true;
                 dBE.RemoteAccess = System.Windows.Forms.SystemInformation.TerminalServerSession;
 
-                c.AddEntry(dBE);
-                c.GetAllEntries();
+                await c.AddEntryAsync(dBE);
+                eL.WriteEntry(c.GetAllEntries().First().EventType);
             }
         }
 
