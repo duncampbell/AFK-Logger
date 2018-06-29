@@ -35,26 +35,29 @@ namespace AFKHostedService
         string EntryOutput(DataBaseEntry str);
 
         [OperationContract]
-        void AddEntry(DataBaseEntry entry);
+        Task<bool> AddEntry(DataBaseEntry entry);
+
+        [OperationContract]
+        Task<bool> AddDevice(Device device);
+
+        [OperationContract]
+        Task<bool> AddUser(User user);
 
         [OperationContract]
         string DBTest();
 
-        
-        // TODO: Add your service operations here
     }
 
     [DataContract]
     public class Employee
     {
-        string name;
+        string name = "";
         bool atDesk;
         TimeSpan eta;
         DateTime time;
 
         public Employee(DataBaseEntry x)
         {
-            name = getName(x.UserID);
             if (x.EventType.Equals("Locked") || x.EventType.Equals("Logged Off") || x.RemoteAccess == true)//Change When We know session names
             {
                 atDesk = false;
@@ -89,12 +92,6 @@ namespace AFKHostedService
         {
             get { return time; }
             set { time = value; }
-        }
-
-        public string getName(string UserID)
-        {
-            //Connect To Database and get the name of person connected to this user name.
-            return "";
         }
 
     }
@@ -165,6 +162,7 @@ namespace AFKHostedService
             set { eta = value; }
         }
 
+        [DataMember]
         public bool RemoteAccess
         {
             get{ return remoteAccess;}
@@ -178,8 +176,20 @@ namespace AFKHostedService
         string deviceID;
         string deviceName;
         string userID;
+        string userName;
         bool vM;
 
+        public Device() { }
+        public Device(string deviceID, string deviceName, string userID, string userName, bool vM)
+        {
+            this.DeviceID = deviceID;
+            this.DeviceName = deviceName;
+            this.UserID = userID;
+            this.UserName = userName;
+            this.vM = VM;
+        }
+
+        [DataMember]
         public string DeviceID
         {
             get
@@ -193,6 +203,7 @@ namespace AFKHostedService
             }
         }
 
+        [DataMember]
         public string DeviceName
         {
             get
@@ -206,6 +217,7 @@ namespace AFKHostedService
             }
         }
 
+        [DataMember]
         public string UserID
         {
             get
@@ -219,16 +231,65 @@ namespace AFKHostedService
             }
         }
 
+        [DataMember]
+        public string UserName
+        {
+            get
+            {
+                return userName;
+            }
+
+            set
+            {
+                userName = value;
+            }
+        }
+
+        [DataMember]
         public bool VM
         {
             get
             {
-                return VM;
+                return vM;
             }
 
             set
             {
                 vM = value;
+            }
+        }
+    }
+
+    [DataContract]
+    public class User
+    {
+        string userID;
+        string userName;
+
+        [DataMember]
+        public string UserID
+        {
+            get
+            {
+                return userID;
+            }
+
+            set
+            {
+                userID = value;
+            }
+        }
+        [DataMember]
+        public string UserName
+        {
+            get
+            {
+                return userName;
+            }
+
+            set
+            {
+                userName = value;
             }
         }
     }

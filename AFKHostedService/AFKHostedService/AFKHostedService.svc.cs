@@ -25,36 +25,64 @@ namespace AFKHostedService
         public async Task<List<DataBaseEntry>> GetAllEntries()
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            //Connect to database
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-            {
-                //Get all entries
-                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").ToListAsync();    
+            try
+            { 
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    //Get all entries
+                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").ToListAsync();    
+                }
             }
+            catch(Exception e)
+            {
+                //Error Message as DataBaseEntry
+                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                ret.Add(error);
+            }
+
             return ret;
         }
 
         public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            //Connect to database
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            try
             {
-                //Return entries of a specific user
-                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID).ToListAsync();
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    //Return entries of a specific user
+                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID).ToListAsync();
+                }
             }
-
+            catch(Exception e)
+            {
+                //Error Message as DataBaseEntry
+                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                ret.Add(error);
+            }
             return ret;
         }
 
         public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            //Connect to database
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            try
             {
-                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                }
             }
+            catch (Exception e)
+            {
+                //Error Message as DataBaseEntry
+                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                ret.Add(error);
+            }
+
             //Return all entries between a specific time period
             return ret;
 
@@ -63,13 +91,133 @@ namespace AFKHostedService
         public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-            //Connect to database
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+
+            try
             {
-                ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                }
             }
+            catch (Exception e)
+            {
+                //Error Message as DataBaseEntry
+                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                ret.Add(error);
+            }
+
             //Return all entries between a specific time period for a specific user
             return ret;
+        }
+        
+        //Returns list of all employees constructed from the last DataBaseEntry associated with their UserID
+        public async Task<List<Employee>> GetEntriesForAlice()
+        {
+            List<Employee> ret = new List<Employee>();
+
+            try
+            {
+                // Connect To db
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    //List of users
+                    List<User> users = await s.Query<User>("User_Search").Distinct().ToListAsync();
+                    //Iterate through list of users, select latest DataBaseEntry, create employee object, and add UserName to Employee from User object
+                    foreach (User u in users)
+                    {
+                        //Try create an employee object. If no DataBase Entry is found for the user, skip
+                        try
+                        {
+                            //Get latest DataBaseEntries for user
+                            DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u.UserID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
+                            //Create Employee from Entry
+                            Employee emp = new Employee(entry);
+                            //Get name of user
+                            emp.Name = u.UserName;
+                            //Add to list
+                            ret.Add(emp);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //Error Message as DataBaseEntry
+                Employee error = new Employee(new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero));
+                error.Name = "NoUserName";
+                ret.Add(error);
+            }
+
+            return ret;
+
+        }
+
+        public async Task<bool> AddEntry(DataBaseEntry entry)
+        {
+            bool success = false;
+            try
+            {
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    //Add to db and save
+                    await s.StoreAsync(entry);
+                    await s.SaveChangesAsync();
+                }
+
+                Employee emp = new Employee(entry);
+                success = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return success;
+        }
+
+        public async Task<bool> AddDevice(Device device)
+        {
+            bool success = false;
+            try
+            {
+                //Connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    await s.StoreAsync(device);
+                    await s.SaveChangesAsync();
+                }
+                success = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return success;
+        }
+
+        public async Task<bool> AddUser(User user)
+        {
+            bool success = false;
+            try
+            {
+                //connect to database
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    await s.StoreAsync(user);
+                    await s.SaveChangesAsync();
+                }
+                success = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return success;
         }
 
         public TimeSpan RemainingTime(DataBaseEntry entry)
@@ -85,45 +233,9 @@ namespace AFKHostedService
             }
         }
 
-        public async Task<List<Employee>> GetEntriesForAlice()
-        {
-            List<Employee> ret = new List<Employee>();
-            // Connect To db
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-            {
-                List<Device> devices = await s.Query<Device>("Devices_Search").ToListAsync();
-                
-            }
-            return ret;
-            // Get entries of device belonging database
-
-            // First get latest entry of each userID
-
-            // For each entry
-            //if userID on device matches up with their device
-            //Instantiate object of Employee with DatabaseEntry
-            //Add object to employee list that will be returned
-            //Else
-            //Check for earlier entry of userID and add that to entries
-
-        }
-
         public string EntryOutput(DataBaseEntry str)
         {
             return str.EventType + ", " + str.UserID + ", " + str.DeviceID + ", " + str.AutomaticLock + ", " + str.ETA.ToString() + ", " + str.TimeOfEvent.ToString();
-        }
-
-        public void AddEntry(DataBaseEntry entry)
-        {
-            //Connect to database
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-            {
-                //Add to db and save
-                s.StoreAsync(entry);
-                s.SaveChangesAsync();
-            }
-
-            Employee emp = new Employee(entry);
         }
 
         public string DBTest()
