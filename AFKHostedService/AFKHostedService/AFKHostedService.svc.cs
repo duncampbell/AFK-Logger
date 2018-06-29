@@ -1,6 +1,7 @@
 ﻿using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -31,7 +32,7 @@ namespace AFKHostedService
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
                     //Get all entries
-                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").ToListAsync();    
+                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").ToListAsync();    
                 }
             }
             catch(Exception e)
@@ -53,7 +54,7 @@ namespace AFKHostedService
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
                     //Return entries of a specific user
-                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID).ToListAsync();
+                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).ToListAsync();
                 }
             }
             catch(Exception e)
@@ -73,7 +74,7 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -97,7 +98,7 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    ret = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -122,21 +123,29 @@ namespace AFKHostedService
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
                     //List of users
-                    List<User> users = await s.Query<User>("User_Search").Distinct().ToListAsync();
+                    List<User> users = await s.Query<User>("User_Search").ToListAsync();
+                    //Get list of devices with users attached
+                    List<Device> ownDevices = await s.Query<Device>("Device_Search").Where(x => x.UserID != null).ToListAsync();
                     //Iterate through list of users, select latest DataBaseEntry, create employee object, and add UserName to Employee from User object
                     foreach (User u in users)
                     {
                         //Try create an employee object. If no DataBase Entry is found for the user, skip
                         try
                         {
-                            //Get latest DataBaseEntries for user
-                            DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u.UserID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
-                            //Create Employee from Entry
-                            Employee emp = new Employee(entry);
-                            //Get name of user
-                            emp.Name = u.UserName;
-                            //Add to list
-                            ret.Add(emp);
+                            //Check if user has their own device
+                            if (ownDevices.Select(y => y.UserID).Contains(u.UserID))
+                            {
+                                //Find the user's device
+                                Device ownDevice = ownDevices.Where(x => x.UserID == u.UserID).FirstOrDefault();
+                                //Fetch latest DataBaseEntry from user on their own device
+                                DataBaseEntry entry = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x=>x.UserID == u.UserID && x.DeviceID == ownDevice.DeviceID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
+                                //Create Employee from Entry
+                                Employee emp = new Employee(entry);
+                                //Get name of user
+                                emp.Name = u.UserName;
+                                //Add to list
+                                ret.Add(emp);
+                            }
                         }
                         catch
                         {
@@ -165,9 +174,17 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    //Add to db and save
-                    await s.StoreAsync(entry);
-                    await s.SaveChangesAsync();
+                    //Load UserIDs from db
+                    IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x=>x.UserID).ToListAsync();
+                    //Load DeviceIDs from db
+                    IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
+                    //Check that device and user exist
+                    if (userIDs.Contains(entry.UserID) &&  deviceIDs.Contains(entry.DeviceID))
+                    {
+                        //Add to db and save
+                        await s.StoreAsync(entry);
+                        await s.SaveChangesAsync();
+                    }
                 }
 
                 Employee emp = new Employee(entry);
@@ -183,15 +200,30 @@ namespace AFKHostedService
         public async Task<bool> AddDevice(Device device)
         {
             bool success = false;
+            //bool flag for the uniqueness of the device to be added
+            bool unique = true;
             try
             {
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    await s.StoreAsync(device);
-                    await s.SaveChangesAsync();
+                    //Find identical documents
+                     foreach(Device d in await s.Query<Device>("Device_Search").ToListAsync())
+                    {
+                        //Set unique false if identical document is found
+                        if( d.DeviceID == device.DeviceID && d.UserID == device.UserID)
+                        {
+                            unique = false;
+                        }
+                    }
+                     //Add to db if unique
+                    if (unique)
+                    {
+                        await s.StoreAsync(device);
+                        await s.SaveChangesAsync();
+                    }
                 }
-                success = true;
+                success = unique;
             }
             catch (Exception e)
             {
