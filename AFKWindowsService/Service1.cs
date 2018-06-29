@@ -11,12 +11,13 @@ using System.Threading.Tasks;
 
 namespace AFKWindowsService
 {
-    public partial class Service1 : ServiceBase
+    public partial class AFKLogger : ServiceBase
     {
         String deviceID;
         String userID;
-        public Service1()
+        public AFKLogger()
         {
+            CanHandleSessionChangeEvent = true;
             InitializeComponent();
 
             deviceID = System.Environment.MachineName;
@@ -36,7 +37,11 @@ namespace AFKWindowsService
                 dBE.DeviceID = deviceID;
                 dBE.UserID = userID;
                 dBE.TimeOfEvent = DateTime.Now;
+                dBE.AutomaticLock = true;
+                dBE.RemoteAccess = System.Windows.Forms.SystemInformation.TerminalServerSession;
 
+                c.AddEntry(dBE);
+                c.GetAllEntries();
             }
         }
 
