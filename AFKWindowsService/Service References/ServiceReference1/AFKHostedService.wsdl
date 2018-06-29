@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="AFKHostedService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="BasicHttpsBinding_IService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IService_GetAllEntries_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllEntries" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetAllEntries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllEntriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesOfUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesOfUser" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesOfUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesOfUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesBetween_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesBetween" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesBetween_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesBetweenResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesBetweenForUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesBetweenForUser" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesBetweenForUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesBetweenForUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_RemainingTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemainingTime" />
+  </wsdl:message>
+  <wsdl:message name="IService_RemainingTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemainingTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesForAlice_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesForAlice" />
+  </wsdl:message>
+  <wsdl:message name="IService_GetEntriesForAlice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntriesForAliceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_EntryOutput_InputMessage">
+    <wsdl:part name="parameters" element="tns:EntryOutput" />
+  </wsdl:message>
+  <wsdl:message name="IService_EntryOutput_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EntryOutputResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddEntry_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddEntry" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddEntry_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddEntryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddDevice_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddDevice" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddDevice_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddDeviceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddUser" />
+  </wsdl:message>
+  <wsdl:message name="IService_AddUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_DBTest_InputMessage">
+    <wsdl:part name="parameters" element="tns:DBTest" />
+  </wsdl:message>
+  <wsdl:message name="IService_DBTest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DBTestResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IService">
+    <wsdl:operation name="GetAllEntries">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/GetAllEntries" message="tns:IService_GetAllEntries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/GetAllEntriesResponse" message="tns:IService_GetAllEntries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesOfUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/GetEntriesOfUser" message="tns:IService_GetEntriesOfUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/GetEntriesOfUserResponse" message="tns:IService_GetEntriesOfUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetween">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/GetEntriesBetween" message="tns:IService_GetEntriesBetween_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/GetEntriesBetweenResponse" message="tns:IService_GetEntriesBetween_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetweenForUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/GetEntriesBetweenForUser" message="tns:IService_GetEntriesBetweenForUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/GetEntriesBetweenForUserResponse" message="tns:IService_GetEntriesBetweenForUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemainingTime">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/RemainingTime" message="tns:IService_RemainingTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/RemainingTimeResponse" message="tns:IService_RemainingTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesForAlice">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/GetEntriesForAlice" message="tns:IService_GetEntriesForAlice_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/GetEntriesForAliceResponse" message="tns:IService_GetEntriesForAlice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="EntryOutput">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/EntryOutput" message="tns:IService_EntryOutput_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/EntryOutputResponse" message="tns:IService_EntryOutput_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddEntry">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddEntry" message="tns:IService_AddEntry_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/AddEntryResponse" message="tns:IService_AddEntry_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddDevice">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddDevice" message="tns:IService_AddDevice_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/AddDeviceResponse" message="tns:IService_AddDevice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddUser" message="tns:IService_AddUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/AddUserResponse" message="tns:IService_AddUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DBTest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/DBTest" message="tns:IService_DBTest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/DBTestResponse" message="tns:IService_DBTest_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IService" type="tns:IService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAllEntries">
+      <soap:operation soapAction="http://tempuri.org/IService/GetAllEntries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesOfUser">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesOfUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetween">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesBetween" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetweenForUser">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesBetweenForUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemainingTime">
+      <soap:operation soapAction="http://tempuri.org/IService/RemainingTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesForAlice">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesForAlice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EntryOutput">
+      <soap:operation soapAction="http://tempuri.org/IService/EntryOutput" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEntry">
+      <soap:operation soapAction="http://tempuri.org/IService/AddEntry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDevice">
+      <soap:operation soapAction="http://tempuri.org/IService/AddDevice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap:operation soapAction="http://tempuri.org/IService/AddUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DBTest">
+      <soap:operation soapAction="http://tempuri.org/IService/DBTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BasicHttpsBinding_IService" type="tns:IService">
+    <wsp:PolicyReference URI="#BasicHttpsBinding_IService_policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAllEntries">
+      <soap:operation soapAction="http://tempuri.org/IService/GetAllEntries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesOfUser">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesOfUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetween">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesBetween" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesBetweenForUser">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesBetweenForUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemainingTime">
+      <soap:operation soapAction="http://tempuri.org/IService/RemainingTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntriesForAlice">
+      <soap:operation soapAction="http://tempuri.org/IService/GetEntriesForAlice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EntryOutput">
+      <soap:operation soapAction="http://tempuri.org/IService/EntryOutput" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddEntry">
+      <soap:operation soapAction="http://tempuri.org/IService/AddEntry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDevice">
+      <soap:operation soapAction="http://tempuri.org/IService/AddDevice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap:operation soapAction="http://tempuri.org/IService/AddUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DBTest">
+      <soap:operation soapAction="http://tempuri.org/IService/DBTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AFKHostedService">
+    <wsdl:port name="BasicHttpBinding_IService" binding="tns:BasicHttpBinding_IService">
+      <soap:address location="http://localhost:64626/AFKHostedService.svc" />
+    </wsdl:port>
+    <wsdl:port name="BasicHttpsBinding_IService" binding="tns:BasicHttpsBinding_IService">
+      <soap:address location="https://localhost:44354/AFKHostedService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

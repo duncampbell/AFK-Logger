@@ -1,6 +1,6 @@
 ﻿namespace AppletTesting
 {
-    partial class Form1
+    partial class AFKApplet
     {
         /// <summary>
         /// Required designer variable.
@@ -63,7 +63,7 @@
             this.btnETA3.UseVisualStyleBackColor = true;
             this.btnETA3.Click += new System.EventHandler(this.btnETA3_Click);
             // 
-            // Form1
+            // AFKApplet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -71,8 +71,8 @@
             this.Controls.Add(this.btnETA3);
             this.Controls.Add(this.btnETA2);
             this.Controls.Add(this.btnETA1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "AFKApplet";
+            this.Text = "AFK Applet";
             this.ResumeLayout(false);
 
         }
