@@ -110,20 +110,7 @@ namespace AFKHostedService
             //Return all entries between a specific time period for a specific user
             return ret;
         }
-
-        public TimeSpan RemainingTime(DataBaseEntry entry)
-        {
-            TimeSpan remaining = entry.ETA - (DateTime.Now.Subtract(entry.TimeOfEvent));
-            if (remaining < new TimeSpan(0, 0, 0))
-            {
-                return new TimeSpan(0, 0, 0);
-            }
-            else
-            {
-                return remaining;
-            }
-        }
-
+        
         //Returns list of all employees constructed from the last DataBaseEntry associated with their UserID
         public async Task<List<Employee>> GetEntriesForAlice()
         {
@@ -135,18 +122,26 @@ namespace AFKHostedService
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
                     //List of users
-                    List<User> users = await s.Query<User>("User_Search").ToListAsync();
+                    List<User> users = await s.Query<User>("User_Search").Distinct().ToListAsync();
                     //Iterate through list of users, select latest DataBaseEntry, create employee object, and add UserName to Employee from User object
                     foreach (User u in users)
                     {
-                        //Get latest DataBaseEntries for user
-                        DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u.UserID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
-                        //Create Employee from Entry
-                        Employee emp = new Employee(entry);
-                        //Get name of user
-                        emp.Name = u.UserName;
-                        //Add to list
-                        ret.Add(emp);
+                        //Try create an employee object. If no DataBase Entry is found for the user, skip
+                        try
+                        {
+                            //Get latest DataBaseEntries for user
+                            DataBaseEntry entry = await s.Query<DataBaseEntry>("DataEntry_Searching").Where(x => x.UserID == u.UserID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
+                            //Create Employee from Entry
+                            Employee emp = new Employee(entry);
+                            //Get name of user
+                            emp.Name = u.UserName;
+                            //Add to list
+                            ret.Add(emp);
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }
@@ -160,11 +155,6 @@ namespace AFKHostedService
 
             return ret;
 
-        }
-
-        public string EntryOutput(DataBaseEntry str)
-        {
-            return str.EventType + ", " + str.UserID + ", " + str.DeviceID + ", " + str.AutomaticLock + ", " + str.ETA.ToString() + ", " + str.TimeOfEvent.ToString();
         }
 
         public async Task<bool> AddEntry(DataBaseEntry entry)
@@ -228,6 +218,24 @@ namespace AFKHostedService
                 Console.WriteLine(e.Message);
             }
             return success;
+        }
+
+        public TimeSpan RemainingTime(DataBaseEntry entry)
+        {
+            TimeSpan remaining = entry.ETA - (DateTime.Now.Subtract(entry.TimeOfEvent));
+            if (remaining < new TimeSpan(0, 0, 0))
+            {
+                return new TimeSpan(0, 0, 0);
+            }
+            else
+            {
+                return remaining;
+            }
+        }
+
+        public string EntryOutput(DataBaseEntry str)
+        {
+            return str.EventType + ", " + str.UserID + ", " + str.DeviceID + ", " + str.AutomaticLock + ", " + str.ETA.ToString() + ", " + str.TimeOfEvent.ToString();
         }
 
         public string DBTest()
