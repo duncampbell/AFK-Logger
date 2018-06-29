@@ -35,13 +35,13 @@ namespace AFKHostedService
         string EntryOutput(DataBaseEntry str);
 
         [OperationContract]
-        void AddEntry(DataBaseEntry entry);
+        Task<bool> AddEntry(DataBaseEntry entry);
 
         [OperationContract]
-        void AddDevice(Device device);
+        Task<bool> AddDevice(Device device);
 
         [OperationContract]
-        void AddUser(User user);
+        Task<bool> AddUser(User user);
 
         [OperationContract]
         string DBTest();
