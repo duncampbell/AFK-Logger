@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace AFKHostedService
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IMyContractCallback))]
     public interface IService
     {
         [OperationContract]
@@ -50,6 +50,12 @@ namespace AFKHostedService
         [OperationContract]
         string DBTest();
 
+    }
+
+    public interface IMyContractCallback
+    {
+        [OperationContract]
+        void SendResult(string test);
     }
 
     [DataContract]

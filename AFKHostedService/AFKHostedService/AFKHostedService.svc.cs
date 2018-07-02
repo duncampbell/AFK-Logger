@@ -14,6 +14,7 @@ namespace AFKHostedService
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "AFKHostedService" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class AFKHostedService : IService
     {
         IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
@@ -171,28 +172,31 @@ namespace AFKHostedService
             bool success = false;
             try
             {
+                IMyContractCallback callback = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
+                callback.SendResult("Success");
+
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-                {
-                    //Load UserIDs from db
-                    IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x=>x.UserID).ToListAsync();
-                    //Load DeviceIDs from db
-                    IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
-                    //Check that device and user exist
-                    if (userIDs.Contains(entry.UserID) &&  deviceIDs.Contains(entry.DeviceID))
                     {
-                        //Add to db and save
-                        await s.StoreAsync(entry);
-                        await s.SaveChangesAsync();
+                        //Load UserIDs from db
+                        IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x=>x.UserID).ToListAsync();
+                        //Load DeviceIDs from db
+                        IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
+                        //Check that device and user exist
+                        if (userIDs.Contains(entry.UserID) &&  deviceIDs.Contains(entry.DeviceID))
+                        {
+                            //Add to db and save
+                            await s.StoreAsync(entry);
+                            await s.SaveChangesAsync();
+                        }
                     }
-                }
 
-                Employee emp = new Employee(entry);
-                success = true;
+                    Employee emp = new Employee(entry);
+                    success = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //return e.Message;
             }
             return success;
         }
@@ -210,7 +214,7 @@ namespace AFKHostedService
                     || entry.EventType == "SessionLogOff")
                 {
                     entry.UserID = lastEntry.UserID;
-                    success = await AddEntry(entry);
+                   // success = await AddEntry(entry);
                 }
                 //TO DO: contact applet for user details
 
