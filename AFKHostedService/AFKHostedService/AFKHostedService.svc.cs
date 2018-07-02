@@ -216,7 +216,7 @@ namespace AFKHostedService
                     entry.UserID = lastEntry.UserID;
                    // success = await AddEntry(entry);
                 }
-                //TO DO: contact client for user details
+                //TO DO: contact applet for user details
 
                 return success;
             }
