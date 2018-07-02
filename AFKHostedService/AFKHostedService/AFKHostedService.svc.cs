@@ -197,6 +197,27 @@ namespace AFKHostedService
             return success;
         }
 
+        public async Task<bool> AddHistoricalLoggingEntry(DataBaseEntry entry)
+        {
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                bool success = false;
+                //Get last DataBaseEntry for that device
+                DataBaseEntry lastEntry = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.DeviceID == entry.DeviceID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
+                //Set userid to last recorded UserID if the event is a lock/unlock or log off
+                if (entry.EventType == "SessionLock"
+                    || entry.EventType == "SessionUnlock"
+                    || entry.EventType == "SessionLogOff")
+                {
+                    entry.UserID = lastEntry.UserID;
+                    success = await AddEntry(entry);
+                }
+                //TO DO: contact client for user details
+
+                return success;
+            }
+        }
+
         public async Task<bool> AddDevice(Device device)
         {
             bool success = false;

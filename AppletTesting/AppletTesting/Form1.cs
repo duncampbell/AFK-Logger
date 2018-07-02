@@ -41,7 +41,7 @@ namespace AppletTesting
                 try
                 {
                     DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "EventType";
+                    dBE.EventType = "SessionLock";
                     dBE.UserID = userID;
                     dBE.DeviceID = deviceID;
                     dBE.TimeOfEvent = DateTime.Now;
@@ -67,7 +67,7 @@ namespace AppletTesting
                 using (ServiceClient c = new ServiceClient())
                 {
                     DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "EventType";
+                    dBE.EventType = "SessionLock";
                     dBE.UserID = userID;
                     dBE.DeviceID = deviceID;
                     dBE.TimeOfEvent = DateTime.Now;
@@ -93,7 +93,7 @@ namespace AppletTesting
                 {
                     {
                         DataBaseEntry dBE = new DataBaseEntry();
-                        dBE.EventType = "EventType";
+                        dBE.EventType = "SessionLock";
                         dBE.UserID = userID;
                         dBE.DeviceID = deviceID;
                         dBE.TimeOfEvent = DateTime.Now;

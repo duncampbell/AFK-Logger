@@ -1,1 +1,1 @@
-{"Nodes":[{"Url":"http://192.168.10.153:8080","Database":"TestDB","ClusterTag":"A","ServerRole":"Member"}],"Etag":-1,"PersistedAt":"2018-06-28T12:13:53.3621668+00:00"}
+{"Nodes":[{"Url":"http://192.168.10.153:8080","Database":"TestDB","ClusterTag":"A","ServerRole":"Member"}],"Etag":24,"PersistedAt":"2018-07-02T06:42:00.8077099+00:00"}
