@@ -354,7 +354,7 @@ namespace AFKWindowsService.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService", CallbackContract=typeof(AFKWindowsService.ServiceReference1.IServiceCallback))]
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
@@ -405,12 +405,6 @@ namespace AFKWindowsService.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
         System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        bool AddHistoricalLoggingEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
         bool AddDevice(AFKWindowsService.ServiceReference1.Device device);
         
@@ -431,30 +425,41 @@ namespace AFKWindowsService.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/SendResult", ReplyAction="http://tempuri.org/IService/SendResultResponse")]
+        void SendResult(string test);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
+        AFKWindowsService.ServiceReference1.DataBaseEntry FinishDataBaseEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IServiceChannel : AFKWindowsService.ServiceReference1.IService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceClient : System.ServiceModel.ClientBase<AFKWindowsService.ServiceReference1.IService>, AFKWindowsService.ServiceReference1.IService {
+    public partial class ServiceClient : System.ServiceModel.DuplexClientBase<AFKWindowsService.ServiceReference1.IService>, AFKWindowsService.ServiceReference1.IService {
         
-        public ServiceClient() {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public ServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public ServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetAllEntries() {
@@ -519,14 +524,6 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
             return base.Channel.AddEntryAsync(entry);
-        }
-        
-        public bool AddHistoricalLoggingEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntry(entry);
-        }
-        
-        public System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntryAsync(entry);
         }
         
         public bool AddDevice(AFKWindowsService.ServiceReference1.Device device) {

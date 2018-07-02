@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.Linq;
 using System.Security.Principal;
+using System.ServiceModel;
 using System.ServiceProcess;
 
 namespace AFKWindowsService
@@ -21,9 +22,9 @@ namespace AFKWindowsService
             InitializeComponent();
 
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
-            
 
-            using (ServiceClient c = new ServiceClient())
+            InstanceContext iC = new System.ServiceModel.InstanceContext(this);
+            using (ServiceClient c = new ServiceClient(iC))
             {
                 Device device = new Device();
                 device.DeviceID = deviceID;
@@ -31,7 +32,7 @@ namespace AFKWindowsService
                 device.UserName = Environment.UserName;
                 device.VM = false;
 
-                c.AddDevice(device);
+                //c.AddDevice(device);
             }
 
 
@@ -55,7 +56,8 @@ namespace AFKWindowsService
 
         protected async override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            using(ServiceClient c = new ServiceClient())
+            InstanceContext iC = new System.ServiceModel.InstanceContext(this);
+            using (ServiceClient c = new ServiceClient(iC))
             {
                 DataBaseEntry dBE = new DataBaseEntry();
                 dBE.EventType = changeDescription.Reason.ToString();

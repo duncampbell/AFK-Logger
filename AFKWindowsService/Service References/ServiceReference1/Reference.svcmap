@@ -21,14 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address=" http://192.168.10.153/TestDeployPackage/AFKHostedService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="e5478f29-e9ca-4658-bc32-dba1f717befb" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd0" />
-    <MetadataFile FileName="AFKHostedService31.xsd" MetadataType="Schema" ID="453da557-1f9c-4f41-b3aa-fdc8d446d2c2" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd1" />
-    <MetadataFile FileName="AFKHostedService32.xsd" MetadataType="Schema" ID="dca66857-90cf-4b0c-9ffc-2984c3b21165" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd2" />
-    <MetadataFile FileName="AFKHostedService1.disco" MetadataType="Disco" ID="8166f1b8-9cb8-416b-8ba6-69f8a3ec59e6" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?disco" />
-    <MetadataFile FileName="AFKHostedService1.wsdl" MetadataType="Wsdl" ID="b9586f87-a414-4002-a52a-a5b92871eab9" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?wsdl" />
+    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="c8a6423e-ab1a-43cf-807f-da3d21e22c15" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AFKHostedService31.xsd" MetadataType="Schema" ID="5c34d72d-5e9b-4481-bca3-73781c01faf3" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AFKHostedService32.xsd" MetadataType="Schema" ID="7869228a-d50b-48a1-95e6-43b7f099f53e" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AFKHostedService1.disco" MetadataType="Disco" ID="e941fa76-f9fd-4328-92a3-2b726c2680ce" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?disco" />
+    <MetadataFile FileName="AFKHostedService1.wsdl" MetadataType="Wsdl" ID="2e9dd08d-2637-4087-ab8d-328dcd87b869" SourceId="1" SourceUrl="http://192.168.10.153/TestDeployPackage/AFKHostedService.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

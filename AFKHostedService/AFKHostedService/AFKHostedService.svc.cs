@@ -178,6 +178,8 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                     {
+                        //Get UserID and ETA from applet
+                        entry = callback.FinishDataBaseEntry(entry);
                         //Load UserIDs from db
                         IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x=>x.UserID).ToListAsync();
                         //Load DeviceIDs from db
@@ -194,32 +196,11 @@ namespace AFKHostedService
                     Employee emp = new Employee(entry);
                     success = true;
             }
-            catch (Exception e)
+            catch
             {
-                //return e.Message;
+              
             }
             return success;
-        }
-
-        public async Task<bool> AddHistoricalLoggingEntry(DataBaseEntry entry)
-        {
-            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-            {
-                bool success = false;
-                //Get last DataBaseEntry for that device
-                DataBaseEntry lastEntry = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.DeviceID == entry.DeviceID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
-                //Set userid to last recorded UserID if the event is a lock/unlock or log off
-                if (entry.EventType == "SessionLock"
-                    || entry.EventType == "SessionUnlock"
-                    || entry.EventType == "SessionLogOff")
-                {
-                    entry.UserID = lastEntry.UserID;
-                   // success = await AddEntry(entry);
-                }
-                //TO DO: contact applet for user details
-
-                return success;
-            }
         }
 
         public async Task<bool> AddDevice(Device device)
