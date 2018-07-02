@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d619fa30-631b-4bcd-87c0-7e755eb1cc3b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:64626/AFKHostedService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AFKHostedService.xsd" MetadataType="Schema" ID="417a308a-baaf-4408-a0e8-8414a78296b7" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AFKHostedService1.xsd" MetadataType="Schema" ID="75a7e0a5-248d-4f1c-866d-c094cd8fe366" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AFKHostedService.wsdl" MetadataType="Wsdl" ID="3d6226e9-d910-4a8d-b2e9-a57cc77de701" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?wsdl" />
+    <MetadataFile FileName="AFKHostedService2.xsd" MetadataType="Schema" ID="724c8b43-932f-4a58-bfc3-388417742482" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AFKHostedService.disco" MetadataType="Disco" ID="9b865480-7a13-4823-9dd8-abf42cfb8d76" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

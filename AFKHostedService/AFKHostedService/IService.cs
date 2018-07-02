@@ -37,6 +37,10 @@ namespace AFKHostedService
         [OperationContract]
         Task<bool> AddEntry(DataBaseEntry entry);
 
+        //The windows service calls this to attempt to assign user data to a logon
+        [OperationContract]
+        Task<bool> AddHistoricalLoggingEntry(DataBaseEntry entry);
+
         [OperationContract]
         Task<bool> AddDevice(Device device);
 
