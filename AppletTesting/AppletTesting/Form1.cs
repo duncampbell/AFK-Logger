@@ -3,14 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.DirectoryServices;
 using System.Drawing;
 using System.Linq;
-using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 
 namespace AppletTesting
 {
@@ -26,8 +23,8 @@ namespace AppletTesting
         public AFKApplet()
         {
             InitializeComponent();
-            deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
-            userID = WindowsIdentity.GetCurrent().User.AccountDomainSid.ToString();
+            deviceID = System.Environment.MachineName;
+            userID = System.Environment.UserName;
 
             ETA1 = new TimeSpan();
             ETA2 = new TimeSpan();
@@ -110,21 +107,6 @@ namespace AppletTesting
                     throw;
                 }
 
-        }
-
-        private async void btnAddDevice_Click(object sender, EventArgs e)
-        {
-            using (ServiceClient c = new ServiceClient())
-            {
-                Device device = new Device();
-                device.DeviceID = deviceID;
-                device.DeviceName = Environment.MachineName;
-                device.UserID = userID;
-                device.UserName = Environment.UserName;
-                device.VM = chkVM.Checked;
-
-                await c.AddDeviceAsync(device);
-            }
         }
     }
 }
