@@ -1,15 +1,11 @@
 ﻿using AFKWindowsService.ServiceReference1;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.Linq;
 using System.Security.Principal;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AFKWindowsService
 {
@@ -40,14 +36,14 @@ namespace AFKWindowsService
 
 
 
-            
+            eL = new EventLog();
             if (!EventLog.SourceExists("MySource"))
             {
                 EventLog.CreateEventSource("MySource", "MyNewLog");
             }
-            eL = new EventLog();
-            //eL.Source = "MySource";
-            //eL.Log = "MyNewLog";
+
+            eL.Source = "MySource";
+            eL.Log = "MyNewLog";
 
 
         }
