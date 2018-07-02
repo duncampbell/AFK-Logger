@@ -62,7 +62,8 @@ namespace AFKWindowsService
                 dBE.DeviceID = deviceID;
                 dBE.TimeOfEvent = DateTime.Now;
                 dBE.AutomaticLock = true;
-                dBE.RemoteAccess = System.Windows.Forms.SystemInformation.TerminalServerSession;
+                dBE.RemoteAccess = true;
+                if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
                 await c.AddEntryAsync(dBE);
                 eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);

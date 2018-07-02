@@ -405,6 +405,12 @@ namespace AFKWindowsService.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
         System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
+        bool AddHistoricalLoggingEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
+        System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
         bool AddDevice(AFKWindowsService.ServiceReference1.Device device);
         
@@ -513,6 +519,14 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
             return base.Channel.AddEntryAsync(entry);
+        }
+        
+        public bool AddHistoricalLoggingEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddHistoricalLoggingEntry(entry);
+        }
+        
+        public System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddHistoricalLoggingEntryAsync(entry);
         }
         
         public bool AddDevice(AFKWindowsService.ServiceReference1.Device device) {
