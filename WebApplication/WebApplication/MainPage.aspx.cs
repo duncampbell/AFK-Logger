@@ -209,6 +209,7 @@ namespace WebApplication
 
         public void SendResult(string test)
         {
+            CreateEmployeeTable();
             tableSetUp();
         }
 
