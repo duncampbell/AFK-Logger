@@ -47,18 +47,6 @@
                         <SortedDescendingHeaderStyle BackColor="#993366" />
                     </asp:GridView>
                     <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
                 </asp:View>
                 <asp:View ID="View1" runat="server">
                     
@@ -439,11 +427,6 @@
             <SortedAscendingHeaderStyle BackColor="#66FF33" />
             <SortedDescendingHeaderStyle BackColor="#993366" />
         </asp:GridView>
-                    <asp:LinqDataSource ID="LinqDataSource1" runat="server" EntityTypeName="">
-                    </asp:LinqDataSource>
-        <br />
-        <br />
-        <br />
         <br />
                 </asp:View>
             </asp:MultiView>
@@ -451,8 +434,6 @@
             
         
     </div>
-        <p>
-            &nbsp;</p>
     </form>
 </body>
 </html>
