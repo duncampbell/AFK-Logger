@@ -34,14 +34,20 @@ namespace AFKHostedService
         [OperationContract]
         string EntryOutput(DataBaseEntry str);
 
-        [OperationContract]
-        Task<bool> AddEntry(DataBaseEntry entry);
+        [OperationContract(IsOneWay =true)]
+        void AddServiceEntry(DataBaseEntry entry);
+
+        [OperationContract(IsOneWay = true)]
+        void AddAppletEntry(DataBaseEntry entry);
 
         [OperationContract]
         Task<bool> AddDevice(Device device);
 
         [OperationContract]
         Task<bool> AddUser(User user);
+
+        [OperationContract]
+        bool RegisterClient(string deviceID, bool service);
 
         [OperationContract]
         string DBTest();
@@ -54,7 +60,7 @@ namespace AFKHostedService
         void SendResult(string test);
 
         [OperationContract]
-        DataBaseEntry FinishDataBaseEntry(DataBaseEntry entry);
+        void FinishDataBaseEntry(DataBaseEntry entry);
     }
 
     [DataContract]

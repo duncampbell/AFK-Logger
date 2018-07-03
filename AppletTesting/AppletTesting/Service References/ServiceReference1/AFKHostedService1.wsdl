@@ -425,7 +425,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddEntry_Input_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddServiceEntry_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -448,7 +448,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddEntry_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddAppletEntry_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -541,6 +541,52 @@
     </wsp:ExactlyOne>
   </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddUser_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_RegisterClient_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_RegisterClient_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -750,11 +796,11 @@
   <wsdl:message name="IService_EntryOutput_OutputMessage">
     <wsdl:part name="parameters" element="tns:EntryOutputResponse" />
   </wsdl:message>
-  <wsdl:message name="IService_AddEntry_InputMessage">
-    <wsdl:part name="parameters" element="tns:AddEntry" />
+  <wsdl:message name="IService_AddServiceEntry_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddServiceEntry" />
   </wsdl:message>
-  <wsdl:message name="IService_AddEntry_OutputMessage">
-    <wsdl:part name="parameters" element="tns:AddEntryResponse" />
+  <wsdl:message name="IService_AddAppletEntry_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddAppletEntry" />
   </wsdl:message>
   <wsdl:message name="IService_AddDevice_InputMessage">
     <wsdl:part name="parameters" element="tns:AddDevice" />
@@ -767,6 +813,12 @@
   </wsdl:message>
   <wsdl:message name="IService_AddUser_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService_RegisterClient_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterClient" />
+  </wsdl:message>
+  <wsdl:message name="IService_RegisterClient_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterClientResponse" />
   </wsdl:message>
   <wsdl:message name="IService_DBTest_InputMessage">
     <wsdl:part name="parameters" element="tns:DBTest" />
@@ -815,9 +867,11 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IService/EntryOutput" message="tns:IService_EntryOutput_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService/EntryOutputResponse" message="tns:IService_EntryOutput_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="AddEntry">
-      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddEntry" message="tns:IService_AddEntry_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IService/AddEntryResponse" message="tns:IService_AddEntry_OutputMessage" />
+    <wsdl:operation name="AddServiceEntry">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddServiceEntry" message="tns:IService_AddServiceEntry_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAppletEntry">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/AddAppletEntry" message="tns:IService_AddAppletEntry_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="AddDevice">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/AddDevice" message="tns:IService_AddDevice_InputMessage" />
@@ -826,6 +880,10 @@
     <wsdl:operation name="AddUser">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/AddUser" message="tns:IService_AddUser_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService/AddUserResponse" message="tns:IService_AddUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterClient">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/RegisterClient" message="tns:IService_RegisterClient_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/RegisterClientResponse" message="tns:IService_RegisterClient_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="DBTest">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/DBTest" message="tns:IService_DBTest_InputMessage" />
@@ -920,16 +978,19 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="AddEntry">
-      <soap12:operation soapAction="http://tempuri.org/IService/AddEntry" style="document" />
+    <wsdl:operation name="AddServiceEntry">
+      <soap12:operation soapAction="http://tempuri.org/IService/AddServiceEntry" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_AddEntry_Input_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_AddServiceEntry_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
-      <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_AddEntry_output_policy" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAppletEntry">
+      <soap12:operation soapAction="http://tempuri.org/IService/AddAppletEntry" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_AddAppletEntry_Input_policy" />
         <soap12:body use="literal" />
-      </wsdl:output>
+      </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="AddDevice">
       <soap12:operation soapAction="http://tempuri.org/IService/AddDevice" style="document" />
@@ -950,6 +1011,17 @@
       </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IService_AddUser_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterClient">
+      <soap12:operation soapAction="http://tempuri.org/IService/RegisterClient" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_RegisterClient_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_RegisterClient_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

@@ -56,7 +56,7 @@ namespace AFKWindowsService
             eL.WriteEntry("Started at " + DateTime.Now.ToShortTimeString());
         }
 
-        protected async override void OnSessionChange(SessionChangeDescription changeDescription)
+        protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace AFKWindowsService
                     dBE.RemoteAccess = true;
                     if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
-                    await c.AddEntryAsync(dBE);
+                    c.AddServiceEntry(dBE);
                     eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
                 }
             }
@@ -91,10 +91,9 @@ namespace AFKWindowsService
             //throw new NotImplementedException();
         }
 
-        public DataBaseEntry FinishDataBaseEntry(DataBaseEntry entry)
+        void IServiceCallback.FinishDataBaseEntry(DataBaseEntry entry)
         {
-            eL.WriteEntry("Callback Method Triggered");
-            return new DataBaseEntry();
+            //Ignore
         }
     }
 }

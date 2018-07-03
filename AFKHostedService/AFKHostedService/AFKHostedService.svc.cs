@@ -3,6 +3,7 @@ using Raven.Client.Documents.Session;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -14,9 +15,11 @@ namespace AFKHostedService
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "AFKHostedService" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AFKHostedService : IService
     {
+        private static Dictionary<string, IMyContractCallback> clients = new Dictionary<string, IMyContractCallback>();
+        private static object locker = new object();
         IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
 
         public AFKHostedService()
@@ -167,40 +170,59 @@ namespace AFKHostedService
 
         }
 
-        public async Task<bool> AddEntry(DataBaseEntry entry)
+        public void AddServiceEntry(DataBaseEntry entry)
         {
-            bool success = false;
-            try
+            //Record log-off events immediately
+            if(entry.EventType == "SessionLogfOff")
             {
-                IMyContractCallback callback = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
-                callback.SendResult("Success");
-
-                //Connect to database
-                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
-                    {
-                        //Get UserID and ETA from applet
-                        entry = callback.FinishDataBaseEntry(entry);
-                        //Load UserIDs from db
-                        IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x=>x.UserID).ToListAsync();
-                        //Load DeviceIDs from db
-                        IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
-                        //Check that device and user exist
-                        if (userIDs.Contains(entry.UserID) &&  deviceIDs.Contains(entry.DeviceID))
+                AddAppletEntry(entry);
+            }
+            else
+            {
+                var inactiveClients = new List<string>();
+                foreach (var client in clients)
+                {
+                    if (client.Key.Substring(client.Key.Length-8) !=  "-Service")//stops services being called
+                    {   
+                        try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
                         {
-                            //Add to db and save
-                            await s.StoreAsync(entry);
-                            await s.SaveChangesAsync();
+                            //The applet then calls the AddAppletEntry method to complete the record
+                            client.Value.FinishDataBaseEntry(entry);
+                        }
+                        catch
+                        {
+                            inactiveClients.Add(client.Key);
                         }
                     }
+                }
+                //removes inactive clients from client list
+                if (inactiveClients.Count > 0)
+                {
+                    foreach(var client in inactiveClients)
+                    {
+                        clients.Remove(client);
+                    }
+                }
+            }
+        }
 
-                    Employee emp = new Employee(entry);
-                    success = true;
-            }
-            catch
+        public async void AddAppletEntry(DataBaseEntry entry)
+        {
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
-              
+                //Load UserIDs from db
+                IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x => x.UserID).ToListAsync();
+                //Load DeviceIDs from db
+                IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
+                //Check that device and user exist
+                if (userIDs.Contains(entry.UserID) && deviceIDs.Contains(entry.DeviceID))
+                {
+                    //Add to db and save
+                    await s.StoreAsync(entry);
+                    await s.SaveChangesAsync();
+                }
+                Employee emp = new Employee(entry); //TODO: send employee to webpage
             }
-            return success;
         }
 
         public async Task<bool> AddDevice(Device device)
@@ -313,6 +335,37 @@ namespace AFKHostedService
                     return e.Message;
                 }
             }
+        }
+
+        public bool RegisterClient(string deviceID, bool service)
+        {
+            bool success = false;
+            //Generate unique clientID based on device + whether client is service or applet
+            string clientID = deviceID;
+            clientID += service ? "-Service" : "-Applet";
+
+            if (clientID   != null && clientID != "")
+            {
+                try
+                {
+                    IMyContractCallback callback = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
+                    lock (locker)
+                    {
+                        //remove old client
+                        if (clients.Keys.Contains(clientID))
+                        {
+                            clients.Remove(clientID);
+                        }
+                        clients.Add(clientID,callback);
+                        success = true;
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            return success;
         }
     }
 }

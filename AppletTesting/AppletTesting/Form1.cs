@@ -12,13 +12,19 @@ using System.ServiceModel;
 using System.Security.Principal;
 using System.DirectoryServices;
 using AFKWindowsService.ServiceReference1;
+using System.Diagnostics;
 
 namespace AppletTesting
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public partial class AFKApplet : Form, ServiceReference1.IServiceCallback
     {
         string deviceID;
         string userID;
+        InstanceContext iC;
+        ServiceReference1.ServiceClient c;
+
+        bool recentEntry = false;
 
         TimeSpan ETA;
         TimeSpan ETA1;
@@ -31,42 +37,34 @@ namespace AppletTesting
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             userID = WindowsIdentity.GetCurrent().User.AccountDomainSid.ToString();
 
+            iC = new InstanceContext(this);
+            c = new ServiceReference1.ServiceClient(iC);
+            c.RegisterClient(deviceID, false);
+
+
+
             ETA1 = new TimeSpan(1,0,0);
             ETA2 = new TimeSpan(2,0,0);
             ETA3 = new TimeSpan(3,0,0);
         }
 
         //Assigns ETA and UserID to DataBaseEntry and returns it
-        public DataBaseEntry FinishDataBaseEntry(DataBaseEntry entry)
+        public  void FinishDataBaseEntry(DataBaseEntry entry)
         {
-            
-            if (this.deviceID == entry.DeviceID)
+            //Confirms deviceID is correct and prevents duplicate entry
+            if (this.deviceID == entry.DeviceID && !recentEntry)
             {
                 entry.UserID = this.userID;
-                entry.ETA = (ETA != null)? ETA : TimeSpan.Zero;
+                entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
+                recentEntry = false;
             }
-            return entry;
+            c.AddAppletEntryAsync(entry);
+
         }
 
         void ServiceReference1.IServiceCallback.SendResult(string test)
         {
             
-        }
-
-        private void btnAddDevice_Click(object sender, EventArgs e)
-        {
-            Device d = new Device();
-            d.DeviceID = deviceID;
-            d.DeviceName = Environment.MachineName;
-            d.UserID = userID;
-            d.UserName = Environment.UserName;
-            d.VM = chkVM.Checked;
-
-            InstanceContext iC = new InstanceContext(this);
-            using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
-            {
-                MessageBox.Show(c.AddDevice(d).ToString());
-            }
         }
 
         private async void allETABtn_Click(object sender, EventArgs e)
@@ -90,27 +88,49 @@ namespace AppletTesting
 
 
             //Create device and send to API
-            InstanceContext iC = new InstanceContext(this);
+            try
+            {
+                //Create device
+                DataBaseEntry dBE = new DataBaseEntry();
+                dBE.EventType = "SessionLock";
+                dBE.UserID = userID;
+                dBE.DeviceID = deviceID;
+                dBE.TimeOfEvent = DateTime.Now;
+                dBE.AutomaticLock = false;
+                dBE.RemoteAccess = false;
+                dBE.ETA = ETA;
+
+
+                //Send to API
+                await c.AddAppletEntryAsync(dBE);
+                //recentEntry = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            //TODO: add lock method
+        }
+
+        private void btnAddDevice_Click(object sender, EventArgs e)
+        {
+            Device d = new Device();
+            d.DeviceID = deviceID;
+            d.DeviceName = Environment.MachineName;
+            d.UserID = userID;
+            d.UserName = Environment.UserName;
+            d.VM = chkVM.Checked;
+
             using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
             {
-                try
+                if (c.AddDevice(d))
                 {
-                    //Create device
-                    DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "SessionLock";
-                    dBE.UserID = userID;
-                    dBE.DeviceID = deviceID;
-                    dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = false;
-                    dBE.RemoteAccess = false;
-                    dBE.ETA = ETA;
-                    //Send to API
-                    await c.AddEntryAsync(dBE);
+                    MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID,"Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception)
+                else
                 {
-
-                    throw;
+                    MessageBox.Show("Device not added, either due to an error or because it already exists","Device Not Added",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             }
         }
