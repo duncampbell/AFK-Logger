@@ -36,91 +36,6 @@ namespace AppletTesting
             ETA3 = new TimeSpan(3,0,0);
         }
 
-        private void btnETA1_Click(object sender, EventArgs e)
-        {
-            ETA = ETA1;
-            InstanceContext iC = new InstanceContext(this);
-            using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
-            {
-                try
-                {
-                    DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "SessionLock";
-                    dBE.UserID = userID;
-                    dBE.DeviceID = deviceID;
-                    dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = false;
-                    dBE.RemoteAccess = false;
-                    dBE.ETA = ETA1;
-
-                    c.AddEntry(dBE);
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-
-        }
-
-        private void btnETA2_Click(object sender, EventArgs e)
-        {
-            ETA = ETA2;
-            //try
-            //{
-            //    InstanceContext iC = new InstanceContext(this);
-            //    using (ServiceClient c = new ServiceClient(iC))
-            //    {
-            //        DataBaseEntry dBE = new DataBaseEntry();
-            //        dBE.EventType = "SessionLock";
-            //        dBE.UserID = userID;
-            //        dBE.DeviceID = deviceID;
-            //        dBE.TimeOfEvent = DateTime.Now;
-            //        dBE.AutomaticLock = false;
-            //        dBE.RemoteAccess = false;
-            //        dBE.ETA = ETA2;
-
-            //        await c.AddEntryAsync(dBE);
-            //    }
-
-            //}
-            //catch (Exception)
-            //{
-
-            //    throw;
-            //}
-        }
-
-        private void btnETA3_Click(object sender, EventArgs e)
-        {
-            ETA = ETA3;
-
-            //InstanceContext iC = new InstanceContext(this);
-            //using (ServiceClient c = new ServiceClient(iC))
-            //    try
-            //    {
-            //        {
-            //            DataBaseEntry dBE = new DataBaseEntry();
-            //            dBE.EventType = "SessionLock";
-            //            dBE.UserID = userID;
-            //            dBE.DeviceID = deviceID;
-            //            dBE.TimeOfEvent = DateTime.Now;
-            //            dBE.AutomaticLock = false;
-            //            dBE.RemoteAccess = false;
-            //            dBE.ETA = ETA3;
-
-            //            await c.AddEntryAsync(dBE);
-            //        }
-            //    }
-            //    catch (Exception)
-            //    {
-
-            //        throw;
-            //    }
-
-        }
-
         //Assigns ETA and UserID to DataBaseEntry and returns it
         public DataBaseEntry FinishDataBaseEntry(DataBaseEntry entry)
         {
@@ -135,7 +50,7 @@ namespace AppletTesting
 
         void ServiceReference1.IServiceCallback.SendResult(string test)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void btnAddDevice_Click(object sender, EventArgs e)
@@ -151,6 +66,52 @@ namespace AppletTesting
             using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
             {
                 MessageBox.Show(c.AddDevice(d).ToString());
+            }
+        }
+
+        private async void allETABtn_Click(object sender, EventArgs e)
+        {
+            //Determine ETA
+            switch (((Button)sender).Text)
+            {
+                case "ETA 1":
+                    ETA = ETA1;
+                    break;
+                case "ETA 2":
+                    ETA = ETA2;
+                    break;
+                case "ETA 3":
+                    ETA = ETA3;
+                    break;
+                default:
+                    //TO DO: Think of best default
+                    break;
+            }
+
+
+            //Create device and send to API
+            InstanceContext iC = new InstanceContext(this);
+            using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
+            {
+                try
+                {
+                    //Create device
+                    DataBaseEntry dBE = new DataBaseEntry();
+                    dBE.EventType = "SessionLock";
+                    dBE.UserID = userID;
+                    dBE.DeviceID = deviceID;
+                    dBE.TimeOfEvent = DateTime.Now;
+                    dBE.AutomaticLock = false;
+                    dBE.RemoteAccess = false;
+                    dBE.ETA = ETA;
+                    //Send to API
+                    await c.AddEntryAsync(dBE);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
         }
     }

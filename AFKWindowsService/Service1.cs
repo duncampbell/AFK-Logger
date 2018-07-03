@@ -10,19 +10,21 @@ using System.ServiceProcess;
 
 namespace AFKWindowsService
 {
-    public partial class AFKLogger : ServiceBase
+    public partial class AFKLogger : ServiceBase, ServiceReference1.IServiceCallback
     {
         String deviceID;
 
-        System.Diagnostics.EventLog eL;
+        EventLog eL;
 
         public AFKLogger()
         {
             CanHandleSessionChangeEvent = true;
             InitializeComponent();
 
+            //Get unique device ID, the windows SID
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
 
+            //TESTING: creates device
             InstanceContext iC = new System.ServiceModel.InstanceContext(this);
             using (ServiceClient c = new ServiceClient(iC))
             {
@@ -36,7 +38,7 @@ namespace AFKWindowsService
             }
 
 
-
+            //TESTING: event log serves as console output
             eL = new EventLog();
             if (!EventLog.SourceExists("MySource"))
             {
@@ -56,24 +58,43 @@ namespace AFKWindowsService
 
         protected async override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            InstanceContext iC = new System.ServiceModel.InstanceContext(this);
-            using (ServiceClient c = new ServiceClient(iC))
+            try
             {
-                DataBaseEntry dBE = new DataBaseEntry();
-                dBE.EventType = changeDescription.Reason.ToString();
-                dBE.DeviceID = deviceID;
-                dBE.TimeOfEvent = DateTime.Now;
-                dBE.AutomaticLock = true;
-                dBE.RemoteAccess = true;
-                if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
+                InstanceContext iC = new InstanceContext(this);
+                using (ServiceClient c = new ServiceClient(iC))
+                {
+                    DataBaseEntry dBE = new DataBaseEntry();
+                    dBE.EventType = changeDescription.Reason.ToString();
+                    dBE.DeviceID = deviceID;
+                    dBE.TimeOfEvent = DateTime.Now;
+                    dBE.AutomaticLock = true;
+                    dBE.RemoteAccess = true;
+                    if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
-                await c.AddEntryAsync(dBE);
-                eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
+                    await c.AddEntryAsync(dBE);
+                    eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
+                }
             }
+            catch (Exception e)
+            {
+                eL.WriteEntry(e.Message);
+            }
+
         }
 
         protected override void OnStop()
         {
+        }
+
+        public void SendResult(string test)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public DataBaseEntry FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            eL.WriteEntry("Callback Method Triggered");
+            return new DataBaseEntry();
         }
     }
 }

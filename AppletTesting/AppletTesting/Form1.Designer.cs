@@ -43,7 +43,7 @@
             this.btnETA1.TabIndex = 0;
             this.btnETA1.Text = "ETA 1";
             this.btnETA1.UseVisualStyleBackColor = true;
-            this.btnETA1.Click += new System.EventHandler(this.btnETA1_Click);
+            this.btnETA1.Click += new System.EventHandler(this.allETABtn_Click);
             // 
             // btnETA2
             // 
@@ -53,7 +53,7 @@
             this.btnETA2.TabIndex = 1;
             this.btnETA2.Text = "ETA 2";
             this.btnETA2.UseVisualStyleBackColor = true;
-            this.btnETA2.Click += new System.EventHandler(this.btnETA2_Click);
+            this.btnETA2.Click += new System.EventHandler(this.allETABtn_Click);
             // 
             // btnETA3
             // 
@@ -63,7 +63,7 @@
             this.btnETA3.TabIndex = 2;
             this.btnETA3.Text = "ETA 3";
             this.btnETA3.UseVisualStyleBackColor = true;
-            this.btnETA3.Click += new System.EventHandler(this.btnETA3_Click);
+            this.btnETA3.Click += new System.EventHandler(this.allETABtn_Click);
             // 
             // btnAddDevice
             // 
