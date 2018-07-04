@@ -105,10 +105,10 @@ namespace AppletTesting
                 await c.AddAppletEntryAsync(dBE);
                 //recentEntry = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                MessageBox.Show("Program encountered the following error: " + ex.Message,"Progam Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             //TODO: add lock method
         }
@@ -133,6 +133,11 @@ namespace AppletTesting
                     MessageBox.Show("Device not added, either due to an error or because it already exists","Device Not Added",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            splitContainer1.Panel1Collapsed = true;
         }
     }
 }

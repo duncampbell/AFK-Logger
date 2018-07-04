@@ -54,6 +54,7 @@ namespace AFKHostedService
 
     }
 
+
     public interface IMyContractCallback
     {
         [OperationContract]

@@ -28,87 +28,140 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnAddDevice = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnETA1 = new System.Windows.Forms.Button();
+            this.chkVM = new System.Windows.Forms.CheckBox();
             this.btnETA2 = new System.Windows.Forms.Button();
             this.btnETA3 = new System.Windows.Forms.Button();
-            this.btnAddDevice = new System.Windows.Forms.Button();
-            this.chkVM = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnAddDevice);
+            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.btnETA1);
+            this.splitContainer1.Panel1.Controls.Add(this.chkVM);
+            this.splitContainer1.Panel1.Controls.Add(this.btnETA2);
+            this.splitContainer1.Panel1.Controls.Add(this.btnETA3);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Size = new System.Drawing.Size(266, 184);
+            this.splitContainer1.SplitterDistance = 130;
+            this.splitContainer1.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(70, 50);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "label2";
+            // 
+            // btnAddDevice
+            // 
+            this.btnAddDevice.Location = new System.Drawing.Point(12, 41);
+            this.btnAddDevice.Name = "btnAddDevice";
+            this.btnAddDevice.Size = new System.Drawing.Size(75, 23);
+            this.btnAddDevice.TabIndex = 10;
+            this.btnAddDevice.Text = "Add Device";
+            this.btnAddDevice.UseVisualStyleBackColor = true;
+            this.btnAddDevice.Click += new System.EventHandler(this.btnAddDevice_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(205, 41);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(46, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnETA1
             // 
-            this.btnETA1.Location = new System.Drawing.Point(13, 13);
+            this.btnETA1.Location = new System.Drawing.Point(12, 12);
             this.btnETA1.Name = "btnETA1";
             this.btnETA1.Size = new System.Drawing.Size(75, 23);
-            this.btnETA1.TabIndex = 0;
+            this.btnETA1.TabIndex = 7;
             this.btnETA1.Text = "ETA 1";
             this.btnETA1.UseVisualStyleBackColor = true;
             this.btnETA1.Click += new System.EventHandler(this.allETABtn_Click);
             // 
+            // chkVM
+            // 
+            this.chkVM.AutoSize = true;
+            this.chkVM.Location = new System.Drawing.Point(94, 45);
+            this.chkVM.Name = "chkVM";
+            this.chkVM.Size = new System.Drawing.Size(105, 17);
+            this.chkVM.TabIndex = 11;
+            this.chkVM.Text = "Virtual Machine?";
+            this.chkVM.UseVisualStyleBackColor = true;
+            // 
             // btnETA2
             // 
-            this.btnETA2.Location = new System.Drawing.Point(95, 12);
+            this.btnETA2.Location = new System.Drawing.Point(94, 11);
             this.btnETA2.Name = "btnETA2";
             this.btnETA2.Size = new System.Drawing.Size(75, 23);
-            this.btnETA2.TabIndex = 1;
+            this.btnETA2.TabIndex = 8;
             this.btnETA2.Text = "ETA 2";
             this.btnETA2.UseVisualStyleBackColor = true;
             this.btnETA2.Click += new System.EventHandler(this.allETABtn_Click);
             // 
             // btnETA3
             // 
-            this.btnETA3.Location = new System.Drawing.Point(177, 13);
+            this.btnETA3.Location = new System.Drawing.Point(176, 12);
             this.btnETA3.Name = "btnETA3";
             this.btnETA3.Size = new System.Drawing.Size(75, 23);
-            this.btnETA3.TabIndex = 2;
+            this.btnETA3.TabIndex = 9;
             this.btnETA3.Text = "ETA 3";
             this.btnETA3.UseVisualStyleBackColor = true;
             this.btnETA3.Click += new System.EventHandler(this.allETABtn_Click);
-            // 
-            // btnAddDevice
-            // 
-            this.btnAddDevice.Location = new System.Drawing.Point(13, 42);
-            this.btnAddDevice.Name = "btnAddDevice";
-            this.btnAddDevice.Size = new System.Drawing.Size(75, 23);
-            this.btnAddDevice.TabIndex = 3;
-            this.btnAddDevice.Text = "Add Device";
-            this.btnAddDevice.UseVisualStyleBackColor = true;
-            this.btnAddDevice.Click += new System.EventHandler(this.btnAddDevice_Click);
-            // 
-            // chkVM
-            // 
-            this.chkVM.AutoSize = true;
-            this.chkVM.Location = new System.Drawing.Point(95, 46);
-            this.chkVM.Name = "chkVM";
-            this.chkVM.Size = new System.Drawing.Size(105, 17);
-            this.chkVM.TabIndex = 4;
-            this.chkVM.Text = "Virtual Machine?";
-            this.chkVM.UseVisualStyleBackColor = true;
             // 
             // AFKApplet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(264, 77);
-            this.Controls.Add(this.chkVM);
-            this.Controls.Add(this.btnAddDevice);
-            this.Controls.Add(this.btnETA3);
-            this.Controls.Add(this.btnETA2);
-            this.Controls.Add(this.btnETA1);
+            this.ClientSize = new System.Drawing.Size(266, 184);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "AFKApplet";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AFK Applet";
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnAddDevice;
+        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnETA1;
+        private System.Windows.Forms.CheckBox chkVM;
         private System.Windows.Forms.Button btnETA2;
         private System.Windows.Forms.Button btnETA3;
-        private System.Windows.Forms.Button btnAddDevice;
-        private System.Windows.Forms.CheckBox chkVM;
     }
 }
 
