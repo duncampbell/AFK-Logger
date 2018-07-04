@@ -156,99 +156,6 @@ namespace WebApplication.ServiceReference1 {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Employee", Namespace="http://schemas.datacontract.org/2004/07/AFKHostedService")]
-    [System.SerializableAttribute()]
-    public partial class Employee : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool AtDeskField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.TimeSpan EtaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NameField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime TimeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool AtDesk {
-            get {
-                return this.AtDeskField;
-            }
-            set {
-                if ((this.AtDeskField.Equals(value) != true)) {
-                    this.AtDeskField = value;
-                    this.RaisePropertyChanged("AtDesk");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.TimeSpan Eta {
-            get {
-                return this.EtaField;
-            }
-            set {
-                if ((this.EtaField.Equals(value) != true)) {
-                    this.EtaField = value;
-                    this.RaisePropertyChanged("Eta");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Name {
-            get {
-                return this.NameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NameField, value) != true)) {
-                    this.NameField = value;
-                    this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime Time {
-            get {
-                return this.TimeField;
-            }
-            set {
-                if ((this.TimeField.Equals(value) != true)) {
-                    this.TimeField = value;
-                    this.RaisePropertyChanged("Time");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Device", Namespace="http://schemas.datacontract.org/2004/07/AFKHostedService")]
     [System.SerializableAttribute()]
     public partial class Device : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -417,6 +324,99 @@ namespace WebApplication.ServiceReference1 {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Employee", Namespace="http://schemas.datacontract.org/2004/07/AFKHostedService")]
+    [System.SerializableAttribute()]
+    public partial class Employee : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool AtDeskField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.TimeSpan EtaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime TimeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool AtDesk {
+            get {
+                return this.AtDeskField;
+            }
+            set {
+                if ((this.AtDeskField.Equals(value) != true)) {
+                    this.AtDeskField = value;
+                    this.RaisePropertyChanged("AtDesk");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.TimeSpan Eta {
+            get {
+                return this.EtaField;
+            }
+            set {
+                if ((this.EtaField.Equals(value) != true)) {
+                    this.EtaField = value;
+                    this.RaisePropertyChanged("Eta");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Time {
+            get {
+                return this.TimeField;
+            }
+            set {
+                if ((this.TimeField.Equals(value) != true)) {
+                    this.TimeField = value;
+                    this.RaisePropertyChanged("Time");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService", CallbackContract=typeof(WebApplication.ServiceReference1.IServiceCallback))]
     public interface IService {
@@ -452,10 +452,10 @@ namespace WebApplication.ServiceReference1 {
         System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> GetEntriesForAlice();
+        void GetEntriesForAlice();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync();
+        System.Threading.Tasks.Task GetEntriesForAliceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
         string EntryOutput(WebApplication.ServiceReference1.DataBaseEntry str);
@@ -463,17 +463,17 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
         System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        bool AddEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        System.Threading.Tasks.Task AddServiceEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        bool AddHistoricalLoggingEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        void AddAppletEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        System.Threading.Tasks.Task AddAppletEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
         bool AddDevice(WebApplication.ServiceReference1.Device device);
@@ -487,6 +487,12 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
         System.Threading.Tasks.Task<bool> AddUserAsync(WebApplication.ServiceReference1.User user);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        bool RegisterClient(string deviceID, bool service);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
         
@@ -499,6 +505,12 @@ namespace WebApplication.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/SendResult", ReplyAction="http://tempuri.org/IService/SendResultResponse")]
         void SendResult(string test);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
+        void FinishDataBaseEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/CreateEmployeeTable", ReplyAction="http://tempuri.org/IService/CreateEmployeeTableResponse")]
+        void CreateEmployeeTable(System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> employees);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -569,11 +581,11 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.RemainingTimeAsync(entry);
         }
         
-        public System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> GetEntriesForAlice() {
-            return base.Channel.GetEntriesForAlice();
+        public void GetEntriesForAlice() {
+            base.Channel.GetEntriesForAlice();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
+        public System.Threading.Tasks.Task GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
         }
         
@@ -585,20 +597,20 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.EntryOutputAsync(str);
         }
         
-        public bool AddEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntry(entry);
+        public void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddServiceEntry(entry);
         }
         
-        public System.Threading.Tasks.Task<bool> AddEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntryAsync(entry);
+        public System.Threading.Tasks.Task AddServiceEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddServiceEntryAsync(entry);
         }
         
-        public bool AddHistoricalLoggingEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntry(entry);
+        public void AddAppletEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddAppletEntry(entry);
         }
         
-        public System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntryAsync(entry);
+        public System.Threading.Tasks.Task AddAppletEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddAppletEntryAsync(entry);
         }
         
         public bool AddDevice(WebApplication.ServiceReference1.Device device) {
@@ -615,6 +627,14 @@ namespace WebApplication.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> AddUserAsync(WebApplication.ServiceReference1.User user) {
             return base.Channel.AddUserAsync(user);
+        }
+        
+        public bool RegisterClient(string deviceID, bool service) {
+            return base.Channel.RegisterClient(deviceID, service);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service) {
+            return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
         public string DBTest() {

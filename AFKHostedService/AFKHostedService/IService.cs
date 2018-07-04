@@ -28,8 +28,8 @@ namespace AFKHostedService
         [OperationContract]
         TimeSpan RemainingTime(DataBaseEntry entry);
 
-        [OperationContract]
-        Task<List<Employee>> GetEntriesForAlice();
+        [OperationContract(IsOneWay =true)]
+        void GetEntriesForAlice();
 
         [OperationContract]
         string EntryOutput(DataBaseEntry str);
@@ -62,6 +62,9 @@ namespace AFKHostedService
 
         [OperationContract]
         void FinishDataBaseEntry(DataBaseEntry entry);
+
+        [OperationContract]
+        void CreateEmployeeTable(List<Employee> employees);
     }
 
     [DataContract]

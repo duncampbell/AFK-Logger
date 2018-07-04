@@ -80,15 +80,13 @@
   </xs:element>
   <xs:element name="GetEntriesForAliceResponse">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="GetEntriesForAliceResult" nillable="true" type="q7:ArrayOfEmployee" />
-      </xs:sequence>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="EntryOutput">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="str" nillable="true" type="q8:DataBaseEntry" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="str" nillable="true" type="q7:DataBaseEntry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -99,38 +97,24 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="AddEntry">
+  <xs:element name="AddServiceEntry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q8:DataBaseEntry" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddAppletEntry">
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q9:DataBaseEntry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="AddEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="AddEntryResult" type="xs:boolean" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="AddHistoricalLoggingEntry">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q10:DataBaseEntry" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="AddHistoricalLoggingEntryResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="AddHistoricalLoggingEntryResult" type="xs:boolean" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
   <xs:element name="AddDevice">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="device" nillable="true" type="q11:Device" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="device" nillable="true" type="q10:Device" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -144,7 +128,7 @@
   <xs:element name="AddUser">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="user" nillable="true" type="q12:User" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="user" nillable="true" type="q11:User" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -152,6 +136,21 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="AddUserResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RegisterClient">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="deviceID" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="service" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RegisterClientResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RegisterClientResult" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -175,6 +174,30 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="SendResultResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FinishDataBaseEntry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q12:DataBaseEntry" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FinishDataBaseEntryResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateEmployeeTable">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="employees" nillable="true" type="q13:ArrayOfEmployee" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateEmployeeTableResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

@@ -117,7 +117,7 @@ namespace AFKHostedService
         }
         
         //Returns list of all employees constructed from the last DataBaseEntry associated with their UserID
-        public async Task<List<Employee>> GetEntriesForAlice()
+        public async void  GetEntriesForAlice()
         {
             List<Employee> ret = new List<Employee>();
 
@@ -166,7 +166,8 @@ namespace AFKHostedService
                 ret.Add(error);
             }
 
-            return ret;
+            IMyContractCallback cb = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
+            cb.CreateEmployeeTable(ret);
 
         }
 
@@ -188,6 +189,7 @@ namespace AFKHostedService
                         {
                             //The applet then calls the AddAppletEntry method to complete the record
                             client.Value.FinishDataBaseEntry(entry);
+                            client.Value.SendResult("");
                         }
                         catch
                         {

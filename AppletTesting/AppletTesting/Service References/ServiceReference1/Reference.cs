@@ -16,28 +16,28 @@ namespace AppletTesting.ServiceReference1 {
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetAllEntries();
+        AFKWindowsService.ServiceReference1.DataBaseEntry[] GetAllEntries();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetAllEntriesAsync();
+        System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetAllEntriesAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesOfUser(string UserID);
+        AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesOfUser(string UserID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesOfUserAsync(string UserID);
+        System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesOfUserAsync(string UserID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end);
+        AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesBetween(System.DateTime start, System.DateTime end);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end);
+        System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end);
+        AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end);
+        System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
         System.TimeSpan RemainingTime(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
@@ -46,10 +46,10 @@ namespace AppletTesting.ServiceReference1 {
         System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee> GetEntriesForAlice();
+        AFKWindowsService.ServiceReference1.Employee[] GetEntriesForAlice();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee>> GetEntriesForAliceAsync();
+        System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.Employee[]> GetEntriesForAliceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
         string EntryOutput(AFKWindowsService.ServiceReference1.DataBaseEntry str);
@@ -132,35 +132,35 @@ namespace AppletTesting.ServiceReference1 {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetAllEntries() {
+        public AFKWindowsService.ServiceReference1.DataBaseEntry[] GetAllEntries() {
             return base.Channel.GetAllEntries();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetAllEntriesAsync() {
+        public System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetAllEntriesAsync() {
             return base.Channel.GetAllEntriesAsync();
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesOfUser(string UserID) {
+        public AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesOfUser(string UserID) {
             return base.Channel.GetEntriesOfUser(UserID);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesOfUserAsync(string UserID) {
+        public System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesOfUserAsync(string UserID) {
             return base.Channel.GetEntriesOfUserAsync(UserID);
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end) {
+        public AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesBetween(System.DateTime start, System.DateTime end) {
             return base.Channel.GetEntriesBetween(start, end);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end) {
+        public System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end) {
             return base.Channel.GetEntriesBetweenAsync(start, end);
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end) {
+        public AFKWindowsService.ServiceReference1.DataBaseEntry[] GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end) {
             return base.Channel.GetEntriesBetweenForUser(UserID, start, end);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end) {
+        public System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.DataBaseEntry[]> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end) {
             return base.Channel.GetEntriesBetweenForUserAsync(UserID, start, end);
         }
         
@@ -172,11 +172,11 @@ namespace AppletTesting.ServiceReference1 {
             return base.Channel.RemainingTimeAsync(entry);
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee> GetEntriesForAlice() {
+        public AFKWindowsService.ServiceReference1.Employee[] GetEntriesForAlice() {
             return base.Channel.GetEntriesForAlice();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
+        public System.Threading.Tasks.Task<AFKWindowsService.ServiceReference1.Employee[]> GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
         }
         

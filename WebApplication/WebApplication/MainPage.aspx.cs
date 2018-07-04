@@ -10,10 +10,12 @@ using System.ServiceModel;
 
 namespace WebApplication
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,ConcurrencyMode =ConcurrencyMode.Multiple)]
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
         DataTable dt;
+        InstanceContext iC;
         List<DataBaseEntry> Entries;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
         List<Employee> employees;
@@ -22,9 +24,9 @@ namespace WebApplication
         {
             
             // MainPage test = new MainPage();
-            InstanceContext context = new InstanceContext(this);
-            Proxy = new ServiceReference1.ServiceClient(context);
-            CreateEmployeeTable();
+            iC = new InstanceContext(this);
+            Proxy = new ServiceReference1.ServiceClient(iC);
+            CreateEmployeeTable(new List<Employee>());
 
             if (!IsPostBack)
             {
@@ -36,14 +38,16 @@ namespace WebApplication
                 ViewState["TimeEnd"] = new DateTime();
                 ViewState["SortOn"] = "Time of Event";
                 ViewState["TypeSort"] = "Descending";
+
+                Proxy.RegisterClient("web", false);
             }
             tableSetUp();
             // PreviousPage.Enabled = false;
         }
 
-        public void CreateEmployeeTable()
+        public void CreateEmployeeTable(List<Employee> employees)
         {
-            employees = Proxy.GetEntriesForAlice();
+            this.employees = employees;
             DataTable emp = new DataTable();
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
@@ -209,8 +213,9 @@ namespace WebApplication
 
         public void SendResult(string test)
         {
-            CreateEmployeeTable();
+            Proxy.GetEntriesForAliceAsync();
             tableSetUp();
+            Response.Redirect(Request.RawUrl);
         }
 
         protected void SearchUser_Click(object sender, EventArgs e)
@@ -340,6 +345,9 @@ namespace WebApplication
             PageNavigation.ActiveViewIndex = index;
         }
 
-
+        public void FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //Ignore
+        }
     }
 }

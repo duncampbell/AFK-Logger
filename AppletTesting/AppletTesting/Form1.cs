@@ -64,7 +64,7 @@ namespace AppletTesting
 
         void ServiceReference1.IServiceCallback.SendResult(string test)
         {
-            
+            //Ignore
         }
 
         private async void allETABtn_Click(object sender, EventArgs e)
@@ -102,7 +102,7 @@ namespace AppletTesting
 
 
                 //Send to API
-                await c.AddAppletEntryAsync(dBE);
+                await c.AddServiceEntryAsync(dBE);
                 //recentEntry = true;
             }
             catch (Exception ex)

@@ -220,9 +220,6 @@
     <Content Include="Service References\ServiceReference1\WebApplication.ServiceReference1.DataBaseEntry.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Service References\ServiceReference1\WebApplication.ServiceReference1.Employee.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
