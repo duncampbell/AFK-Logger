@@ -8,14 +8,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.ServiceModel;
+using System.Security.Principal;
+using System.DirectoryServices;
+using AFKWindowsService.ServiceReference1;
+using System.Diagnostics;
 
 namespace AppletTesting
 {
-    public partial class AFKApplet : Form
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    public partial class AFKApplet : Form, ServiceReference1.IServiceCallback
     {
         string deviceID;
         string userID;
+        InstanceContext iC;
+        ServiceReference1.ServiceClient c;
 
+        bool recentEntry = false;
+
+        TimeSpan ETA;
         TimeSpan ETA1;
         TimeSpan ETA2;
         TimeSpan ETA3;
@@ -23,90 +34,110 @@ namespace AppletTesting
         public AFKApplet()
         {
             InitializeComponent();
-            deviceID = System.Environment.MachineName;
-            userID = System.Environment.UserName;
+            deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
+            userID = WindowsIdentity.GetCurrent().User.AccountDomainSid.ToString();
 
-            ETA1 = new TimeSpan();
-            ETA2 = new TimeSpan();
-            ETA3 = new TimeSpan();
+            iC = new InstanceContext(this);
+            c = new ServiceReference1.ServiceClient(iC);
+            c.RegisterClient(deviceID, false);
+
+
+
+            ETA1 = new TimeSpan(1,0,0);
+            ETA2 = new TimeSpan(2,0,0);
+            ETA3 = new TimeSpan(3,0,0);
         }
 
-        private async void btnETA1_Click(object sender, EventArgs e)
+        //Assigns ETA and UserID to DataBaseEntry and returns it
+        public  void FinishDataBaseEntry(DataBaseEntry entry)
         {
-            using(ServiceClient c = new ServiceClient())
+            //Confirms deviceID is correct and prevents duplicate entry
+            if (this.deviceID == entry.DeviceID && !recentEntry)
             {
-                try
-                {
-                    DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "SessionLock";
-                    dBE.UserID = userID;
-                    dBE.DeviceID = deviceID;
-                    dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = false;
-                    dBE.RemoteAccess = false;
-                    dBE.ETA = ETA1;
+                entry.UserID = this.userID;
+                entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
+                recentEntry = false;
+            }
+            c.AddAppletEntryAsync(entry);
 
-                    await c.AddEntryAsync(dBE);
-                }
-                catch (Exception)
-                {
+        }
 
-                    throw;
-                }
+        void ServiceReference1.IServiceCallback.SendResult(string test)
+        {
+            
+        }
+
+        private async void allETABtn_Click(object sender, EventArgs e)
+        {
+            //Determine ETA
+            switch (((Button)sender).Text)
+            {
+                case "ETA 1":
+                    ETA = ETA1;
+                    break;
+                case "ETA 2":
+                    ETA = ETA2;
+                    break;
+                case "ETA 3":
+                    ETA = ETA3;
+                    break;
+                default:
+                    //TO DO: Think of best default
+                    break;
             }
 
-        }
 
-        private async void btnETA2_Click(object sender, EventArgs e)
-        {
+            //Create device and send to API
             try
             {
-                using (ServiceClient c = new ServiceClient())
-                {
-                    DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = "SessionLock";
-                    dBE.UserID = userID;
-                    dBE.DeviceID = deviceID;
-                    dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = false;
-                    dBE.RemoteAccess = false;
-                    dBE.ETA = ETA2;
+                //Create device
+                DataBaseEntry dBE = new DataBaseEntry();
+                dBE.EventType = "SessionLock";
+                dBE.UserID = userID;
+                dBE.DeviceID = deviceID;
+                dBE.TimeOfEvent = DateTime.Now;
+                dBE.AutomaticLock = false;
+                dBE.RemoteAccess = false;
+                dBE.ETA = ETA;
 
-                    await c.AddEntryAsync(dBE);
-                }
 
+                //Send to API
+                await c.AddAppletEntryAsync(dBE);
+                //recentEntry = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                MessageBox.Show("Program encountered the following error: " + ex.Message,"Progam Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
+            //TODO: add lock method
+        }
+
+        private void btnAddDevice_Click(object sender, EventArgs e)
+        {
+            Device d = new Device();
+            d.DeviceID = deviceID;
+            d.DeviceName = Environment.MachineName;
+            d.UserID = userID;
+            d.UserName = Environment.UserName;
+            d.VM = chkVM.Checked;
+
+            using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
+            {
+                if (c.AddDevice(d))
+                {
+                    MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID,"Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Device not added, either due to an error or because it already exists","Device Not Added",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                }
             }
         }
 
-        private async void btnETA3_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            using (ServiceClient c = new ServiceClient())
-                try
-                {
-                    {
-                        DataBaseEntry dBE = new DataBaseEntry();
-                        dBE.EventType = "SessionLock";
-                        dBE.UserID = userID;
-                        dBE.DeviceID = deviceID;
-                        dBE.TimeOfEvent = DateTime.Now;
-                        dBE.AutomaticLock = false;
-                        dBE.RemoteAccess = false;
-                        dBE.ETA = ETA3;
-
-                        await c.AddEntryAsync(dBE);
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
+            splitContainer1.Panel1Collapsed = true;
         }
     }
 }

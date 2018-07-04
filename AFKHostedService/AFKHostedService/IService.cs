@@ -34,12 +34,11 @@ namespace AFKHostedService
         [OperationContract]
         string EntryOutput(DataBaseEntry str);
 
-        [OperationContract]
-        Task<bool> AddEntry(DataBaseEntry entry);
+        [OperationContract(IsOneWay =true)]
+        void AddServiceEntry(DataBaseEntry entry);
 
-        //The windows service calls this to attempt to assign user data to a logon
-        [OperationContract]
-        Task<bool> AddHistoricalLoggingEntry(DataBaseEntry entry);
+        [OperationContract(IsOneWay = true)]
+        void AddAppletEntry(DataBaseEntry entry);
 
         [OperationContract]
         Task<bool> AddDevice(Device device);
@@ -48,14 +47,21 @@ namespace AFKHostedService
         Task<bool> AddUser(User user);
 
         [OperationContract]
+        bool RegisterClient(string deviceID, bool service);
+
+        [OperationContract]
         string DBTest();
 
     }
+
 
     public interface IMyContractCallback
     {
         [OperationContract]
         void SendResult(string test);
+
+        [OperationContract]
+        void FinishDataBaseEntry(DataBaseEntry entry);
     }
 
     [DataContract]

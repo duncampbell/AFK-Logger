@@ -354,7 +354,7 @@ namespace AFKWindowsService.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService", CallbackContract=typeof(AFKWindowsService.ServiceReference1.IServiceCallback))]
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
@@ -399,11 +399,17 @@ namespace AFKWindowsService.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
         System.Threading.Tasks.Task<string> EntryOutputAsync(AFKWindowsService.ServiceReference1.DataBaseEntry str);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        bool AddEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        void AddServiceEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        System.Threading.Tasks.Task AddServiceEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        void AddAppletEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        System.Threading.Tasks.Task AddAppletEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
         bool AddDevice(AFKWindowsService.ServiceReference1.Device device);
@@ -417,6 +423,12 @@ namespace AFKWindowsService.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
         System.Threading.Tasks.Task<bool> AddUserAsync(AFKWindowsService.ServiceReference1.User user);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        bool RegisterClient(string deviceID, bool service);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
         
@@ -425,30 +437,41 @@ namespace AFKWindowsService.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/SendResult", ReplyAction="http://tempuri.org/IService/SendResultResponse")]
+        void SendResult(string test);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
+        void FinishDataBaseEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IServiceChannel : AFKWindowsService.ServiceReference1.IService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceClient : System.ServiceModel.ClientBase<AFKWindowsService.ServiceReference1.IService>, AFKWindowsService.ServiceReference1.IService {
+    public partial class ServiceClient : System.ServiceModel.DuplexClientBase<AFKWindowsService.ServiceReference1.IService>, AFKWindowsService.ServiceReference1.IService {
         
-        public ServiceClient() {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public ServiceClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public ServiceClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry> GetAllEntries() {
@@ -507,12 +530,20 @@ namespace AFKWindowsService.ServiceReference1 {
             return base.Channel.EntryOutputAsync(str);
         }
         
-        public bool AddEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntry(entry);
+        public void AddServiceEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddServiceEntry(entry);
         }
         
-        public System.Threading.Tasks.Task<bool> AddEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntryAsync(entry);
+        public System.Threading.Tasks.Task AddServiceEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddServiceEntryAsync(entry);
+        }
+        
+        public void AddAppletEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddAppletEntry(entry);
+        }
+        
+        public System.Threading.Tasks.Task AddAppletEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddAppletEntryAsync(entry);
         }
         
         public bool AddDevice(AFKWindowsService.ServiceReference1.Device device) {
@@ -529,6 +560,14 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> AddUserAsync(AFKWindowsService.ServiceReference1.User user) {
             return base.Channel.AddUserAsync(user);
+        }
+        
+        public bool RegisterClient(string deviceID, bool service) {
+            return base.Channel.RegisterClient(deviceID, service);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service) {
+            return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
         public string DBTest() {
