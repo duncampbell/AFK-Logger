@@ -11,6 +11,7 @@ using System.ServiceModel;
 namespace WebApplication
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,ConcurrencyMode =ConcurrencyMode.Multiple)]
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
@@ -41,7 +42,7 @@ namespace WebApplication
 
                 Proxy.RegisterClient("web", false);
             }
-            tableSetUp();
+            //tableSetUp();
             // PreviousPage.Enabled = false;
         }
 
@@ -74,6 +75,7 @@ namespace WebApplication
             }
             employeeGrid.DataSource = emp;
             employeeGrid.DataBind();
+            //TODO: Refresh table
         }
 
         public void tableSetUp()
@@ -211,11 +213,10 @@ namespace WebApplication
             
         }
 
+        //Causes Alice's page to reload data
         public void SendResult(string test)
         {
             Proxy.GetEntriesForAliceAsync();
-            tableSetUp();
-            Response.Redirect(Request.RawUrl);
         }
 
         protected void SearchUser_Click(object sender, EventArgs e)
@@ -340,7 +341,7 @@ namespace WebApplication
 
         protected void StatusMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
-            
+            Proxy.GetEntriesForAliceAsync();
             int index = Int32.Parse(e.Item.Value);
             PageNavigation.ActiveViewIndex = index;
         }

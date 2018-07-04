@@ -46,25 +46,27 @@ namespace AFKHostedService
         [OperationContract]
         Task<bool> AddUser(User user);
 
-        [OperationContract]
-        bool RegisterClient(string deviceID, bool service);
+        [OperationContract(IsOneWay = true)]
+        void RegisterClient(string deviceID, bool service);
 
         [OperationContract]
         string DBTest();
 
     }
 
-
     public interface IMyContractCallback
     {
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void SendResult(string test);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void FinishDataBaseEntry(DataBaseEntry entry);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void CreateEmployeeTable(List<Employee> employees);
+
+        [OperationContract(IsOneWay = true)]
+        void TableSetup(List<DataBaseEntry> entries);
     }
 
     [DataContract]

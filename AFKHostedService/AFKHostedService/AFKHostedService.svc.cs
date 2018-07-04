@@ -166,8 +166,7 @@ namespace AFKHostedService
                 ret.Add(error);
             }
 
-            IMyContractCallback cb = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
-            cb.CreateEmployeeTable(ret);
+            clients["web-Applet"].CreateEmployeeTable(ret);
 
         }
 
@@ -339,9 +338,8 @@ namespace AFKHostedService
             }
         }
 
-        public bool RegisterClient(string deviceID, bool service)
+        public void RegisterClient(string deviceID, bool service)
         {
-            bool success = false;
             //Generate unique clientID based on device + whether client is service or applet
             string clientID = deviceID;
             clientID += service ? "-Service" : "-Applet";
@@ -359,7 +357,6 @@ namespace AFKHostedService
                             clients.Remove(clientID);
                         }
                         clients.Add(clientID,callback);
-                        success = true;
                     }
                 }
                 catch
@@ -367,7 +364,6 @@ namespace AFKHostedService
 
                 }
             }
-            return success;
         }
     }
 }

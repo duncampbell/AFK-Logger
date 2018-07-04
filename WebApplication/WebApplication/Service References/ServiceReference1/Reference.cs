@@ -451,10 +451,10 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
         System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/GetEntriesForAlice")]
         void GetEntriesForAlice();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/GetEntriesForAlice")]
         System.Threading.Tasks.Task GetEntriesForAliceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
@@ -487,11 +487,11 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
         System.Threading.Tasks.Task<bool> AddUserAsync(WebApplication.ServiceReference1.User user);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
-        bool RegisterClient(string deviceID, bool service);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/RegisterClient")]
+        void RegisterClient(string deviceID, bool service);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
-        System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/RegisterClient")]
+        System.Threading.Tasks.Task RegisterClientAsync(string deviceID, bool service);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
@@ -503,13 +503,13 @@ namespace WebApplication.ServiceReference1 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IServiceCallback {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/SendResult", ReplyAction="http://tempuri.org/IService/SendResultResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/SendResult")]
         void SendResult(string test);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/FinishDataBaseEntry")]
         void FinishDataBaseEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/CreateEmployeeTable", ReplyAction="http://tempuri.org/IService/CreateEmployeeTableResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/CreateEmployeeTable")]
         void CreateEmployeeTable(System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> employees);
     }
     
@@ -629,11 +629,11 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.AddUserAsync(user);
         }
         
-        public bool RegisterClient(string deviceID, bool service) {
-            return base.Channel.RegisterClient(deviceID, service);
+        public void RegisterClient(string deviceID, bool service) {
+            base.Channel.RegisterClient(deviceID, service);
         }
         
-        public System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service) {
+        public System.Threading.Tasks.Task RegisterClientAsync(string deviceID, bool service) {
             return base.Channel.RegisterClientAsync(deviceID, service);
         }
         

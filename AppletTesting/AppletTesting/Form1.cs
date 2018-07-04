@@ -17,6 +17,7 @@ using System.Diagnostics;
 namespace AppletTesting
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
     public partial class AFKApplet : Form, ServiceReference1.IServiceCallback
     {
         string deviceID;
@@ -137,7 +138,12 @@ namespace AppletTesting
 
         private void button1_Click(object sender, EventArgs e)
         {
-            splitContainer1.Panel1Collapsed = true;
+            splitContainer1.Panel2Collapsed = splitContainer1.Panel2Collapsed?false:true;
+        }
+
+        public void CreateEmployeeTable(Employee[] employees)
+        {
+            //Ignore
         }
     }
 }
