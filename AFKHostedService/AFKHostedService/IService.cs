@@ -85,25 +85,25 @@ namespace AFKHostedService
             eta = x.ETA;
             time = x.TimeOfEvent;
         }
-
+        [DataMember]
         public string Name
         {
             get { return name; }
             set { name = value; }
         }
-
+        [DataMember]
         public bool AtDesk
         {
             get { return atDesk; }
             set { atDesk = value; }
         }
-
+        [DataMember]
         public TimeSpan Eta
         {
             get { return eta; }
             set { eta = value; }
         }
-
+        [DataMember]
         public DateTime Time
         {
             get { return time; }
