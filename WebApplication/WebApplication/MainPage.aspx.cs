@@ -14,7 +14,7 @@ namespace WebApplication
     {
         ServiceReference1.ServiceClient Proxy;
         DataTable dt;
-        List<DataBaseEntry> Entries;
+        //List<DataBaseEntry> Entries;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
         List<Employee> employees;
 
@@ -28,17 +28,12 @@ namespace WebApplication
 
             if (!IsPostBack)
             {
-                
                 this.StatusMenu.Items[0].Selected = true;
-                ViewState["State"] = "Normal";
-                ViewState["SearchName"] = "";
-                ViewState["TimeStart"] = new DateTime();
-                ViewState["TimeEnd"] = new DateTime();
                 ViewState["SortOn"] = "Time of Event";
                 ViewState["TypeSort"] = "Descending";
+                ViewState["Entries"] = Proxy.GetAllEntries();
             }
             tableSetUp();
-            // PreviousPage.Enabled = false;
         }
 
         public void CreateEmployeeTable()
@@ -74,9 +69,9 @@ namespace WebApplication
 
         public void tableSetUp()
         {
-            if ((string)(ViewState["State"]) == ("Normal"))
+           /* if ((string)(ViewState["State"]) == ("Normal"))
             {
-                Entries = Proxy.GetAllEntries();
+                Entries = (List<DataBaseEntry>)ViewState["Entries"];//Proxy.GetAllEntries();
             }
             else if ((string)(ViewState["State"]) == "SearchName")
             {
@@ -90,6 +85,8 @@ namespace WebApplication
             {
                 Entries = Proxy.GetEntriesBetweenForUser((string)(ViewState["SearchName"]), (DateTime)ViewState["TimeStart"], (DateTime)ViewState["TimeEnd"]);
             }
+            */
+            //
             checkOrdering();
             CreatingGrid();
             FillGrid();
@@ -98,7 +95,6 @@ namespace WebApplication
         public void CreatingGrid()
         {
             dt = new DataTable();
-
             dt.Columns.Add("Event Type");
             dt.Columns.Add("User ID");
             dt.Columns.Add("Device ID");
@@ -111,7 +107,7 @@ namespace WebApplication
 
         public void FillGrid()
         {
-
+            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
             for (int i = 0; i < Entries.Count; i++)
             {
                 DataRow oItem = dt.NewRow();
@@ -132,6 +128,7 @@ namespace WebApplication
 
         public void checkOrdering()
         {
+            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
             switch (ViewState["SortOn"].ToString())
                 {
                     case "Time of Event":
@@ -204,7 +201,9 @@ namespace WebApplication
                         break;
 
             }
-            
+            ViewState["Entries"] = Entries;
+
+
         }
 
         public void SendResult(string test)
@@ -213,25 +212,23 @@ namespace WebApplication
             tableSetUp();
         }
 
-        protected void SearchUser_Click(object sender, EventArgs e)
+        protected void SearchUser_Click(object sender, EventArgs e) //Change A lot
         {
             startTimeLabel.Text = "";
             endTimeLabel.Text = "";
             string startInput = txtStartTime.Text;
             string endInput = txtEndTime.Text;
             string userName = txtUser.Text;
-            
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+
             if (userName == "" && startInput == "" && endInput == "")//Search Blank
             {
-                ViewState["State"] = "Normal";
-                ViewState["SearchName"] = "";
-                ViewState["TimeStart"] = new DateTime();
-                ViewState["TimeEnd"] = new DateTime();
+                ViewState["Entries"] = Proxy.GetAllEntries();
                 tableSetUp();
             }else if (userName != "" && startInput == "" && endInput == "")//Search Only UserName
             {
-                ViewState["State"] = "SearchName";
-                ViewState["SearchName"] = userName;
+                ViewState["Entries"] = Proxy.GetEntriesOfUser(userName);
                 tableSetUp();
             }else if (userName == "" && (startInput != "" || endInput != ""))//Search Only Time
             {
@@ -242,8 +239,9 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
-                    ViewState["TimeStart"] = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
-                }catch
+                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                }
+                catch
                 {
                     searchable = false;
                     startTimeLabel.Text = "Incorrect Format";
@@ -255,14 +253,15 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
-                    ViewState["TimeEnd"] = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
-                }catch{
+                    end = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                }
+                catch{
                     searchable = false;
                     endTimeLabel.Text = "Incorrect Format";
                 }
                 if (searchable == true)
                 {
-                    ViewState["State"] = "SearchTime";
+                    ViewState["Entries"] = Proxy.GetEntriesBetween(start,end);
                     tableSetUp();
                 }
                 
@@ -277,7 +276,7 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
-                    ViewState["TimeStart"] = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                 } catch
                 {
                     searchable = false;
@@ -290,7 +289,7 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
-                    ViewState["TimeEnd"] = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
+                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                 }catch
                 {
                     searchable = false;
@@ -298,8 +297,7 @@ namespace WebApplication
                 }
                 if (searchable == true)
                 {
-                    ViewState["SearchName"] = userName;
-                    ViewState["State"] = "SearchNameTime";
+                    ViewState["Entries"] = Proxy.GetEntriesBetweenForUser(userName, start, end);
                     tableSetUp();
                 }
             }
@@ -340,6 +338,9 @@ namespace WebApplication
             PageNavigation.ActiveViewIndex = index;
         }
 
-
+        public void FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //Ignore
+        }
     }
 }

@@ -463,17 +463,17 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
         System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        bool AddEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddEntry", ReplyAction="http://tempuri.org/IService/AddEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
+        System.Threading.Tasks.Task AddServiceEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        bool AddHistoricalLoggingEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        void AddAppletEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddHistoricalLoggingEntry", ReplyAction="http://tempuri.org/IService/AddHistoricalLoggingEntryResponse")]
-        System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
+        System.Threading.Tasks.Task AddAppletEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
         bool AddDevice(WebApplication.ServiceReference1.Device device);
@@ -487,6 +487,12 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
         System.Threading.Tasks.Task<bool> AddUserAsync(WebApplication.ServiceReference1.User user);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        bool RegisterClient(string deviceID, bool service);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
+        System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
         
@@ -499,6 +505,9 @@ namespace WebApplication.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/SendResult", ReplyAction="http://tempuri.org/IService/SendResultResponse")]
         void SendResult(string test);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
+        void FinishDataBaseEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -585,20 +594,20 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.EntryOutputAsync(str);
         }
         
-        public bool AddEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntry(entry);
+        public void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddServiceEntry(entry);
         }
         
-        public System.Threading.Tasks.Task<bool> AddEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddEntryAsync(entry);
+        public System.Threading.Tasks.Task AddServiceEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddServiceEntryAsync(entry);
         }
         
-        public bool AddHistoricalLoggingEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntry(entry);
+        public void AddAppletEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            base.Channel.AddAppletEntry(entry);
         }
         
-        public System.Threading.Tasks.Task<bool> AddHistoricalLoggingEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.AddHistoricalLoggingEntryAsync(entry);
+        public System.Threading.Tasks.Task AddAppletEntryAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
+            return base.Channel.AddAppletEntryAsync(entry);
         }
         
         public bool AddDevice(WebApplication.ServiceReference1.Device device) {
@@ -615,6 +624,14 @@ namespace WebApplication.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> AddUserAsync(WebApplication.ServiceReference1.User user) {
             return base.Channel.AddUserAsync(user);
+        }
+        
+        public bool RegisterClient(string deviceID, bool service) {
+            return base.Channel.RegisterClient(deviceID, service);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service) {
+            return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
         public string DBTest() {
