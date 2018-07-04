@@ -5,25 +5,28 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.Linq;
 using System.Security.Principal;
+using System.ServiceModel;
 using System.ServiceProcess;
 
 namespace AFKWindowsService
 {
-    public partial class AFKLogger : ServiceBase
+    public partial class AFKLogger : ServiceBase, ServiceReference1.IServiceCallback
     {
         String deviceID;
 
-        System.Diagnostics.EventLog eL;
+        EventLog eL;
 
         public AFKLogger()
         {
             CanHandleSessionChangeEvent = true;
             InitializeComponent();
 
+            //Get unique device ID, the windows SID
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
-            
 
-            using (ServiceClient c = new ServiceClient())
+            //TESTING: creates device
+            InstanceContext iC = new System.ServiceModel.InstanceContext(this);
+            using (ServiceClient c = new ServiceClient(iC))
             {
                 Device device = new Device();
                 device.DeviceID = deviceID;
@@ -31,11 +34,11 @@ namespace AFKWindowsService
                 device.UserName = Environment.UserName;
                 device.VM = false;
 
-                c.AddDevice(device);
+                //c.AddDevice(device);
             }
 
 
-
+            //TESTING: event log serves as console output
             eL = new EventLog();
             if (!EventLog.SourceExists("MySource"))
             {
@@ -53,24 +56,44 @@ namespace AFKWindowsService
             eL.WriteEntry("Started at " + DateTime.Now.ToShortTimeString());
         }
 
-        protected async override void OnSessionChange(SessionChangeDescription changeDescription)
+        protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            using(ServiceClient c = new ServiceClient())
+            try
             {
-                DataBaseEntry dBE = new DataBaseEntry();
-                dBE.EventType = changeDescription.Reason.ToString();
-                dBE.DeviceID = deviceID;
-                dBE.TimeOfEvent = DateTime.Now;
-                dBE.AutomaticLock = true;
-                dBE.RemoteAccess = System.Windows.Forms.SystemInformation.TerminalServerSession;
+                InstanceContext iC = new InstanceContext(this);
+                using (ServiceClient c = new ServiceClient(iC))
+                {
+                    DataBaseEntry dBE = new DataBaseEntry();
+                    dBE.EventType = changeDescription.Reason.ToString();
+                    dBE.DeviceID = deviceID;
+                    dBE.TimeOfEvent = DateTime.Now;
+                    dBE.AutomaticLock = true;
+                    dBE.RemoteAccess = true;
+                    if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
-                await c.AddEntryAsync(dBE);
-                eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
+                    c.AddServiceEntry(dBE);
+                    eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
+                }
             }
+            catch (Exception e)
+            {
+                eL.WriteEntry(e.Message);
+            }
+
         }
 
         protected override void OnStop()
         {
+        }
+
+        public void SendResult(string test)
+        {
+            //throw new NotImplementedException();
+        }
+
+        void IServiceCallback.FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //Ignore
         }
     }
 }

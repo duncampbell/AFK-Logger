@@ -11,8 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SundryFiles", "SundryFiles"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Applet", "..\AppletTesting\AppletTesting\Applet.csproj", "{4C59E302-A51A-4BA4-B630-893BFA5492C9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F699D2A3-E0FC-4434-A5C5-98885ACA8220} = {F699D2A3-E0FC-4434-A5C5-98885ACA8220}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AFKWindowsService", "..\AFKWindowsService\AFKWindowsService.csproj", "{A9DB222A-04AE-4F6A-B964-AE3FA46D9E08}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F699D2A3-E0FC-4434-A5C5-98885ACA8220} = {F699D2A3-E0FC-4434-A5C5-98885ACA8220}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
