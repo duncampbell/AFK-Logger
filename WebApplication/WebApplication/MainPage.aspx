@@ -64,7 +64,7 @@
                 <asp:View ID="View1" runat="server">
                     
         <br />
-            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 430px; margin-bottom: 7px" Width="225px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
+            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 430px; margin-bottom: 7px" Width="240px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
             &nbsp;
             <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -233,7 +233,18 @@
                     numberOfMonths: 1,
                 });
             </script>
-                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 430px" Width="225px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 430px" Width="240px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <script type="text/javascript">
+                var picker = new Pikaday(
+                {
+                    field: document.getElementById('txtEndTime'),
+                    firstDay: 1,
+                    minDate: new Date('2017-01-01'),
+                    maxDate: new Date('2030-12-31'),
+                    yearRange: [2017, 2030],
+                    numberOfMonths: 1,
+                });
+            </script>
             &nbsp;
             <asp:DropDownList ID="endTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>

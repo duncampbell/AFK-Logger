@@ -18,11 +18,19 @@ namespace UnitTests
             InstanceContext context = new InstanceContext(this);
             ServiceReference1.ServiceClient Proxy = new ServiceReference1.ServiceClient(context);
 
-            Device devSuc = new Device("Device ID", "Device Name", "User ID", "UserName", false);
+            Device devSuc = new Device("a", "a", "a", "a", false);
             bool success = Proxy.AddDevice(devSuc);
             Assert.IsTrue(success);
 
-            Device devFail = new Device("Device ID", "Device Name", "User ID", "UserName", false);
+            devSuc = new Device("b", "b", "b", "b", false);
+            success = Proxy.AddDevice(devSuc);
+            Assert.IsTrue(success);
+
+            devSuc = new Device("b", "b", "b", "b", false);
+            success = Proxy.AddDevice(devSuc);
+            Assert.IsTrue(success);
+
+            Device devFail = new Device("a", "a", "a", "a", false);
             bool failure = Proxy.AddDevice(devFail);
             Assert.IsFalse(failure);
         }
@@ -34,14 +42,26 @@ namespace UnitTests
             ServiceReference1.ServiceClient Proxy = new ServiceReference1.ServiceClient(context);
 
             User devSuc = new User();
-            devSuc.UserID = "User ID";
-            devSuc.UserName = "User Name";
+            devSuc.UserID = "a";
+            devSuc.UserName = "a";
             bool success = Proxy.AddUser(devSuc);
             Assert.IsTrue(success);
 
+            devSuc = new User();
+            devSuc.UserID = "b";
+            devSuc.UserName = "b";
+            success = Proxy.AddUser(devSuc);
+            Assert.IsTrue(success);
+
+            devSuc = new User();
+            devSuc.UserID = "c";
+            devSuc.UserName = "c";
+            success = Proxy.AddUser(devSuc);
+            Assert.IsTrue(success);
+
             User devfail = new User();
-            devfail.UserID = "User ID";
-            devfail.UserName = "User Name";
+            devfail.UserID = "a";
+            devfail.UserName = "a";
             bool fail = Proxy.AddUser(devfail);
             Assert.IsFalse(fail);
         }
@@ -53,11 +73,12 @@ namespace UnitTests
             ServiceReference1.ServiceClient Proxy = new ServiceReference1.ServiceClient(context);
             Proxy.ClearAllDatabases();
 
-            DataBaseEntry dbTest = new DataBaseEntry("Event Type", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            List<DataBaseEntry> dataTest = new List<DataBaseEntry>();
+            DataBaseEntry dbTest = new DataBaseEntry("b", "b", "b", new DateTime(50000), true, false, new TimeSpan(1, 50, 20));
             Proxy.AddAppletEntry(dbTest);
-            dbTest = new DataBaseEntry("Event Type", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            dbTest = new DataBaseEntry("c", "c", "c", new DateTime(55000), false, true, new TimeSpan(8, 50, 20));
             Proxy.AddAppletEntry(dbTest);
-            dbTest = new DataBaseEntry("Event Type1", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan(1, 20, 50));
+            dbTest = new DataBaseEntry("a", "a", "a", new DateTime(60000), false, false, new TimeSpan(1, 20, 50));
             Proxy.AddAppletEntry(dbTest);
 
             Assert.IsTrue(true);
