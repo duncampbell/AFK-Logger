@@ -30,7 +30,7 @@ namespace WebApplication
             {
                 ViewState["Index"] = 0;
                 this.StatusMenu.Items[0].Selected = true;
-                ViewState["SortOn"] = "Time of Event";
+                ViewState["SortOn"] = "TimeOfEvent";
                 ViewState["TypeSort"] = "Descending";
                 ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
             }
@@ -247,7 +247,39 @@ namespace WebApplication
                 ViewState["TypeSort"] = "Ascending";
             }
 
-            ViewState["SortOn"] = e.SortExpression;
+            if(e.SortExpression.Equals("Event Type")){
+                ViewState["SortOn"] = "EventType";
+            }
+
+            if (e.SortExpression.Equals("User ID"))
+            {
+                ViewState["SortOn"] = "UserID";
+            }
+
+            if (e.SortExpression.Equals("Device ID"))
+            {
+                ViewState["SortOn"] = "DeviceID";
+            }
+
+            if (e.SortExpression.Equals("Time of Event"))
+            {
+                ViewState["SortOn"] = "TimeOfEvent";
+            }
+
+            if (e.SortExpression.Equals("Automatic"))
+            {
+                ViewState["SortOn"] = "AutomaticLock";
+            }
+
+            if (e.SortExpression.Equals("Remote"))
+            {
+                ViewState["SortOn"] = "RemoteAccess";
+            }
+
+            if (e.SortExpression.Equals("ETA"))
+            {
+                ViewState["SortOn"] = "ETA";
+            }
             
             tableSetUp();
         }
