@@ -54,7 +54,6 @@ namespace AFKHostedService
 
         [OperationContract]
         void ClearAllDatabases();
-        
 
     }
 

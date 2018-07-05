@@ -10,12 +10,12 @@
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/pikaday.css" rel="stylesheet" />
 </head>
-<body>
-    <form id="form1" runat="server"  >
+<body style ="background-color:skyblue">
+    <form id="form1" runat="server" >
     <div style="margin-left:auto; margin-right:auto; width:1400px;">
     
-        <asp:Panel ID="Panel1" runat="server" BackColor="#6699FF" Height="40px" style="margin-left: 0px" Width="1400px">
-            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px">
+        <asp:Panel ID="Panel1" runat="server" BackColor="#6699FF" Height="40px" style="margin-left: 0px; width:100%;" >
+            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial">
                 <DynamicHoverStyle Font-Bold="True" Font-Italic="False" />
                 <Items>
                     <asp:MenuItem Text="Employee Status" Value="0"></asp:MenuItem>
@@ -40,7 +40,8 @@
                             <asp:AsyncPostBackTrigger ControlID = "updateTimer" />
                         </Triggers>
                         <ContentTemplate>
-                            <asp:GridView ID="employeeGrid" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px">
+                            <asp:GridView ID="employeeGrid" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Arial">
+                                <AlternatingRowStyle BackColor="White" />
                                 <Columns>
                                     <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
                                     <ControlStyle Width="0px" />
@@ -51,8 +52,16 @@
                                     </asp:BoundField>
                                     <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA" />
                                 </Columns>
-                                <SortedAscendingHeaderStyle BackColor="#66FF33" />
-                                <SortedDescendingHeaderStyle BackColor="#993366" />
+                                <EditRowStyle BackColor="#2461BF" />
+                                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#6699FF" Font-Bold="True" ForeColor="White" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <RowStyle BackColor="#EFF3FB" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                                <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                                <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
                             <br />
                         </ContentTemplate>
@@ -404,19 +413,20 @@
             <br />
             <asp:TextBox ID="txtUser" runat="server" style="margin-left: 520px" Width="240px" Height="17px"></asp:TextBox>
             <br />
-            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 520px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="260px" Height="36px" />
+            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 520px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="260px" Height="36px" BackColor="#3366FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
         <br />
         
                     <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
                         <ContentTemplate>
-                            <asp:GridView ID="dataGridView" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="90px" OnSorting="gridView_Sorting" PageSize="20" style="margin-top: 0px" Width="1400px">
+                            <asp:GridView ID="dataGridView" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="90px" OnSorting="gridView_Sorting" PageSize="20" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None">
+                                <AlternatingRowStyle BackColor="White" />
                                 <Columns>
                                     <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
-                                    <ControlStyle Width="0px" />
-                                    <ItemStyle Width="100px" />
+                                    <ItemStyle Width="400px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="User ID" HeaderText="User ID" ReadOnly="True" SortExpression="User ID">
-                                    <ItemStyle Width="400px" />
+                                    <ControlStyle Width="0px" />
+                                    <ItemStyle Width="100px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
                                     <HeaderStyle Width="300px" />
@@ -435,8 +445,16 @@
                                     <ItemStyle Width="100px" />
                                     </asp:BoundField>
                                 </Columns>
-                                <SortedAscendingHeaderStyle BackColor="#66FF33" />
-                                <SortedDescendingHeaderStyle BackColor="#993366" />
+                                <EditRowStyle BackColor="#2461BF" />
+                                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#6699FF" Font-Bold="True" ForeColor="White" />
+                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                <RowStyle BackColor="#EFF3FB" />
+                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                                <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                                <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
                             <br />
                             <asp:Button ID="prevBtn" runat="server" OnClick="prevBtn_Click" style="margin-left: 520px" Text="Previous" Width="130px" />
