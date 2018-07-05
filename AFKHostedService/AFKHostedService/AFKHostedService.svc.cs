@@ -35,8 +35,17 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
+                    var sortProperty = typeof(DataBaseEntry).GetProperty(sortField, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                     //Get all entries
-                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").ToListAsync();    
+                    switch (sortDirection)
+                    {
+                        case "Ascending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                        case "Descending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                    }
                 }
             }
             catch(Exception e)
@@ -57,8 +66,17 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
+                    var sortProperty = typeof(DataBaseEntry).GetProperty(sortField, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                     //Return entries of a specific user
-                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).ToListAsync();
+                    switch (sortDirection)
+                    {
+                        case "Ascending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                        case "Descending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                    }
                 }
             }
             catch(Exception e)
@@ -78,7 +96,16 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    var sortProperty = typeof(DataBaseEntry).GetProperty(sortField, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    switch (sortDirection)
+                    {
+                        case "Ascending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                        case "Descending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                    }
                 }
             }
             catch (Exception e)
@@ -102,7 +129,16 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    var sortProperty = typeof(DataBaseEntry).GetProperty(sortField, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    switch (sortDirection)
+                    {
+                        case "Ascending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                        case "Descending":
+                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            break;
+                    }
                 }
             }
             catch (Exception e)
@@ -166,11 +202,10 @@ namespace AFKHostedService
                 ret.Add(error);
             }
 
-            return ret;
+            return ret.OrderBy(x=>x.Name).ToList();
 
         }
         
-
         public void AddServiceEntry(DataBaseEntry entry)
         {
             //Record log-off events immediately
