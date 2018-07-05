@@ -20,18 +20,32 @@ namespace WebApplication
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
             // MainPage test = new MainPage();
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
+            
             CreateEmployeeTable();
-
+            
             if (!IsPostBack)
             {
+                ViewState["Index"] = 0;
                 this.StatusMenu.Items[0].Selected = true;
                 ViewState["SortOn"] = "Time of Event";
                 ViewState["TypeSort"] = "Descending";
-                ViewState["Entries"] = Proxy.GetAllEntries();
+                ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+            }
+            if ((int)ViewState["Index"] == 0)
+            {
+                prevBtn.Enabled = false;
+            }else
+            {
+                prevBtn.Enabled = true;
+            }
+            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
+            if (Entries.Count < 20)
+            {
+                prevBtn.Enabled = false;
+                nextBtn.Enabled = false;
             }
             tableSetUp();
         }
@@ -69,25 +83,28 @@ namespace WebApplication
 
         public void tableSetUp()
         {
-           /* if ((string)(ViewState["State"]) == ("Normal"))
+            if ((int)ViewState["Index"] == 0)
             {
-                Entries = (List<DataBaseEntry>)ViewState["Entries"];//Proxy.GetAllEntries();
+                prevBtn.Enabled = false;
             }
-            else if ((string)(ViewState["State"]) == "SearchName")
+            else
             {
-                Entries = Proxy.GetEntriesOfUser((string)ViewState["SearchName"]);
+                prevBtn.Enabled = true;
             }
-            else if ((string)(ViewState["State"]) == "SearchTime")
+            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
+            if (Entries.Count < 20)
             {
-                Entries = Proxy.GetEntriesBetween((DateTime)ViewState["TimeStart"], (DateTime)ViewState["TimeEnd"]);
+                prevBtn.Enabled = false;
+                nextBtn.Enabled = false;
+                prevBtn.Visible = false;
+                nextBtn.Visible = false;
             }
-            else if ((string)(ViewState["State"]) == "SearchNameTime")
+            else
             {
-                Entries = Proxy.GetEntriesBetweenForUser((string)(ViewState["SearchName"]), (DateTime)ViewState["TimeStart"], (DateTime)ViewState["TimeEnd"]);
+                nextBtn.Enabled = true;
+                prevBtn.Visible = true;
+                nextBtn.Visible = true;
             }
-            */
-            //
-            checkOrdering();
             CreatingGrid();
             FillGrid();
         }
@@ -108,112 +125,31 @@ namespace WebApplication
         public void FillGrid()
         {
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            for (int i = 0; i < Entries.Count; i++)
+            for (int i = 0; i < Entries.Count && i < 20; i++)
             {
-                DataRow oItem = dt.NewRow();
-                oItem[0] = Entries.ElementAt(i).EventType;
-                oItem[1] = Entries.ElementAt(i).UserID;
-                oItem[2] = Entries.ElementAt(i).DeviceID;
-                oItem[3] = Entries.ElementAt(i).TimeOfEvent;
-                oItem[4] = Entries.ElementAt(i).AutomaticLock;
-                oItem[5] = Entries.ElementAt(i).RemoteAccess;
-                oItem[6] = Entries.ElementAt(i).ETA;
-                dt.Rows.Add(oItem);
+                    DataRow oItem = dt.NewRow();
+                    oItem[0] = Entries.ElementAt(i).EventType;
+                    oItem[1] = Entries.ElementAt(i).UserID;
+                    oItem[2] = Entries.ElementAt(i).DeviceID;
+                    oItem[3] = Entries.ElementAt(i).TimeOfEvent;
+                    oItem[4] = Entries.ElementAt(i).AutomaticLock;
+                    oItem[5] = Entries.ElementAt(i).RemoteAccess;
+                    oItem[6] = Entries.ElementAt(i).ETA;
+                    dt.Rows.Add(oItem);
             }
             
             dataGridView.DataSource = dt;
             dataGridView.DataBind();
-           // dataGridView.Columns[0].ItemStyle.Width = 50;
         }
-
-        public void checkOrdering()
-        {
-            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            switch (ViewState["SortOn"].ToString())
-                {
-                    case "Time of Event":
-                       
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                            {
-                                Entries = Entries.OrderByDescending(o => o.TimeOfEvent.Ticks).ToList();
-                        }else{
-                                Entries = Entries.OrderBy(o => o.TimeOfEvent.Ticks).ToList();
-                        }
-                        break;
-                    case "Event Type":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.EventType).ToList();
-                        }
-                        else
-                        {
-                            Entries = Entries.OrderBy(o => o.EventType).ToList();
-                        }
-                        break;
-                    case "User ID":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.UserID).ToList();
-                        }
-                        else
-                        {
-                            Entries = Entries.OrderBy(o => o.UserID).ToList();
-                        }
-                        break;
-                    case "Device ID":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.DeviceID).ToList();
-                        }
-                        else
-                        {
-                            Entries = Entries.OrderBy(o => o.DeviceID).ToList();
-                        }
-                        break;
-                    case "Automatic":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.AutomaticLock).ToList();
-                        }
-                        else
-                        {
-                            Entries = Entries.OrderBy(o => o.AutomaticLock).ToList();
-                        }
-                        break;
-                    case "Remote":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.RemoteAccess).ToList();
-                        }
-                        else
-                        {
-                            Entries = Entries.OrderBy(o => o.RemoteAccess).ToList();
-                        }
-                        break;
-                    case "ETA":
-                        if (ViewState["TypeSort"].ToString().Equals("Descending"))
-                        {
-                            Entries = Entries.OrderByDescending(o => o.ETA).ToList();
-                        }else
-                        {
-                            Entries = Entries.OrderBy(o => o.ETA).ToList();
-                        }
-                        break;
-
-            }
-            ViewState["Entries"] = Entries;
-
-
-        }
-
+        
         public void SendResult(string test)
         {
-            CreateEmployeeTable();
-            tableSetUp();
+            //Ignore
         }
 
-        protected void SearchUser_Click(object sender, EventArgs e) //Change A lot
+        protected void SearchUser_Click(object sender, EventArgs e)
         {
+            ViewState["Index"] = 0;
             startTimeLabel.Text = "";
             endTimeLabel.Text = "";
             string startInput = txtStartTime.Text;
@@ -224,11 +160,11 @@ namespace WebApplication
 
             if (userName == "" && startInput == "" && endInput == "")//Search Blank
             {
-                ViewState["Entries"] = Proxy.GetAllEntries();
+                ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                 tableSetUp();
             }else if (userName != "" && startInput == "" && endInput == "")//Search Only UserName
             {
-                ViewState["Entries"] = Proxy.GetEntriesOfUser(userName);
+                ViewState["Entries"] = Proxy.GetEntriesOfUser(userName, (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                 tableSetUp();
             }else if (userName == "" && (startInput != "" || endInput != ""))//Search Only Time
             {
@@ -246,7 +182,6 @@ namespace WebApplication
                     searchable = false;
                     startTimeLabel.Text = "Incorrect Format";
                 }
-
                 try
                 {
                     string[] tokens = endInput.Split(' ');
@@ -261,11 +196,9 @@ namespace WebApplication
                 }
                 if (searchable == true)
                 {
-                    ViewState["Entries"] = Proxy.GetEntriesBetween(start,end);
+                    ViewState["Entries"] = Proxy.GetEntriesBetween(start,end, (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     tableSetUp();
                 }
-                
-               
             }
             else if (userName != "" && (startInput != "" || endInput != ""))//Search Time and UserName
             {
@@ -297,7 +230,7 @@ namespace WebApplication
                 }
                 if (searchable == true)
                 {
-                    ViewState["Entries"] = Proxy.GetEntriesBetweenForUser(userName, start, end);
+                    ViewState["Entries"] = Proxy.GetEntriesBetweenForUser(userName, start, end, (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     tableSetUp();
                 }
             }
@@ -305,18 +238,6 @@ namespace WebApplication
 
         }
         
-        protected void dataGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            this.dataGridView.PageIndex = e.NewPageIndex;
-            dataGridView.DataBind();
-        }
-
-        protected void employeeGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            this.employeeGrid.PageIndex = e.NewPageIndex;
-            employeeGrid.DataBind();
-        }
- 
         protected void gridView_Sorting(object sender, GridViewSortEventArgs e)
         {
             if(ViewState["TypeSort"].ToString().Equals("Ascending"))
@@ -341,6 +262,23 @@ namespace WebApplication
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
             //Ignore
+        }
+
+        protected void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            CreateEmployeeTable();
+        }
+
+        protected void nextBtn_Click(object sender, EventArgs e)
+        {
+            ViewState["Index"] = (int)ViewState["Index"] + 20;
+            tableSetUp();
+        }
+
+        protected void prevBtn_Click(object sender, EventArgs e)
+        {
+            ViewState["Index"] = (int)ViewState["Index"] - 20;
+            tableSetUp();
         }
     }
 }

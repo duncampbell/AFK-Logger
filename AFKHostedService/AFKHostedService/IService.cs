@@ -14,16 +14,16 @@ namespace AFKHostedService
     public interface IService
     {
         [OperationContract]
-        Task<List<DataBaseEntry>> GetAllEntries();
+        Task<List<DataBaseEntry>> GetAllEntries(int indexStart, string  sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID);
+        Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end);
+        Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
         TimeSpan RemainingTime(DataBaseEntry entry);
@@ -52,8 +52,11 @@ namespace AFKHostedService
         [OperationContract]
         string DBTest();
 
-    }
+        [OperationContract]
+        void ClearAllDatabases();
+        
 
+    }
 
     public interface IMyContractCallback
     {

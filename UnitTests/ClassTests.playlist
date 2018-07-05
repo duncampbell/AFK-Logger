@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="UnitTests.ClassTests.UserEntryTest" /><Add Test="UnitTests.ClassTests.DeviceEntryTest" /><Add Test="UnitTests.ClassTests.EmployeeEntryTest" /><Add Test="UnitTests.ClassTests.DataBaseEntryTest" /></Playlist>

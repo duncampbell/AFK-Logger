@@ -27,7 +27,7 @@ namespace AFKHostedService
             ds.Initialize();
         }
 
-        public async Task<List<DataBaseEntry>> GetAllEntries()
+        public async Task<List<DataBaseEntry>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
@@ -49,7 +49,7 @@ namespace AFKHostedService
             return ret;
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID)
+        public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
@@ -70,7 +70,7 @@ namespace AFKHostedService
             return ret;
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
@@ -93,7 +93,7 @@ namespace AFKHostedService
 
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end)
+        public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
 
@@ -169,6 +169,7 @@ namespace AFKHostedService
             return ret;
 
         }
+        
 
         public void AddServiceEntry(DataBaseEntry entry)
         {
@@ -366,6 +367,11 @@ namespace AFKHostedService
                 }
             }
             return success;
+        }
+
+        public void ClearAllDatabases()
+        {
+            //throw new NotImplementedException();
         }
     }
 }

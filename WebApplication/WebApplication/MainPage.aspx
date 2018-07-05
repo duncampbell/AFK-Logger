@@ -30,30 +30,43 @@
         
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
                 <asp:View ID="View2" runat="server">
+                    <asp:ScriptManager ID="ScriptManager1" runat="server">
+                    </asp:ScriptManager>
+                    <asp:Timer ID="updateTimer" runat="server" Interval ="3000" OnTick="UpdateTimer_Tick">
+                    </asp:Timer>
+                    <br />
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID = "updateTimer" />
+                        </Triggers>
+                        <ContentTemplate>
+                            <asp:GridView ID="employeeGrid" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px">
+                                <Columns>
+                                    <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
+                                    <ControlStyle Width="0px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" />
+                                    <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
+                                    <HeaderStyle Width="200px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA" />
+                                </Columns>
+                                <SortedAscendingHeaderStyle BackColor="#66FF33" />
+                                <SortedDescendingHeaderStyle BackColor="#993366" />
+                            </asp:GridView>
+                            <br />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                     <br />
                     <br />
-                    <asp:GridView ID="employeeGrid" runat="server" AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="50px"  PageSize="20" style="margin-top: 0px" Width="1400px">
-                        <Columns>
-                            <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
-                            <ControlStyle Width="0px" />
-                            </asp:BoundField>
-                            <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status"></asp:BoundField>
-                            <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
-                            <HeaderStyle Width="200px" />
-                            </asp:BoundField>
-                            <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA"></asp:BoundField>
-                        </Columns>
-                        <SortedAscendingHeaderStyle BackColor="#66FF33" />
-                        <SortedDescendingHeaderStyle BackColor="#993366" />
-                    </asp:GridView>
                     <br />
                 </asp:View>
                 <asp:View ID="View1" runat="server">
                     
         <br />
-            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 420px; margin-bottom: 0px" Width="225px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
+            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 430px; margin-bottom: 7px" Width="225px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
             &nbsp;
-            <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -80,7 +93,7 @@
             <asp:ListItem>23</asp:ListItem>
             <asp:ListItem>24</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -143,7 +156,7 @@
             <asp:ListItem>59</asp:ListItem>
             <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -209,7 +222,6 @@
             &nbsp;
         <asp:Label ID="startTimeLabel" runat="server"></asp:Label>
             <br />
-            <br />
             <script type="text/javascript">
                 var picker = new Pikaday(
                 {
@@ -221,9 +233,9 @@
                     numberOfMonths: 1,
                 });
             </script>
-                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 420px" Width="225px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 430px" Width="225px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
             &nbsp;
-            <asp:DropDownList ID="endTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            <asp:DropDownList ID="endTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -250,7 +262,7 @@
             <asp:ListItem>23</asp:ListItem>
             <asp:ListItem>24</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -313,7 +325,7 @@
             <asp:ListItem>59</asp:ListItem>
             <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 0px" Width="50px">
+            &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -379,54 +391,52 @@
             &nbsp;
         <asp:Label ID="endTimeLabel" runat="server"></asp:Label>
             <br />
-            <script type="text/javascript">
-                var picker = new Pikaday(
-                {
-                    field: document.getElementById('txtEndTime'),
-                    firstDay: 1,
-                    minDate: new Date('2017-01-01'),
-                    maxDate: new Date('2030-12-31'),
-                    yearRange: [2017, 2030],
-                    numberOfMonths: 1,
-                });
-            </script>
+            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 520px" Width="240px" Height="17px"></asp:TextBox>
             <br />
-            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 506px" Width="240px" Height="17px"></asp:TextBox>
-            <br />
-            <br />
-            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 507px; margin-top: 0px;" Text="Search" Width="260px" Height="36px" />
+            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 520px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="260px" Height="36px" />
         <br />
         
+                    <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
+                        <ContentTemplate>
+                            <asp:GridView ID="dataGridView" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="90px" OnSorting="gridView_Sorting" PageSize="20" style="margin-top: 0px" Width="1400px">
+                                <Columns>
+                                    <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
+                                    <ControlStyle Width="0px" />
+                                    <ItemStyle Width="100px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="User ID" HeaderText="User ID" ReadOnly="True" SortExpression="User ID">
+                                    <ItemStyle Width="400px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
+                                    <HeaderStyle Width="300px" />
+                                    <ItemStyle Width="400px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
+                                    <HeaderStyle Width="200px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="Automatic" HeaderText="Automatic" ReadOnly="True" SortExpression="Automatic">
+                                    <ItemStyle Width="50px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="Remote" HeaderText="Remote" ReadOnly="True" SortExpression="Remote">
+                                    <ItemStyle Width="50px" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA">
+                                    <ItemStyle Width="100px" />
+                                    </asp:BoundField>
+                                </Columns>
+                                <SortedAscendingHeaderStyle BackColor="#66FF33" />
+                                <SortedDescendingHeaderStyle BackColor="#993366" />
+                            </asp:GridView>
+                            <br />
+                            <asp:Button ID="prevBtn" runat="server" OnClick="prevBtn_Click" style="margin-left: 520px" Text="Previous" Width="130px" />
+                            <asp:Button ID="nextBtn" runat="server" OnClick="nextBtn_Click" style="margin-left: 4px" Text="Next" Width="130px" />
+                            <br />
+                            <br />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+        
         <br />
-        <asp:GridView ID="dataGridView" runat="server" Height="90px" Width="1400px" AutoPostBack="False" OnSorting="gridView_Sorting" OnPageIndexChanging="dataGridView_PageIndexChanging" AllowPaging="True" AllowSorting="True" PageSize="20" AutoGenerateColumns="False" style="margin-top: 0px">
-            <Columns>
-                <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
-                <ControlStyle Width="0px" />
-                <ItemStyle Width="100px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="User ID" HeaderText="User ID" ReadOnly="True" SortExpression="User ID">
-                <ItemStyle Width="400px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
-                <HeaderStyle Width="300px" />
-                <ItemStyle Width="400px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
-                <HeaderStyle Width="200px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Automatic" HeaderText="Automatic" ReadOnly="True" SortExpression="Automatic">
-                <ItemStyle Width="50px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="Remote" HeaderText="Remote" ReadOnly="True" SortExpression="Remote">
-                <ItemStyle Width="50px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA">
-                <ItemStyle Width="100px" />
-                </asp:BoundField>
-            </Columns>
-            <SortedAscendingHeaderStyle BackColor="#66FF33" />
-            <SortedDescendingHeaderStyle BackColor="#993366" />
-        </asp:GridView>
+                    <br />
         <br />
                 </asp:View>
             </asp:MultiView>
