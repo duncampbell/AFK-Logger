@@ -10,20 +10,20 @@
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/pikaday.css" rel="stylesheet" />
 </head>
-<body style ="background-color:skyblue">
+<body style ="background-color:#174669">
     <form id="form1" runat="server" >
     <div style="margin-left:auto; margin-right:auto; width:1400px;">
     
-        <asp:Panel ID="Panel1" runat="server" BackColor="#6699FF" Height="40px" style="margin-left: 0px; width:100%;" >
-            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial">
+        <asp:Panel ID="Panel1" runat="server" BackColor="#174669" Height="40px" style="margin-left: 0px; width:100%;" >
+            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial" BackColor="#6699FF">
                 <DynamicHoverStyle Font-Bold="True" Font-Italic="False" />
                 <Items>
                     <asp:MenuItem Text="Employee Status" Value="0"></asp:MenuItem>
                     <asp:MenuItem Text="Historical Data" Value="1"></asp:MenuItem>
                 </Items>
-                <StaticHoverStyle BackColor="Blue" ForeColor="White" />
+                <StaticHoverStyle BackColor="#99CCFF" ForeColor="White" />
                 <StaticMenuItemStyle Font-Bold="False" ForeColor="White" Height="40px" HorizontalPadding="60px" />
-                <StaticSelectedStyle BackColor="Blue" ForeColor="White" />
+                <StaticSelectedStyle BackColor="#6699FF" ForeColor="White" />
             </asp:Menu>
         </asp:Panel>
         
@@ -73,7 +73,7 @@
                 <asp:View ID="View1" runat="server">
                     
         <br />
-            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 430px; margin-bottom: 7px" Width="240px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
+            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 450px; margin-bottom: 7px" Width="300px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
             &nbsp;
             <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -242,7 +242,7 @@
                     numberOfMonths: 1,
                 });
             </script>
-                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 430px" Width="240px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 450px" Width="300px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
                     <script type="text/javascript">
                 var picker = new Pikaday(
                 {
@@ -411,9 +411,9 @@
             &nbsp;
         <asp:Label ID="endTimeLabel" runat="server"></asp:Label>
             <br />
-            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 520px" Width="240px" Height="17px"></asp:TextBox>
+            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 550px" Width="300px" Height="17px"></asp:TextBox>
             <br />
-            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 520px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="260px" Height="36px" BackColor="#3366FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
+            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 550px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="320px" Height="36px" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
         <br />
         
                     <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
