@@ -101,6 +101,9 @@ namespace WebApplication
             }else{
                 nextBtn.Enabled = true;
             }
+            int index = (int)ViewState["Index"];
+            int pageNum = (int)((index / 20) + 1);
+            PageNumber.Text = pageNum.ToString();
             CreatingGrid();
             FillGrid();
         }
