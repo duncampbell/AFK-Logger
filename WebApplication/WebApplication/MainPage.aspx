@@ -422,11 +422,11 @@
                                 <AlternatingRowStyle BackColor="White" />
                                 <Columns>
                                     <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
-                                    <ItemStyle Width="400px" />
+                                    <ItemStyle Width="100px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="User ID" HeaderText="User ID" ReadOnly="True" SortExpression="User ID">
                                     <ControlStyle Width="0px" />
-                                    <ItemStyle Width="100px" />
+                                    <ItemStyle Width="400px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
                                     <HeaderStyle Width="300px" />
