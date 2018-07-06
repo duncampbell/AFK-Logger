@@ -41,11 +41,13 @@ namespace AppletTesting
             c = new ServiceReference1.ServiceClient(iC);
             c.RegisterClient(deviceID, false);
 
+            ETA1 = new TimeSpan(0, 1, 0);
+            ETA2 = new TimeSpan(0, 2, 0);
+            ETA3 = new TimeSpan(0, 3, 0);
 
-
-            ETA1 = new TimeSpan(1,0,0);
-            ETA2 = new TimeSpan(2,0,0);
-            ETA3 = new TimeSpan(3,0,0);
+            txtETA1.Text = ETA1.TotalMinutes.ToString();
+            txtETA2.Text = ETA2.TotalMinutes.ToString();
+            txtETA3.Text = ETA3.TotalMinutes.ToString();
         }
 
         //Assigns ETA and UserID to DataBaseEntry and returns it
@@ -73,13 +75,13 @@ namespace AppletTesting
             switch (((Button)sender).Text)
             {
                 case "ETA 1":
-                    ETA = ETA1;
+                    ETA = new TimeSpan(0,int.Parse(txtETA1.Text),0);
                     break;
                 case "ETA 2":
-                    ETA = ETA2;
+                    ETA = new TimeSpan(0, int.Parse(txtETA1.Text), 0);
                     break;
                 case "ETA 3":
-                    ETA = ETA3;
+                    ETA = new TimeSpan(0, int.Parse(txtETA1.Text), 0);
                     break;
                 default:
                     //TO DO: Think of best default
@@ -135,9 +137,10 @@ namespace AppletTesting
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSet_Click(object sender, EventArgs e)
         {
-            splitContainer1.Panel1Collapsed = true;
+            splitContainer1.Panel2Collapsed = splitContainer1.Panel2Collapsed ? false:true;
+            Size = splitContainer1.Panel2Collapsed ? new Size(278,111) : new Size(278,170);
         }
 
         public void RefreshTable(List<Employee> employees)

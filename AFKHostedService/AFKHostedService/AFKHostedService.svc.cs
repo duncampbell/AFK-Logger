@@ -443,7 +443,7 @@ namespace AFKHostedService
             }
         }
 
-        public async Task<bool> AddDevice(Device device)
+        public bool AddDevice(Device device)
         {
             bool success = false;
             //bool flag for the uniqueness of the device to be added
@@ -451,10 +451,10 @@ namespace AFKHostedService
             try
             {
                 //Connect to database
-                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                using (IDocumentSession s = ds.OpenSession())
                 {
                     //Find identical documents
-                     foreach(Device d in await s.Query<Device>("Device_Search").ToListAsync())
+                     foreach(Device d in s.Query<Device>("Device_Search").ToList())
                     {
                         //Set unique false if identical document is found
                         if( d.DeviceID == device.DeviceID && d.UserID == device.UserID)
@@ -465,8 +465,8 @@ namespace AFKHostedService
                      //Add to db if unique
                     if (unique)
                     {
-                        await s.StoreAsync(device);
-                        await s.SaveChangesAsync();
+                        s.Store(device);
+                        s.SaveChanges();
                     }
                 }
                 success = unique;
@@ -478,16 +478,16 @@ namespace AFKHostedService
             return success;
         }
 
-        public async Task<bool> AddUser(User user)
+        public bool AddUser(User user)
         {
             bool success = false;
             try
             {
                 //connect to database
-                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                using (IDocumentSession s = ds.OpenSession())
                 {
-                    await s.StoreAsync(user);
-                    await s.SaveChangesAsync();
+                    s.Store(user);
+                    s.SaveChanges();
                 }
                 success = true;
             }
@@ -588,7 +588,25 @@ namespace AFKHostedService
 
         public void ClearAllDatabases()
         {
-            //throw new NotImplementedException();
+            using (IDocumentSession s = ds.OpenSession())
+            {
+                //Delete DataBaseEntries
+                foreach (var x in s.Query<DataBaseEntry>())
+                {
+                    s.Delete(x);
+                }
+                //Delete Devices
+                foreach (var x in s.Query<Device>())
+                {
+                    s.Delete(x);
+                }
+                //Delete Users
+                foreach (var x in s.Query<User>())
+                {
+                    s.Delete(x);
+                }
+                s.SaveChanges();
+            }
         }
     }
 }

@@ -41,10 +41,10 @@ namespace AFKHostedService
         void AddAppletEntry(DataBaseEntry entry);
 
         [OperationContract]
-        Task<bool> AddDevice(Device device);
+        bool AddDevice(Device device);
 
         [OperationContract]
-        Task<bool> AddUser(User user);
+        bool AddUser(User user);
 
         [OperationContract]
         bool RegisterClient(string deviceID, bool service);
@@ -76,7 +76,7 @@ namespace AFKHostedService
 
         public Employee(DataBaseEntry x)
         {
-            if (x.EventType.Equals("Locked") || x.EventType.Equals("Logged Off") || x.RemoteAccess == true)//Change When We know session names
+            if (x.EventType.Equals("SessionLock") || x.EventType.Equals("SessionLogOff") || x.RemoteAccess == true)//Change When We know session names
             {
                 atDesk = false;
             }

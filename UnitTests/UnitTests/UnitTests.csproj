@@ -76,24 +76,21 @@
     <None Include="app.config" />
     <None Include="Properties\DataSources\AFKHostedService.DataBaseEntry.datasource" />
     <None Include="Properties\DataSources\AFKHostedService.Employee.datasource" />
-    <None Include="Service References\ServiceReference1\AFKHostedService.wsdl" />
-    <None Include="Service References\ServiceReference1\AFKHostedService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService2.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServiceReference1\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServiceReference1\AFKHostedService.disco" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Service References\ServiceReference1\AFKHostedService1.wsdl" />
+    <None Include="Service References\ServiceReference1\AFKHostedService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference1\AFKHostedService31.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference1\AFKHostedService32.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +101,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServiceReference1\AFKHostedService1.disco" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

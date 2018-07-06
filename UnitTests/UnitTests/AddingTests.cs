@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace UnitTests
 {
     [TestClass]
-    public class AddingTests
+    public class AddingTests:IServiceCallback
     {
 
         [TestMethod]
@@ -82,6 +82,16 @@ namespace UnitTests
             Proxy.AddAppletEntry(dbTest);
 
             Assert.IsTrue(true);
+        }
+
+        public void SendResult(string test)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //throw new NotImplementedException();
         }
     }
 }
