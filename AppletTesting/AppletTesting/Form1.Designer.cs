@@ -29,13 +29,15 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnAddDevice = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnSet = new System.Windows.Forms.Button();
             this.btnETA1 = new System.Windows.Forms.Button();
             this.chkVM = new System.Windows.Forms.CheckBox();
             this.btnETA2 = new System.Windows.Forms.Button();
             this.btnETA3 = new System.Windows.Forms.Button();
+            this.txtETA1 = new System.Windows.Forms.TextBox();
+            this.txtETA2 = new System.Windows.Forms.TextBox();
+            this.txtETA3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -44,7 +46,9 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -52,7 +56,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.btnAddDevice);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.btnSet);
             this.splitContainer1.Panel1.Controls.Add(this.btnETA1);
             this.splitContainer1.Panel1.Controls.Add(this.chkVM);
             this.splitContainer1.Panel1.Controls.Add(this.btnETA2);
@@ -60,19 +64,14 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Size = new System.Drawing.Size(266, 184);
-            this.splitContainer1.SplitterDistance = 130;
+            this.splitContainer1.Panel2.Controls.Add(this.txtETA3);
+            this.splitContainer1.Panel2.Controls.Add(this.txtETA2);
+            this.splitContainer1.Panel2.Controls.Add(this.txtETA1);
+            this.splitContainer1.Panel2Collapsed = true;
+            this.splitContainer1.Size = new System.Drawing.Size(271, 140);
+            this.splitContainer1.SplitterDistance = 70;
             this.splitContainer1.TabIndex = 7;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(70, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "label2";
+            this.splitContainer1.TabStop = false;
             // 
             // btnAddDevice
             // 
@@ -84,15 +83,15 @@
             this.btnAddDevice.UseVisualStyleBackColor = true;
             this.btnAddDevice.Click += new System.EventHandler(this.btnAddDevice_Click);
             // 
-            // button1
+            // btnSet
             // 
-            this.button1.Location = new System.Drawing.Point(205, 41);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(46, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnSet.Location = new System.Drawing.Point(205, 41);
+            this.btnSet.Name = "btnSet";
+            this.btnSet.Size = new System.Drawing.Size(46, 23);
+            this.btnSet.TabIndex = 12;
+            this.btnSet.Text = "Set";
+            this.btnSet.UseVisualStyleBackColor = true;
+            this.btnSet.Click += new System.EventHandler(this.btnSet_Click);
             // 
             // btnETA1
             // 
@@ -134,11 +133,32 @@
             this.btnETA3.UseVisualStyleBackColor = true;
             this.btnETA3.Click += new System.EventHandler(this.allETABtn_Click);
             // 
+            // txtETA1
+            // 
+            this.txtETA1.Location = new System.Drawing.Point(12, 18);
+            this.txtETA1.Name = "txtETA1";
+            this.txtETA1.Size = new System.Drawing.Size(74, 20);
+            this.txtETA1.TabIndex = 13;
+            // 
+            // txtETA2
+            // 
+            this.txtETA2.Location = new System.Drawing.Point(94, 18);
+            this.txtETA2.Name = "txtETA2";
+            this.txtETA2.Size = new System.Drawing.Size(75, 20);
+            this.txtETA2.TabIndex = 14;
+            // 
+            // txtETA3
+            // 
+            this.txtETA3.Location = new System.Drawing.Point(176, 18);
+            this.txtETA3.Name = "txtETA3";
+            this.txtETA3.Size = new System.Drawing.Size(75, 20);
+            this.txtETA3.TabIndex = 15;
+            // 
             // AFKApplet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 184);
+            this.ClientSize = new System.Drawing.Size(271, 74);
             this.Controls.Add(this.splitContainer1);
             this.Name = "AFKApplet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -155,13 +175,15 @@
 
         #endregion
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAddDevice;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSet;
         private System.Windows.Forms.Button btnETA1;
         private System.Windows.Forms.CheckBox chkVM;
         private System.Windows.Forms.Button btnETA2;
         private System.Windows.Forms.Button btnETA3;
+        private System.Windows.Forms.TextBox txtETA3;
+        private System.Windows.Forms.TextBox txtETA2;
+        private System.Windows.Forms.TextBox txtETA1;
     }
 }
 
