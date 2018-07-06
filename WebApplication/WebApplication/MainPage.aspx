@@ -413,7 +413,7 @@
             <br />
             <asp:TextBox ID="txtUser" runat="server" style="margin-left: 550px" Width="300px" Height="17px"></asp:TextBox>
             <br />
-            <asp:Button ID="Button1" runat="server" OnClick="SearchUser_Click" style="margin-left: 550px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="320px" Height="36px" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
+            <asp:Button ID="searchBtn" runat="server" OnClick="SearchUser_Click" style="margin-left: 550px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="320px" Height="36px" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
         <br />
         
                     <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
@@ -457,8 +457,8 @@
                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
                             <br />
-                            <asp:Button ID="prevBtn" runat="server" OnClick="prevBtn_Click" style="margin-left: 520px" Text="Previous" Width="130px" />
-                            <asp:Button ID="nextBtn" runat="server" OnClick="nextBtn_Click" style="margin-left: 4px" Text="Next" Width="130px" />
+                            <asp:Button ID="prevBtn" runat="server" OnClick="prevBtn_Click" style="margin-left: 550px" Text="Previous" Width="160px" />
+                            <asp:Button ID="nextBtn" runat="server" OnClick="nextBtn_Click" style="margin-left: 4px" Text="Next" Width="160px" />
                             <br />
                             <br />
                         </ContentTemplate>
