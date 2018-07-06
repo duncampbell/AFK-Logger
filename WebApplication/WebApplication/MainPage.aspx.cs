@@ -35,19 +35,6 @@ namespace WebApplication
                 ViewState["TypeSort"] = "Descending";
                 ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
             }
-            if ((int)ViewState["Index"] == 0)
-            {
-                prevBtn.Enabled = false;
-            }else
-            {
-                prevBtn.Enabled = true;
-            }
-            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            if (Entries.Count < 20)
-            {
-                prevBtn.Enabled = false;
-                nextBtn.Enabled = false;
-            }
             tableSetUp();
         }
 
@@ -90,13 +77,13 @@ namespace WebApplication
                     ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     break;
                 case "SearchName":
-                    Proxy.GetEntriesOfUser((string)ViewState["UserName"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     break;
                 case "SearchTime":
-                    Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     break;
-                case "SearchTimeName":
-                    Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                case "SearchNameTime":
+                    ViewState["Entries"] = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     break;
             }
             if ((int)ViewState["Index"] == 0)
@@ -110,7 +97,6 @@ namespace WebApplication
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
             if (Entries.Count < 20)
             {
-                prevBtn.Enabled = true;
                 nextBtn.Enabled = false;
             }else{
                 nextBtn.Enabled = true;
@@ -170,6 +156,8 @@ namespace WebApplication
 
             if (userName == "" && startInput == "" && endInput == "")//Search Blank
             {
+                ViewState["TypeSort"] = "Descending";
+                ViewState["SortOn"] = "TimeOfEvent";
                 ViewState["State"] = "Normal";
                 tableSetUp();
             }else if (userName != "" && startInput == "" && endInput == "")//Search Only UserName
@@ -186,6 +174,7 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
+                    int hour = Int32.Parse(startTimeHour.Text);
                     start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                     ViewState["StartTime"] = start;
                 }
@@ -200,7 +189,8 @@ namespace WebApplication
                     int day = Int32.Parse(tokens[2]);
                     int month = months[tokens[1]];
                     int year = Int32.Parse(tokens[3]);
-                    end = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                    int hour = Int32.Parse(startTimeHour.Text);
+                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                     ViewState["EndTime"] = end;
                 }
                 catch{
@@ -251,8 +241,6 @@ namespace WebApplication
                     tableSetUp();
                 }
             }
-
-
         }
         
         protected void gridView_Sorting(object sender, GridViewSortEventArgs e)
