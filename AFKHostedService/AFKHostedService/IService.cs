@@ -41,10 +41,10 @@ namespace AFKHostedService
         void AddAppletEntry(DataBaseEntry entry);
 
         [OperationContract]
-        Task<bool> AddDevice(Device device);
+        bool AddDevice(Device device);
 
         [OperationContract]
-        Task<bool> AddUser(User user);
+        bool AddUser(User user);
 
         [OperationContract]
         bool RegisterClient(string deviceID, bool service);
