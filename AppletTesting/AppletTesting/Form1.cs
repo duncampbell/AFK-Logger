@@ -139,5 +139,10 @@ namespace AppletTesting
         {
             splitContainer1.Panel1Collapsed = true;
         }
+
+        public void RefreshTable(List<Employee> employees)
+        {
+            //Ignore
+        }
     }
 }
