@@ -35,9 +35,10 @@
             this.chkVM = new System.Windows.Forms.CheckBox();
             this.btnETA2 = new System.Windows.Forms.Button();
             this.btnETA3 = new System.Windows.Forms.Button();
-            this.txtETA1 = new System.Windows.Forms.TextBox();
-            this.txtETA2 = new System.Windows.Forms.TextBox();
             this.txtETA3 = new System.Windows.Forms.TextBox();
+            this.txtETA2 = new System.Windows.Forms.TextBox();
+            this.txtETA1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -64,6 +65,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.txtETA3);
             this.splitContainer1.Panel2.Controls.Add(this.txtETA2);
             this.splitContainer1.Panel2.Controls.Add(this.txtETA1);
@@ -133,12 +135,12 @@
             this.btnETA3.UseVisualStyleBackColor = true;
             this.btnETA3.Click += new System.EventHandler(this.allETABtn_Click);
             // 
-            // txtETA1
+            // txtETA3
             // 
-            this.txtETA1.Location = new System.Drawing.Point(12, 18);
-            this.txtETA1.Name = "txtETA1";
-            this.txtETA1.Size = new System.Drawing.Size(74, 20);
-            this.txtETA1.TabIndex = 13;
+            this.txtETA3.Location = new System.Drawing.Point(176, 18);
+            this.txtETA3.Name = "txtETA3";
+            this.txtETA3.Size = new System.Drawing.Size(75, 20);
+            this.txtETA3.TabIndex = 15;
             // 
             // txtETA2
             // 
@@ -147,18 +149,28 @@
             this.txtETA2.Size = new System.Drawing.Size(75, 20);
             this.txtETA2.TabIndex = 14;
             // 
-            // txtETA3
+            // txtETA1
             // 
-            this.txtETA3.Location = new System.Drawing.Point(176, 18);
-            this.txtETA3.Name = "txtETA3";
-            this.txtETA3.Size = new System.Drawing.Size(75, 20);
-            this.txtETA3.TabIndex = 15;
+            this.txtETA1.Location = new System.Drawing.Point(12, 18);
+            this.txtETA1.Name = "txtETA1";
+            this.txtETA1.Size = new System.Drawing.Size(74, 20);
+            this.txtETA1.TabIndex = 13;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(4, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(43, 10);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // AFKApplet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(271, 74);
+            this.ClientSize = new System.Drawing.Size(271, 75);
             this.Controls.Add(this.splitContainer1);
             this.Name = "AFKApplet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -184,6 +196,7 @@
         private System.Windows.Forms.TextBox txtETA3;
         private System.Windows.Forms.TextBox txtETA2;
         private System.Windows.Forms.TextBox txtETA1;
+        private System.Windows.Forms.Button button1;
     }
 }
 

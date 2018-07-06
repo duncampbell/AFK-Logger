@@ -78,10 +78,10 @@ namespace AppletTesting
                     ETA = new TimeSpan(0,int.Parse(txtETA1.Text),0);
                     break;
                 case "ETA 2":
-                    ETA = new TimeSpan(0, int.Parse(txtETA1.Text), 0);
+                    ETA = new TimeSpan(0, int.Parse(txtETA2.Text), 0);
                     break;
                 case "ETA 3":
-                    ETA = new TimeSpan(0, int.Parse(txtETA1.Text), 0);
+                    ETA = new TimeSpan(0, int.Parse(txtETA3.Text), 0);
                     break;
                 default:
                     //TO DO: Think of best default
@@ -146,6 +146,32 @@ namespace AppletTesting
         public void RefreshTable(List<Employee> employees)
         {
             //Ignore
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //Create device
+                DataBaseEntry dBE = new DataBaseEntry();
+                dBE.EventType = "SessionUnlock";
+                dBE.UserID = userID;
+                dBE.DeviceID = deviceID;
+                dBE.TimeOfEvent = DateTime.Now;
+                dBE.AutomaticLock = false;
+                dBE.RemoteAccess = false;
+                dBE.ETA = TimeSpan.Zero;
+
+
+                //Send to API
+                await c.AddAppletEntryAsync(dBE);
+                //recentEntry = true;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
