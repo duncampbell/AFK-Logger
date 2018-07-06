@@ -266,14 +266,59 @@ namespace AFKHostedService
                 //Connect to database
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
-                    var sortProperty = typeof(DataBaseEntry).GetProperty(sortField, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                     switch (sortDirection)
                     {
                         case "Ascending":
-                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            switch (sortField)
+                            {
+                                case "EventType":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "UserID":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "DeviceID":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "TimeOfEvent":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "AutomaticLock":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "ETA":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "RemoteAccess":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                            }
                             break;
                         case "Descending":
-                            ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => sortProperty.GetValue(x)).Skip(indexStart).Take(20).ToListAsync();
+                            switch (sortField)
+                            {
+                                case "EventType":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "UserID":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "DeviceID":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "TimeOfEvent":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "AutomaticLock":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "ETA":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "RemoteAccess":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                            }
                             break;
                     }
                 }
@@ -398,7 +443,7 @@ namespace AFKHostedService
             }
         }
 
-        public async Task<bool> AddDevice(Device device)
+        public bool AddDevice(Device device)
         {
             bool success = false;
             //bool flag for the uniqueness of the device to be added
@@ -406,10 +451,10 @@ namespace AFKHostedService
             try
             {
                 //Connect to database
-                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                using (IDocumentSession s = ds.OpenSession())
                 {
                     //Find identical documents
-                     foreach(Device d in await s.Query<Device>("Device_Search").ToListAsync())
+                     foreach(Device d in s.Query<Device>("Device_Search").ToList())
                     {
                         //Set unique false if identical document is found
                         if( d.DeviceID == device.DeviceID && d.UserID == device.UserID)
@@ -420,8 +465,8 @@ namespace AFKHostedService
                      //Add to db if unique
                     if (unique)
                     {
-                        await s.StoreAsync(device);
-                        await s.SaveChangesAsync();
+                        s.Store(device);
+                        s.SaveChanges();
                     }
                 }
                 success = unique;
@@ -433,16 +478,16 @@ namespace AFKHostedService
             return success;
         }
 
-        public async Task<bool> AddUser(User user)
+        public bool AddUser(User user)
         {
             bool success = false;
             try
             {
                 //connect to database
-                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                using (IDocumentSession s = ds.OpenSession())
                 {
-                    await s.StoreAsync(user);
-                    await s.SaveChangesAsync();
+                    s.Store(user);
+                    s.SaveChanges();
                 }
                 success = true;
             }
@@ -543,7 +588,27 @@ namespace AFKHostedService
 
         public void ClearAllDatabases()
         {
-            //throw new NotImplementedException();
+            using (IDocumentSession s = ds.OpenSession())
+            {
+                //Delete DataBaseEntries
+                foreach (var x in s.Query<DataBaseEntry>())
+                {
+                    s.Delete(x);
+                }
+                //Delete Devices
+                foreach (var x in s.Query<Device>())
+                {
+                    s.Delete(x);
+                }
+                //Delete Users
+                foreach (var x in s.Query<User>())
+                {
+                    s.Delete(x);
+                }
+                s.SaveChanges();
+            }
         }
+        
+        
     }
 }
