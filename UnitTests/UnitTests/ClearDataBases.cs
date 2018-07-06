@@ -19,7 +19,8 @@ namespace UnitTests
 
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
-           // throw new NotImplementedException();
+            //throw new NotImplementedException();
+
         }
 
         public void SendResult(string test)

@@ -26,7 +26,12 @@
   </xs:complexType>
   <xs:element name="ArrayOfEmployee" nillable="true" type="tns:ArrayOfEmployee" />
   <xs:complexType name="Employee">
-    <xs:sequence />
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AtDesk" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Eta" type="ser:duration" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Time" type="xs:dateTime" />
+    </xs:sequence>
   </xs:complexType>
   <xs:element name="Employee" nillable="true" type="tns:Employee" />
   <xs:complexType name="Device">
