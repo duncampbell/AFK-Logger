@@ -7,7 +7,6 @@ using System.ServiceModel;
 namespace UnitTests
 {
     [TestClass]
-    [ServiceBehavior(IncludeExceptionDetailInFaults =true)]
     public class ClearDataBases:IServiceCallback
     {
         [TestMethod]
@@ -21,6 +20,7 @@ namespace UnitTests
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
             //throw new NotImplementedException();
+
         }
 
         public void SendResult(string test)
