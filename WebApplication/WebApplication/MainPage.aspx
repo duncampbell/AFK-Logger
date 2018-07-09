@@ -129,7 +129,6 @@
             <asp:ListItem>21</asp:ListItem>
             <asp:ListItem>22</asp:ListItem>
             <asp:ListItem>23</asp:ListItem>
-            <asp:ListItem>24</asp:ListItem>
         </asp:DropDownList>
             &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -192,7 +191,6 @@
             <asp:ListItem>57</asp:ListItem>
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
-            <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
             &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -255,7 +253,6 @@
             <asp:ListItem>57</asp:ListItem>
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
-            <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
             &nbsp;
         <asp:Label ID="startTimeLabel" runat="server"></asp:Label>
@@ -309,7 +306,6 @@
             <asp:ListItem>21</asp:ListItem>
             <asp:ListItem>22</asp:ListItem>
             <asp:ListItem>23</asp:ListItem>
-            <asp:ListItem>24</asp:ListItem>
         </asp:DropDownList>
             &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -372,7 +368,6 @@
             <asp:ListItem>57</asp:ListItem>
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
-            <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
             &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
             <asp:ListItem>00</asp:ListItem>
@@ -435,7 +430,6 @@
             <asp:ListItem>57</asp:ListItem>
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
-            <asp:ListItem>60</asp:ListItem>
         </asp:DropDownList>
             &nbsp;
         <asp:Label ID="endTimeLabel" runat="server"></asp:Label>

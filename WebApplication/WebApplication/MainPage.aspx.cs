@@ -490,7 +490,16 @@ namespace WebApplication
             {
                 sb.AppendLine(data.UserName + "," + data.EventType + "," +data.UserID+ ", "  +data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
-            File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+            //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+            string FilePath = Server.MapPath("~/");
+            string FileName = "test.csv";
+
+            // Creates the file on server
+            File.WriteAllText(FilePath + FileName, sb.ToString());
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+            Response.TransmitFile(FilePath + FileName);
+            Response.End();
         }
 
         protected void ExportAll_Click(object sender, EventArgs e)
