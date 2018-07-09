@@ -229,39 +229,12 @@ namespace WebApplication {
         protected global::System.Web.UI.WebControls.GridView dataGridView;
         
         /// <summary>
-        /// Panel2 control.
+        /// pageMenu control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel2;
-        
-        /// <summary>
-        /// PageNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PageNumber;
-        
-        /// <summary>
-        /// prevBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button prevBtn;
-        
-        /// <summary>
-        /// nextBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button nextBtn;
+        protected global::System.Web.UI.WebControls.Menu pageMenu;
     }
 }

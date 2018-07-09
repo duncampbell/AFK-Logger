@@ -24,6 +24,7 @@
     <MetadataSource Address="http://localhost:64626/AFKHostedService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="e3adfd88-a7ac-4da7-9166-9d8298abc5cd" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd3" />
     <MetadataFile FileName="AFKHostedService.xsd" MetadataType="Schema" ID="a6a1bac1-47ce-4c93-b079-f8a6ff0a8013" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd0" />
     <MetadataFile FileName="AFKHostedService1.xsd" MetadataType="Schema" ID="a17bd82a-e8ac-46e9-9819-d3734c62bd0d" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" />
     <MetadataFile FileName="AFKHostedService.wsdl" MetadataType="Wsdl" ID="e6b120af-c07b-4bec-9456-babb7c3145ad" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?wsdl" />

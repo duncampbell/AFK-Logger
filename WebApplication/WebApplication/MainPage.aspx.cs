@@ -20,22 +20,14 @@ namespace WebApplication
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // MainPage test = new MainPage();
+
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
-            
-            CreateEmployeeTable();
-            
             if (!IsPostBack)
             {
-                ViewState["State"] = "Normal";
-                ViewState["Index"] = 0;
-                this.StatusMenu.Items[0].Selected = true;
-                ViewState["SortOn"] = "TimeOfEvent";
-                ViewState["TypeSort"] = "Descending";
-                ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                CreateEmployeeTable();
             }
-            tableSetUp();
+            
         }
 
         public void CreateEmployeeTable()
@@ -58,7 +50,17 @@ namespace WebApplication
                 }
                 else
                 {
-                    oItem[1] = "Not At Desk";
+                    TimeSpan sinceEvent = (DateTime.Now - employees.ElementAt(i).Time);
+                    if (sinceEvent < employees.ElementAt(i).Eta)
+                    {
+                        oItem[1] = "Expected Back";
+                    }else if (sinceEvent < (- new TimeSpan(1,0,0)))
+                    {
+                        oItem[1] = "Out of Office";
+                    }else
+                    {
+                        oItem[1] = "Expected back, but late";
+                    }
                 }
                 
                 oItem[2] = employees.ElementAt(i).Time;
@@ -71,48 +73,115 @@ namespace WebApplication
 
         public void tableSetUp()
         {
+            Tuple<List<DataBaseEntry>, int> ent;
             switch ((string)ViewState["State"])
             {
+                
                 case "Normal":
-                    ViewState["Entries"] = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = ent.Item1;
+                    int numEntries = ent.Item2;
+                    int numPages = (int)Math.Ceiling((double)numEntries / 20);
+                    ViewState["PageTotal"] = numPages;
+                    populatePageMenu();
                     break;
                 case "SearchName":
-                    ViewState["Entries"] = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = ent.Item1;
+                    numEntries = ent.Item2;
+                    numPages = (int)Math.Ceiling((double)numEntries / 20);
+                    ViewState["PageTotal"] = numPages;
+                    populatePageMenu();
                     break;
                 case "SearchTime":
-                    ViewState["Entries"] = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = ent.Item1;
+                    numEntries = ent.Item2;
+                    numPages = (int)Math.Ceiling((double)numEntries / 20);
+                    ViewState["PageTotal"] = numPages;
+                    populatePageMenu();
                     break;
                 case "SearchNameTime":
-                    ViewState["Entries"] = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                    ViewState["Entries"] = ent.Item1;
+                    numEntries = ent.Item2;
+                    numPages = (int)Math.Ceiling((double)numEntries / 20);
+                    ViewState["PageTotal"] = numPages;
+                    populatePageMenu();
                     break;
-            }
-            if ((int)ViewState["Index"] == 0)
-            {
-                prevBtn.Enabled = false;
-            }
-            else
-            {
-                prevBtn.Enabled = true;
-            }
-            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            if (Entries.Count < 20)
-            {
-                nextBtn.Enabled = false;
-            }else{
-                nextBtn.Enabled = true;
             }
             int index = (int)ViewState["Index"];
             int pageNum = (int)((index / 20) + 1);
-            PageNumber.Text = pageNum.ToString();
             CreatingGrid();
             FillGrid();
+        }
+
+        public void populatePageMenu()
+        {
+            ViewState["PageStart"] = (((int)ViewState["Index"] / 100) *5) + 1;
+            pageMenu.Items.Clear();
+            MenuItem childItm = new MenuItem("<<");
+            pageMenu.Items.Add(childItm);
+            childItm = new MenuItem("<");
+            pageMenu.Items.Add(childItm);
+            for (int i = (int)ViewState["PageStart"]; i <= (int)ViewState["PageTotal"] && i < ((int)ViewState["PageStart"] + 5); i++)
+            {
+                childItm = new MenuItem(i.ToString());
+                pageMenu.Items.Add(childItm);
+            }
+            childItm = new MenuItem(">");
+            pageMenu.Items.Add(childItm);
+            childItm = new MenuItem(">>");
+            pageMenu.Items.Add(childItm);
+            if ((int)ViewState["Index"] == 0)
+            {
+                pageMenu.Items[1].Selectable = false;
+            }
+            else
+            {
+                pageMenu.Items[1].Selectable = true;
+            }
+
+            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
+            if (Entries.Count < 20)
+            {
+                int nextMenuItemNum = pageMenu.Items.Count;
+                pageMenu.Items[nextMenuItemNum-2].Selectable = false;
+            }
+            else
+            {
+                int nextMenuItemNum = pageMenu.Items.Count;
+                pageMenu.Items[nextMenuItemNum-2].Selectable = true;
+            }
+            if (Entries.Count != 0)
+            {
+                int selected = ((int)ViewState["Index"] / 20) % 5;
+               pageMenu.Items[selected + 2].Selected = true;
+            }
+            if ((int)ViewState["Index"] < 100)
+            {
+                pageMenu.Items[0].Selectable = false;
+            }else
+            {
+                pageMenu.Items[0].Selectable = true;
+            }
+
+            if (((int)ViewState["PageTotal"] - (int)ViewState["PageStart"]+1) < 5 )
+            {
+                pageMenu.Items[pageMenu.Items.Count-1].Selectable = false;
+            }
+            else
+            {
+                pageMenu.Items[pageMenu.Items.Count - 1].Selectable = true;
+            }
+
         }
 
         public void CreatingGrid()
         {
             dt = new DataTable();
+            dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
-            dt.Columns.Add("User ID");
             dt.Columns.Add("Device ID");
             dt.Columns.Add("Time of Event", typeof(System.DateTime));
             dt.Columns.Add("Automatic");
@@ -124,11 +193,12 @@ namespace WebApplication
         public void FillGrid()
         {
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
+            string X = Entries.ElementAt(0).UserName;
             for (int i = 0; i < Entries.Count && i < 20; i++)
             {
                     DataRow oItem = dt.NewRow();
-                    oItem[0] = Entries.ElementAt(i).EventType;
-                    oItem[1] = Entries.ElementAt(i).UserID;
+                    oItem[0] = Entries.ElementAt(i).UserName;
+                    oItem[1] = Entries.ElementAt(i).EventType;
                     oItem[2] = Entries.ElementAt(i).DeviceID;
                     oItem[3] = Entries.ElementAt(i).TimeOfEvent;
                     oItem[4] = Entries.ElementAt(i).AutomaticLock;
@@ -255,7 +325,12 @@ namespace WebApplication
                 ViewState["TypeSort"] = "Ascending";
             }
 
-            if(e.SortExpression.Equals("Event Type")){
+            if (e.SortExpression.Equals("User Name"))
+            {
+                ViewState["SortOn"] = "UserName";
+            }
+
+            if (e.SortExpression.Equals("Event Type")){
                 ViewState["SortOn"] = "EventType";
             }
 
@@ -294,7 +369,22 @@ namespace WebApplication
 
         protected void StatusMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
-            
+            if (e.Item.Value == "1")
+            {
+                ViewState["State"] = "Normal";
+                ViewState["Index"] = 0;
+                this.StatusMenu.Items[0].Selected = true;
+                ViewState["SortOn"] = "TimeOfEvent";
+                ViewState["TypeSort"] = "Descending";
+                Tuple<List<DataBaseEntry>, int> ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                ViewState["Entries"] = ent.Item1;
+                int numEntries = ent.Item2;
+                int numPages = (int)Math.Ceiling((double)numEntries / 20);
+                ViewState["PageTotal"] = numPages;
+                ViewState["PageStart"] = 1;
+                tableSetUp();
+            }
+
             int index = Int32.Parse(e.Item.Value);
             PageNavigation.ActiveViewIndex = index;
         }
@@ -308,16 +398,36 @@ namespace WebApplication
         {
             CreateEmployeeTable();
         }
-
-        protected void nextBtn_Click(object sender, EventArgs e)
+        
+        protected void pageMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
-            ViewState["Index"] = (int)ViewState["Index"] + 20;
-            tableSetUp();
-        }
+            if (e.Item.Value == "<")
+            {
+                if ((int)ViewState["Index"] != 0)
+                {
+                    ViewState["Index"] = (int)ViewState["Index"] - 20;
+                }
 
-        protected void prevBtn_Click(object sender, EventArgs e)
-        {
-            ViewState["Index"] = (int)ViewState["Index"] - 20;
+            }else if (e.Item.Value == ">")
+            {
+                ViewState["Index"] = (int)ViewState["Index"] + 20;
+            }
+            else if (e.Item.Value == ">>")
+            {
+                ViewState["PageStart"] = (int)ViewState["PageStart"] + 5;
+                int ind = ((int)ViewState["PageStart"] - 1) * 20;
+                ViewState["Index"] = ind;
+            }
+            else if (e.Item.Value == "<<")
+            {
+                    ViewState["PageStart"] = (int)ViewState["PageStart"] - 5;
+                    ViewState["Index"] = ((int)ViewState["PageStart"] - 1) * 20;
+            }
+            else
+            {
+                int pageNum = Int32.Parse(e.Item.Value);
+                ViewState["Index"] = (pageNum-1) * 20;
+            }
             tableSetUp();
         }
     }
