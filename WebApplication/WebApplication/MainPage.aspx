@@ -9,10 +9,30 @@
     <link href="css/theme.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/pikaday.css" rel="stylesheet" />
+    <style type="text/css">
+        .auto-style6 {
+            width: 185px;
+            height: 36px;
+        }
+        .auto-style7 {
+            width: 1565px;
+            height: 36px;
+        }
+        .auto-style8 {
+            height: 36px;
+            width: 168px;
+        }
+        .auto-style9 {
+            margin-left: 0px;
+        }
+        .auto-style10 {
+            width: 1400px;
+        }
+        </style>
 </head>
 <body style ="background-color:#174669">
     <form id="form1" runat="server" >
-    <div style="margin-left:auto; margin-right:auto; width:1400px;">
+    <div style="margin-left:auto; margin-right:auto; " class="auto-style10">
     
         <asp:Panel ID="Panel1" runat="server" BackColor="#174669" Height="40px" style="margin-left: 0px; width:100%;" >
             <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial" BackColor="#6699FF">
@@ -34,23 +54,32 @@
                     </asp:ScriptManager>
                     <asp:Timer ID="updateTimer" runat="server" Interval ="3000" OnTick="UpdateTimer_Tick">
                     </asp:Timer>
+                    <asp:Timer ID="etaTimer" runat="server" Interval ="1000" OnTick="etaTimer_Tick">
+                    </asp:Timer>
                     <br />
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID = "updateTimer" />
+                            <asp:AsyncPostBackTrigger ControlID = "etaTimer" />
                         </Triggers>
                         <ContentTemplate>
-                            <asp:GridView ID="employeeGrid" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Arial">
+                            <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Arial">
                                 <AlternatingRowStyle BackColor="White" />
                                 <Columns>
                                     <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
                                     <ControlStyle Width="0px" />
+                                    <ItemStyle Width="300px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" />
+                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" >
+                                    <ItemStyle Width="400px" />
+                                    </asp:BoundField>
                                     <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
                                     <HeaderStyle Width="200px" />
+                                    <ItemStyle Width="400px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA" />
+                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA" >
+                                    <ItemStyle Width="300px" />
+                                    </asp:BoundField>
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />
                                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -455,20 +484,32 @@
                                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
-                            <asp:Menu ID="pageMenu" runat="server" ForeColor="White" OnMenuItemClick="pageMenu_MenuItemClick" Orientation="Horizontal">
-                                <StaticMenuItemStyle BackColor="#6699FF" BorderStyle="Solid" HorizontalPadding="10px" />
-                                <StaticMenuStyle BackColor="#6699FF" />
-                                <StaticSelectedStyle BackColor="Blue" ForeColor="White" />
-                            </asp:Menu>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <br />
-                            <br />
+                            <table>
+                                <tr>
+                                    <td class="auto-style7">
+
+                                        <asp:Menu ID="pageMenu" runat="server" ForeColor="White" OnMenuItemClick="pageMenu_MenuItemClick" Orientation="Horizontal">
+                                            <StaticMenuItemStyle BackColor="#6699FF" BorderStyle="Solid" HorizontalPadding="10px" />
+                                            <StaticMenuStyle BackColor="#6699FF" />
+                                            <StaticSelectedStyle BackColor="Blue" ForeColor="White" />
+                                        </asp:Menu>
+
+                                    </td>
+                                    <td class="auto-style8">
+
+                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" />
+
+                                    </td>
+                                    <td class="auto-style6">
+
+                                        <asp:Button ID="exportAllBtn" runat="server" BackColor="#6699FF" CssClass="auto-style9" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportAll_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export All" Width="200px" />
+
+                                    </td>
+                                </tr>
+                            </table>
+  
                         </ContentTemplate>
                     </asp:UpdatePanel>
-        
-        <br />
-                    <br />
-        <br />
                 </asp:View>
             </asp:MultiView>
 
