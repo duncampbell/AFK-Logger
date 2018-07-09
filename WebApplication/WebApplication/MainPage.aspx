@@ -421,25 +421,24 @@
                             <asp:GridView ID="dataGridView" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="90px" OnSorting="gridView_Sorting" PageSize="20" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None">
                                 <AlternatingRowStyle BackColor="White" />
                                 <Columns>
-                                    <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
-                                    <ItemStyle Width="100px" />
+                                    <asp:BoundField DataField="User Name" HeaderText="User Name" SortExpression="User Name" ReadOnly="true">
+                                    <ItemStyle Width="150px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="User ID" HeaderText="User ID" ReadOnly="True" SortExpression="User ID">
-                                    <ControlStyle Width="0px" />
-                                    <ItemStyle Width="400px" />
+                                    <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
+                                    <ItemStyle Width="150px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
                                     <HeaderStyle Width="300px" />
-                                    <ItemStyle Width="400px" />
+                                    <ItemStyle Width="300px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
                                     <HeaderStyle Width="200px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Automatic" HeaderText="Automatic" ReadOnly="True" SortExpression="Automatic">
-                                    <ItemStyle Width="50px" />
+                                    <ItemStyle Width="100px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Remote" HeaderText="Remote" ReadOnly="True" SortExpression="Remote">
-                                    <ItemStyle Width="50px" />
+                                    <ItemStyle Width="100px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA">
                                     <ItemStyle Width="100px" />
@@ -456,9 +455,12 @@
                                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
-                            <br />
-                            <asp:Button ID="prevBtn" runat="server" OnClick="prevBtn_Click" style="margin-left: 550px" Text="Previous" Width="160px" />
-                            <asp:Button ID="nextBtn" runat="server" OnClick="nextBtn_Click" style="margin-left: 4px" Text="Next" Width="160px" />
+                            <asp:Menu ID="pageMenu" runat="server" ForeColor="White" OnMenuItemClick="pageMenu_MenuItemClick" Orientation="Horizontal">
+                                <StaticMenuItemStyle BackColor="#6699FF" BorderStyle="Solid" HorizontalPadding="10px" />
+                                <StaticMenuStyle BackColor="#6699FF" />
+                                <StaticSelectedStyle BackColor="Blue" ForeColor="White" />
+                            </asp:Menu>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <br />
                             <br />
                         </ContentTemplate>
