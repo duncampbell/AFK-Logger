@@ -4,9 +4,11 @@ using System.Data;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.ServiceModel;
 using System.ServiceProcess;
+using System.Windows.Forms;
 
 namespace AFKWindowsService
 {
@@ -69,6 +71,7 @@ namespace AFKWindowsService
                     dBE.TimeOfEvent = DateTime.Now;
                     dBE.AutomaticLock = true;
                     dBE.RemoteAccess = true;
+                    dBE.ETA = new TimeSpan(0,30,0);
                     if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
                     c.AddServiceEntry(dBE);
@@ -97,3 +100,4 @@ namespace AFKWindowsService
         }
     }
 }
+;

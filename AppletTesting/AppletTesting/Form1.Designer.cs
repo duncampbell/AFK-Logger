@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AFKApplet));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnAddDevice = new System.Windows.Forms.Button();
             this.btnSet = new System.Windows.Forms.Button();
@@ -35,10 +37,11 @@
             this.chkVM = new System.Windows.Forms.CheckBox();
             this.btnETA2 = new System.Windows.Forms.Button();
             this.btnETA3 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.txtETA3 = new System.Windows.Forms.TextBox();
             this.txtETA2 = new System.Windows.Forms.TextBox();
             this.txtETA1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -135,6 +138,16 @@
             this.btnETA3.UseVisualStyleBackColor = true;
             this.btnETA3.Click += new System.EventHandler(this.allETABtn_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(4, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(43, 10);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // txtETA3
             // 
             this.txtETA3.Location = new System.Drawing.Point(176, 18);
@@ -156,15 +169,13 @@
             this.txtETA1.Size = new System.Drawing.Size(74, 20);
             this.txtETA1.TabIndex = 13;
             // 
-            // button1
+            // notifyIcon1
             // 
-            this.button1.Location = new System.Drawing.Point(4, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(43, 10);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.notifyIcon1.BalloonTipText = "AFKLogger Applet";
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
             // AFKApplet
             // 
@@ -172,9 +183,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(271, 75);
             this.Controls.Add(this.splitContainer1);
+            this.MaximizeBox = false;
             this.Name = "AFKApplet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AFK Applet";
+            this.Resize += new System.EventHandler(this.AFKApplet_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -197,6 +210,7 @@
         private System.Windows.Forms.TextBox txtETA2;
         private System.Windows.Forms.TextBox txtETA1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

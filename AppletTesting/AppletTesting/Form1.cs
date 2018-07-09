@@ -13,12 +13,19 @@ using System.Security.Principal;
 using System.DirectoryServices;
 using AFKWindowsService.ServiceReference1;
 using System.Diagnostics;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
+using AppletTesting;
 
 namespace AppletTesting
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public partial class AFKApplet : Form, ServiceReference1.IServiceCallback
     {
+        #region Variable Declaration
+
+        KeyboardHook hook = new KeyboardHook();
+
         string deviceID;
         string userID;
         InstanceContext iC;
@@ -30,9 +37,11 @@ namespace AppletTesting
         TimeSpan ETA1;
         TimeSpan ETA2;
         TimeSpan ETA3;
-        
+        #endregion
+
         public AFKApplet()
         {
+            SetStartup();
             InitializeComponent();
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             userID = WindowsIdentity.GetCurrent().User.AccountDomainSid.ToString();
@@ -41,41 +50,29 @@ namespace AppletTesting
             c = new ServiceReference1.ServiceClient(iC);
             c.RegisterClient(deviceID, false);
 
-            ETA1 = new TimeSpan(0, 1, 0);
-            ETA2 = new TimeSpan(0, 2, 0);
-            ETA3 = new TimeSpan(0, 3, 0);
+            LoadETAPrefs();
 
-            txtETA1.Text = ETA1.TotalMinutes.ToString();
-            txtETA2.Text = ETA2.TotalMinutes.ToString();
-            txtETA3.Text = ETA3.TotalMinutes.ToString();
+            hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
+            hook.RegisterHotKey(AppletTesting.ModifierKeys.Win, Keys.NumPad1);
+            hook.RegisterHotKey(AppletTesting.ModifierKeys.Win, Keys.NumPad2);
+            hook.RegisterHotKey(AppletTesting.ModifierKeys.Win, Keys.NumPad3);
+
         }
 
-        //Assigns ETA and UserID to DataBaseEntry and returns it
-        public  void FinishDataBaseEntry(DataBaseEntry entry)
+        //Basically converts hotkey to button press
+        void hook_KeyPressed(object sender, KeyPressedEventArgs e)
         {
-            //Confirms deviceID is correct and prevents duplicate entry
-            if (this.deviceID == entry.DeviceID && !recentEntry)
-            {
-                entry.UserID = this.userID;
-                entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
-                recentEntry = false;
-            }
-            c.AddAppletEntryAsync(entry);
-
+            allETABtn_Click(new Button() { Text = "ETA " + e.Key.ToString().Substring(e.Key.ToString().Length-1)}, new EventArgs());
         }
-
-        void ServiceReference1.IServiceCallback.SendResult(string test)
-        {
-            
-        }
-
+        
+        //Called when any of the ETA buttons are clicked or when hotkeys are used (terrible, I know)
         private async void allETABtn_Click(object sender, EventArgs e)
         {
             //Determine ETA
             switch (((Button)sender).Text)
             {
                 case "ETA 1":
-                    ETA = new TimeSpan(0,int.Parse(txtETA1.Text),0);
+                    ETA = new TimeSpan(0, int.Parse(txtETA1.Text), 0);
                     break;
                 case "ETA 2":
                     ETA = new TimeSpan(0, int.Parse(txtETA2.Text), 0);
@@ -110,11 +107,13 @@ namespace AppletTesting
             catch (Exception ex)
             {
 
-                MessageBox.Show("Program encountered the following error: " + ex.Message,"Progam Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             //TODO: add lock method
         }
 
+        //Add device manually
+        //TODO: remove from form and place in installer
         private void btnAddDevice_Click(object sender, EventArgs e)
         {
             Device d = new Device();
@@ -128,26 +127,24 @@ namespace AppletTesting
             {
                 if (c.AddDevice(d))
                 {
-                    MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID,"Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID, "Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Device not added, either due to an error or because it already exists","Device Not Added",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show("Device not added, either due to an error or because it already exists", "Device Not Added", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        //Display ETA time textboxes
         private void btnSet_Click(object sender, EventArgs e)
         {
-            splitContainer1.Panel2Collapsed = splitContainer1.Panel2Collapsed ? false:true;
-            Size = splitContainer1.Panel2Collapsed ? new Size(278,111) : new Size(278,170);
+            if (!splitContainer1.Panel2Collapsed) { SaveETAPrefs(); }
+            splitContainer1.Panel2Collapsed = splitContainer1.Panel2Collapsed ? false : true;
+            Size = splitContainer1.Panel2Collapsed ? new Size(278, 111) : new Size(278, 170);
         }
 
-        public void RefreshTable(List<Employee> employees)
-        {
-            //Ignore
-        }
-
+        //TODO: remove for release
         private async void button1_Click(object sender, EventArgs e)
         {
             try
@@ -173,5 +170,208 @@ namespace AppletTesting
                 MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        //Hides and shows form based on system tray icon click
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Visible = true;
+
+        }
+
+        private void AFKApplet_Resize(object sender, EventArgs e)
+        {
+            if(this.WindowState == FormWindowState.Minimized) { this.Hide(); }
+        }
+
+        #region Registry Methods
+        //Adds applet to startup registry key
+        //TODO: remove from form, add to installer
+        private void SetStartup()
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            rk.SetValue("AFKApplet", Application.ExecutablePath);
+        }
+
+        //Saves ETA preferences
+        private bool SaveETAPrefs()
+        {
+            bool success = false;
+
+            try
+            {
+                RegistryKey k = Registry.CurrentUser.CreateSubKey(@"Software\AFKLogger");
+                k.SetValue("ETA1",txtETA1.Text);
+                k.SetValue("ETA2", txtETA2.Text);
+                k.SetValue("ETA3", txtETA3.Text);
+                success = true;
+            }
+            catch
+            {
+                MessageBox.Show("Failed to store ETA preferences in registry.", "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return success;
+            }
+
+
+            return success;
+        }
+
+        //Attempts to load ETA preferences from registry. On failure, inserts default values
+        private bool LoadETAPrefs()
+        {
+            bool success = false;
+            try
+            {
+                RegistryKey k = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\AFKLogger");
+                txtETA1.Text = k.GetValue("ETA1").ToString();
+                txtETA2.Text = k.GetValue("ETA2").ToString();
+                txtETA3.Text = k.GetValue("ETA3").ToString();
+                success = true;
+            }
+            catch
+            {
+                txtETA1.Text = "15";
+                txtETA2.Text = "45";
+                txtETA3.Text = "90";
+                MessageBox.Show("Failed to load ETA preferences from registry.", "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return success;
+        }
+        #endregion
+
+        #region Service Callback methods
+        //Assigns ETA and UserID to DataBaseEntry and returns it
+        public void FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //Confirms deviceID is correct and prevents duplicate entry
+            if (this.deviceID == entry.DeviceID && !recentEntry)
+            {
+                entry.UserID = this.userID;
+                entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
+                recentEntry = false;
+            }
+            c.AddAppletEntryAsync(entry);
+
+        }
+
+        //Ignored, used by web app
+        void ServiceReference1.IServiceCallback.SendResult(string test)
+        {
+
+        }
+
+        //Ignored, used by web app callback
+        public void RefreshTable(List<Employee> employees)
+        {
+            //Ignore
+        }
+
+        #endregion
+
+
     }
+
+
+
+    #region Keyboard Hook Classes
+    public sealed class KeyboardHook : IDisposable
+    {
+
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotkey(IntPtr hWnd, int id);
+
+        private class Window : NativeWindow, IDisposable
+        {
+            private static int WM_HOTKEY = 0x0312;
+
+            public Window()
+            {
+                this.CreateHandle(new CreateParams());
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                base.WndProc(ref m);
+
+                if (m.Msg == WM_HOTKEY)
+                {
+                    Keys key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
+                    ModifierKeys modifier = (ModifierKeys)((int)m.LParam & 0xFFFF);
+
+                    KeyPressed?.Invoke(this, new KeyPressedEventArgs(modifier, key));
+                }
+            }
+            public event EventHandler<KeyPressedEventArgs> KeyPressed;
+            public void Dispose()
+            {
+                this.DestroyHandle();
+            }
+
+        }
+
+        private Window _window = new Window();
+        private int _currentId;
+
+        public KeyboardHook()
+        {
+            _window.KeyPressed += delegate (object sender, KeyPressedEventArgs args)
+            {
+                KeyPressed?.Invoke(this, args);
+            };
+        }
+        public void RegisterHotKey(ModifierKeys modifier, Keys key)
+        {
+            _currentId++;
+            //var test = (uint)key;
+            if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
+            {
+                throw new InvalidOperationException("Couldn't register the hot key.");
+            }
+        }
+        public event EventHandler<KeyPressedEventArgs> KeyPressed;
+
+        public void Dispose()
+        {
+            for (int i = _currentId; i > 0; i--)
+            {
+                UnregisterHotkey(_window.Handle, i);
+            }
+            _window.Dispose();
+        }
+    }
+
+    public class KeyPressedEventArgs : EventArgs
+    {
+        private ModifierKeys _modifier;
+        private Keys _key;
+
+        internal KeyPressedEventArgs(ModifierKeys modifier, Keys key)
+        {
+            _modifier = modifier;
+            _key = key;
+        }
+
+        public ModifierKeys Modifier
+        {
+            get { return _modifier; }
+        }
+        public Keys Key
+        {
+            get { return _key; }
+        }
+    }
+
+    [Flags]
+    public enum ModifierKeys : uint
+    {
+        Alt=1,
+        Control = 2,
+        Shift = 4,
+        Win = 8
+    }
+
+    #endregion
 }
