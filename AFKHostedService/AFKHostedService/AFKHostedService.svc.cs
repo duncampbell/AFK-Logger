@@ -1,5 +1,6 @@
 ﻿using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using Sparrow.Platform.Posix;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
+using Raven.Client.Documents.Queries;
 
 namespace AFKHostedService
 {
@@ -28,8 +30,10 @@ namespace AFKHostedService
             ds.Initialize();
         }
 
-        public async Task<List<DataBaseEntry>> GetAllEntries(int indexStart, string sortField, string sortDirection)
+        public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
+            int numResults = 0;
+            QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
             { 
@@ -42,6 +46,9 @@ namespace AFKHostedService
                         case "Ascending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x=>x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -68,6 +75,9 @@ namespace AFKHostedService
                         case "Descending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -92,20 +102,23 @@ namespace AFKHostedService
                             }
                             break;
                     }
+                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).ToListAsync();
+                    numResults = stats.TotalResults;
                 }
             }
             catch(Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
-
-            return ret;
+            return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection)
+        public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesOfUser(string UserName, int indexStart, string sortField, string sortDirection)
         {
+            int numResults = 0;
+            QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
             {
@@ -119,69 +132,80 @@ namespace AFKHostedService
                         case "Ascending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                         case "Descending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                     }
+                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).Where(x => x.UserName == UserName).ToListAsync();
+                    numResults = stats.TotalResults;
                 }
+
             }
             catch(Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error","Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
-            return ret;
+            return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
+        public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
+            int numResults = 0;
+            QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             try
             {
@@ -193,6 +217,9 @@ namespace AFKHostedService
                         case "Ascending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -219,6 +246,9 @@ namespace AFKHostedService
                         case "Descending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -243,24 +273,27 @@ namespace AFKHostedService
                             }
                             break;
                     }
+                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    numResults = stats.TotalResults;
                 }
             }
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
 
             //Return all entries between a specific time period
-            return ret;
+            return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
 
         }
 
-        public async Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
+        public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetweenForUser(string UserName, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
-
+            int numResults = 0;
+            QueryStatistics stats = new QueryStatistics();
             try
             {
                 //Connect to database
@@ -271,67 +304,75 @@ namespace AFKHostedService
                         case "Ascending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                         case "Descending":
                             switch (sortField)
                             {
+                                case "UserName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserID == UserID && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                     }
+                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    numResults = stats.TotalResults;
                 }
             }
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
 
             //Return all entries between a specific time period for a specific user
-            return ret;
+            return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
         }
         
         //Returns list of all employees constructed from the last DataBaseEntry associated with their UserID
@@ -379,7 +420,7 @@ namespace AFKHostedService
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                Employee error = new Employee(new DataBaseEntry("Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero));
+                Employee error = new Employee(new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero));
                 error.Name = "NoUserName";
                 ret.Add(error);
             }
@@ -608,7 +649,17 @@ namespace AFKHostedService
                 s.SaveChanges();
             }
         }
-        
-        
+
+        public void UpdateData()
+        {
+            using (IDocumentSession s = ds.OpenSession())
+            {
+                foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
+                {
+                    d.UserName = "UserName";
+                }
+                s.SaveChanges();
+            }
+        }
     }
 }

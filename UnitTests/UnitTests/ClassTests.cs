@@ -31,9 +31,9 @@ namespace UnitTests
         [TestMethod]
         public void EmployeeEntryTest()
         {
-            DataBaseEntry era = new DataBaseEntry("Event Type", "User ID", "Device ID", new DateTime(), false, true, new TimeSpan(1, 50, 20));
+            DataBaseEntry era = new DataBaseEntry("SessionUnlocked", "User ID", "Device ID", new DateTime(), false, true, new TimeSpan(1, 50, 20));
             Employee entryRemoteAccess = new Employee(era);
-            DataBaseEntry el = new DataBaseEntry("SessionLocked", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            DataBaseEntry el = new DataBaseEntry("SessionLock", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
             Employee entryLocked = new Employee(el);
             DataBaseEntry elo = new DataBaseEntry("SessionUnlocked", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
             Employee entryUnlocked = new Employee(elo);

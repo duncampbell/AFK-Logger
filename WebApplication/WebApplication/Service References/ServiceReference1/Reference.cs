@@ -43,6 +43,9 @@ namespace WebApplication.ServiceReference1 {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UserIDField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UserNameField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -140,6 +143,19 @@ namespace WebApplication.ServiceReference1 {
                 if ((object.ReferenceEquals(this.UserIDField, value) != true)) {
                     this.UserIDField = value;
                     this.RaisePropertyChanged("UserID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UserName {
+            get {
+                return this.UserNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UserNameField, value) != true)) {
+                    this.UserNameField = value;
+                    this.RaisePropertyChanged("UserName");
                 }
             }
         }
@@ -422,28 +438,28 @@ namespace WebApplication.ServiceReference1 {
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetAllEntries(int indexStart, string sortField, string sortDirection);
+        System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
+        System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
         System.TimeSpan RemainingTime(WebApplication.ServiceReference1.DataBaseEntry entry);
@@ -504,6 +520,12 @@ namespace WebApplication.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ClearAllDatabases", ReplyAction="http://tempuri.org/IService/ClearAllDatabasesResponse")]
         System.Threading.Tasks.Task ClearAllDatabasesAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
+        void UpdateData();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
+        System.Threading.Tasks.Task UpdateDataAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -544,35 +566,35 @@ namespace WebApplication.ServiceReference1 {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetAllEntries(int indexStart, string sortField, string sortDirection) {
+        public System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntries(indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntriesAsync(indexStart, sortField, sortDirection);
         }
         
-        public System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
+        public System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUser(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUserAsync(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetween(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenAsync(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUser(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUserAsync(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
@@ -654,6 +676,14 @@ namespace WebApplication.ServiceReference1 {
         
         public System.Threading.Tasks.Task ClearAllDatabasesAsync() {
             return base.Channel.ClearAllDatabasesAsync();
+        }
+        
+        public void UpdateData() {
+            base.Channel.UpdateData();
+        }
+        
+        public System.Threading.Tasks.Task UpdateDataAsync() {
+            return base.Channel.UpdateDataAsync();
         }
     }
 }

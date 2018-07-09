@@ -14,16 +14,16 @@ namespace AFKHostedService
     public interface IService
     {
         [OperationContract]
-        Task<List<DataBaseEntry>> GetAllEntries(int indexStart, string  sortField, string sortDirection);
+        Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string  sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
+        Task<Tuple<List<DataBaseEntry>, int>> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
+        Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
-        Task<List<DataBaseEntry>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
+        Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
         TimeSpan RemainingTime(DataBaseEntry entry);
@@ -54,6 +54,9 @@ namespace AFKHostedService
 
         [OperationContract]
         void ClearAllDatabases();
+
+        [OperationContract]
+        void UpdateData();
 
     }
 
@@ -125,10 +128,12 @@ namespace AFKHostedService
         bool automaticLock;
         bool remoteAccess;
         TimeSpan eta;
+        string userName;
 
 
-        public DataBaseEntry(string EventType, string UserID, string DeviceID, DateTime TimeofEvent, bool AutomaticLock, bool RemoteAccess, TimeSpan ETA)
+        public DataBaseEntry(string UserName, string EventType, string UserID, string DeviceID, DateTime TimeofEvent, bool AutomaticLock, bool RemoteAccess, TimeSpan ETA)
         {
+            userName = UserName;
             eventType = EventType;
             userID = UserID;
             deviceID = DeviceID;
@@ -136,6 +141,13 @@ namespace AFKHostedService
             automaticLock = AutomaticLock;
             remoteAccess = RemoteAccess;
             eta = ETA;
+        }
+
+        [DataMember]
+        public string UserName
+        {
+            get { return userName; }
+            set { userName = value; }
         }
 
         [DataMember]
