@@ -7,70 +7,77 @@ using System.Web.UI.WebControls;
 using System.Data;
 using WebApplication.ServiceReference1;
 using System.ServiceModel;
-
+using System.Text;
+using System.IO;
+using System.Security;
 namespace WebApplication
 {
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
         DataTable dt;
+        DataTable emp;
         //List<DataBaseEntry> Entries;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
         List<Employee> employees;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
+                ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 CreateEmployeeTable();
             }
-            
+
         }
 
         public void CreateEmployeeTable()
         {
-            employees = Proxy.GetEntriesForAlice();
-            DataTable emp = new DataTable();
+            emp = new DataTable();
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
-            emp.Columns.Add("ETA", typeof(System.TimeSpan));
-           
-
+            emp.Columns.Add("ETA");
+            TimeSpan remaining;
+            employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
+                remaining = remainingTime(employees.ElementAt(i));
                 oItem[0] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
                     oItem[1] = "At Desk";
+                    remaining = new TimeSpan(0, 0, 0);
                 }
                 else
                 {
-                    TimeSpan sinceEvent = (DateTime.Now - employees.ElementAt(i).Time);
-                    if (sinceEvent < employees.ElementAt(i).Eta)
+                    if (remaining > new TimeSpan(0, 0, 0))
                     {
                         oItem[1] = "Expected Back";
-                    }else if (sinceEvent < (- new TimeSpan(1,0,0)))
+                    }
+                    else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
                         oItem[1] = "Out of Office";
-                    }else
+                        remaining = new TimeSpan(0, 0, 0);
+                    }
+                    else
                     {
                         oItem[1] = "Expected back, but late";
+                        remaining = new TimeSpan(0, 0, 0);
                     }
                 }
-                
+
                 oItem[2] = employees.ElementAt(i).Time;
-                oItem[3] = employees.ElementAt(i).Eta;
+                oItem[3] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours,remaining.Minutes,remaining.Seconds); 
                 emp.Rows.Add(oItem);
             }
             employeeGrid.DataSource = emp;
             employeeGrid.DataBind();
         }
-
+        
         public void tableSetUp()
         {
             Tuple<List<DataBaseEntry>, int> ent;
@@ -118,63 +125,77 @@ namespace WebApplication
 
         public void populatePageMenu()
         {
-            ViewState["PageStart"] = (((int)ViewState["Index"] / 100) *5) + 1;
-            pageMenu.Items.Clear();
-            MenuItem childItm = new MenuItem("<<");
-            pageMenu.Items.Add(childItm);
-            childItm = new MenuItem("<");
-            pageMenu.Items.Add(childItm);
-            for (int i = (int)ViewState["PageStart"]; i <= (int)ViewState["PageTotal"] && i < ((int)ViewState["PageStart"] + 5); i++)
+            if (((List<DataBaseEntry>)ViewState["Entries"]).Count != 0)
             {
-                childItm = new MenuItem(i.ToString());
+                pageMenu.Visible = true;
+                exportAllBtn.Visible = true;
+                exportPageBtn.Visible = true;
+                ViewState["PageStart"] = (((int)ViewState["Index"] / 100) * 5) + 1;
+                pageMenu.Items.Clear();
+                MenuItem childItm = new MenuItem("<<");
                 pageMenu.Items.Add(childItm);
-            }
-            childItm = new MenuItem(">");
-            pageMenu.Items.Add(childItm);
-            childItm = new MenuItem(">>");
-            pageMenu.Items.Add(childItm);
-            if ((int)ViewState["Index"] == 0)
-            {
-                pageMenu.Items[1].Selectable = false;
-            }
-            else
-            {
-                pageMenu.Items[1].Selectable = true;
-            }
+                childItm = new MenuItem("<");
+                pageMenu.Items.Add(childItm);
+                for (int i = (int)ViewState["PageStart"]; i <= (int)ViewState["PageTotal"] && i < ((int)ViewState["PageStart"] + 5); i++)
+                {
+                    childItm = new MenuItem(i.ToString());
+                    pageMenu.Items.Add(childItm);
+                }
+                childItm = new MenuItem(">");
+                pageMenu.Items.Add(childItm);
+                childItm = new MenuItem(">>");
+                pageMenu.Items.Add(childItm);
 
-            List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            if (Entries.Count < 20)
-            {
-                int nextMenuItemNum = pageMenu.Items.Count;
-                pageMenu.Items[nextMenuItemNum-2].Selectable = false;
-            }
-            else
-            {
-                int nextMenuItemNum = pageMenu.Items.Count;
-                pageMenu.Items[nextMenuItemNum-2].Selectable = true;
-            }
-            if (Entries.Count != 0)
-            {
-                int selected = ((int)ViewState["Index"] / 20) % 5;
-               pageMenu.Items[selected + 2].Selected = true;
-            }
-            if ((int)ViewState["Index"] < 100)
-            {
-                pageMenu.Items[0].Selectable = false;
+
+                if ((int)ViewState["Index"] == 0)
+                {
+                    pageMenu.Items[1].Selectable = false;
+                }
+                else
+                {
+                    pageMenu.Items[1].Selectable = true;
+                }
+
+                List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
+                if (Entries.Count < 20 || ((int)ViewState["PageTotal"] == ((int)ViewState["Index"] / 20)+1))
+                {
+                    int nextMenuItemNum = pageMenu.Items.Count;
+                    pageMenu.Items[nextMenuItemNum - 2].Selectable = false;
+                }
+                else
+                {
+                    int nextMenuItemNum = pageMenu.Items.Count;
+                    pageMenu.Items[nextMenuItemNum - 2].Selectable = true;
+                }
+                if (Entries.Count != 0)
+                {
+                    int selected = ((int)ViewState["Index"] / 20) % 5;
+                    pageMenu.Items[selected + 2].Selected = true;
+                }
+                if ((int)ViewState["Index"] < 100)
+                {
+                    pageMenu.Items[0].Selectable = false;
+                }
+                else
+                {
+                    pageMenu.Items[0].Selectable = true;
+                }
+
+                if (((int)ViewState["PageTotal"] - (int)ViewState["PageStart"] + 1) <= 5)
+                {
+                    pageMenu.Items[pageMenu.Items.Count - 1].Selectable = false;
+                }
+                else
+                {
+                    pageMenu.Items[pageMenu.Items.Count - 1].Selectable = true;
+                }
+
             }else
             {
-                pageMenu.Items[0].Selectable = true;
+                pageMenu.Visible = false;
+                exportAllBtn.Visible = false;
+                exportPageBtn.Visible = false;
             }
-
-            if (((int)ViewState["PageTotal"] - (int)ViewState["PageStart"]+1) < 5 )
-            {
-                pageMenu.Items[pageMenu.Items.Count-1].Selectable = false;
-            }
-            else
-            {
-                pageMenu.Items[pageMenu.Items.Count - 1].Selectable = true;
-            }
-
         }
 
         public void CreatingGrid()
@@ -182,7 +203,7 @@ namespace WebApplication
             dt = new DataTable();
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
-            dt.Columns.Add("Device ID");
+            dt.Columns.Add("Machine Name");
             dt.Columns.Add("Time of Event", typeof(System.DateTime));
             dt.Columns.Add("Automatic");
             dt.Columns.Add("Remote");
@@ -193,20 +214,19 @@ namespace WebApplication
         public void FillGrid()
         {
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-            string X = Entries.ElementAt(0).UserName;
+           
             for (int i = 0; i < Entries.Count && i < 20; i++)
             {
                     DataRow oItem = dt.NewRow();
                     oItem[0] = Entries.ElementAt(i).UserName;
                     oItem[1] = Entries.ElementAt(i).EventType;
-                    oItem[2] = Entries.ElementAt(i).DeviceID;
+                    oItem[2] = Entries.ElementAt(i).MachineName;
                     oItem[3] = Entries.ElementAt(i).TimeOfEvent;
                     oItem[4] = Entries.ElementAt(i).AutomaticLock;
                     oItem[5] = Entries.ElementAt(i).RemoteAccess;
                     oItem[6] = Entries.ElementAt(i).ETA;
                     dt.Rows.Add(oItem);
             }
-            
             dataGridView.DataSource = dt;
             dataGridView.DataBind();
         }
@@ -396,9 +416,15 @@ namespace WebApplication
 
         protected void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            ViewState["Employees"] = Proxy.GetEntriesForAlice();
             CreateEmployeeTable();
         }
-        
+
+        protected void etaTimer_Tick(object sender, EventArgs e)
+        {
+            CreateEmployeeTable();
+        }
+
         protected void pageMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
             if (e.Item.Value == "<")
@@ -429,6 +455,103 @@ namespace WebApplication
                 ViewState["Index"] = (pageNum-1) * 20;
             }
             tableSetUp();
+        }
+
+        public TimeSpan remainingTime(Employee em)
+        {
+            TimeSpan remaining = em.Eta - (DateTime.Now - em.Time);
+            return remaining;
+        }
+        
+        protected void ExportPage_Click(object sender, EventArgs e)
+        {
+            List<DataBaseEntry> ent = new List<DataBaseEntry>();
+            switch ((string)ViewState["State"])
+            {
+
+                case "Normal":
+                    ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                    break;
+                case "SearchName":
+                    ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                    break;
+                case "SearchTime":
+                    ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                    break;
+                case "SearchNameTime":
+                    ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                    break;
+            }
+            
+            var sb = new StringBuilder();
+            foreach (var data in ent)
+            {
+                sb.AppendLine(data.UserName + "," + data.EventType + "," +data.UserID+ ", "  +data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+            }
+            //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+            string FilePath = Server.MapPath("~/");
+            string FileName = "SessionLocks.csv";
+
+            // Creates the file on server
+            File.WriteAllText(FilePath + FileName, sb.ToString());
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+            Response.TransmitFile(FilePath + FileName);
+            Response.End();
+        }
+
+        protected void ExportAll_Click(object sender, EventArgs e)
+        {
+            if ((int)ViewState["PageTotal"] < 100)
+            {
+                List<DataBaseEntry> ent = new List<DataBaseEntry>();
+                switch ((string)ViewState["State"])
+                {
+
+                    case "Normal":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
+                        }
+                        break;
+                    case "SearchName":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                    case "SearchTime":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                    case "SearchNameTime":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                }
+
+                var sb = new StringBuilder();
+                foreach (var data in ent)
+                {
+                    sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+                }
+                //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+                string FilePath = Server.MapPath("~/");
+                string FileName = "SessionLocks.csv";
+
+                // Creates the file on server
+                File.WriteAllText(FilePath + FileName, sb.ToString());
+                Response.ContentType = "application/octet-stream";
+                Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+                Response.TransmitFile(FilePath + FileName);
+                Response.End();
+            }else{
+                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('The amount of data is too much to export.');", true);
+            }
         }
     }
 }
