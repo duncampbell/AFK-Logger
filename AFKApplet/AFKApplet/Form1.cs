@@ -34,7 +34,6 @@ namespace AFKApplet
 
         public AFKAppletForm()
         {
-            SetStartup();
             InitializeComponent();
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             machineName = Environment.MachineName;
@@ -195,11 +194,12 @@ namespace AFKApplet
         #region Registry Methods
         //Adds applet to startup registry key
         //TODO: remove from form, add to installer
+        /*
         private void SetStartup()
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             rk.SetValue("AFKApplet", Application.ExecutablePath);
-        }
+        }*/
 
         //Saves ETA preferences
         private bool SaveETAPrefs()
