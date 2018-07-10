@@ -8,10 +8,69 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AFKWindowsService.ServiceReference1 {
+namespace AFKApplet.ServiceReference1 {
     using System.Runtime.Serialization;
     using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TupleOfArrayOfDataBaseEntryintvHVz0_S93", Namespace="http://schemas.datacontract.org/2004/07/System")]
+    [System.SerializableAttribute()]
+    public partial class TupleOfArrayOfDataBaseEntryintvHVz0_S93 : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private System.Collections.Generic.List<AFKApplet.ServiceReference1.DataBaseEntry> m_Item1Field;
+        
+        private int m_Item2Field;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public System.Collections.Generic.List<AFKApplet.ServiceReference1.DataBaseEntry> m_Item1 {
+            get {
+                return this.m_Item1Field;
+            }
+            set {
+                if ((object.ReferenceEquals(this.m_Item1Field, value) != true)) {
+                    this.m_Item1Field = value;
+                    this.RaisePropertyChanged("m_Item1");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public int m_Item2 {
+            get {
+                return this.m_Item2Field;
+            }
+            set {
+                if ((this.m_Item2Field.Equals(value) != true)) {
+                    this.m_Item2Field = value;
+                    this.RaisePropertyChanged("m_Item2");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
@@ -466,62 +525,62 @@ namespace AFKWindowsService.ServiceReference1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService", CallbackContract=typeof(AFKWindowsService.ServiceReference1.IServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IService", CallbackContract=typeof(AFKApplet.ServiceReference1.IServiceCallback))]
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection);
+        AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetAllEntries(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
+        AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee> GetEntriesForAlice();
+        System.Collections.Generic.List<AFKApplet.ServiceReference1.Employee> GetEntriesForAlice();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee>> GetEntriesForAliceAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKApplet.ServiceReference1.Employee>> GetEntriesForAliceAsync();
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
-        void AddServiceEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        void AddServiceEntry(AFKApplet.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
-        System.Threading.Tasks.Task AddServiceEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        System.Threading.Tasks.Task AddServiceEntryAsync(AFKApplet.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
-        void AddAppletEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        void AddAppletEntry(AFKApplet.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddAppletEntry")]
-        System.Threading.Tasks.Task AddAppletEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        System.Threading.Tasks.Task AddAppletEntryAsync(AFKApplet.ServiceReference1.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
-        bool AddDevice(AFKWindowsService.ServiceReference1.Device device);
+        bool AddDevice(AFKApplet.ServiceReference1.Device device);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddDevice", ReplyAction="http://tempuri.org/IService/AddDeviceResponse")]
-        System.Threading.Tasks.Task<bool> AddDeviceAsync(AFKWindowsService.ServiceReference1.Device device);
+        System.Threading.Tasks.Task<bool> AddDeviceAsync(AFKApplet.ServiceReference1.Device device);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
-        bool AddUser(AFKWindowsService.ServiceReference1.User user);
+        bool AddUser(AFKApplet.ServiceReference1.User user);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddUser", ReplyAction="http://tempuri.org/IService/AddUserResponse")]
-        System.Threading.Tasks.Task<bool> AddUserAsync(AFKWindowsService.ServiceReference1.User user);
+        System.Threading.Tasks.Task<bool> AddUserAsync(AFKApplet.ServiceReference1.User user);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
         bool RegisterClient(string deviceID, bool service);
@@ -530,10 +589,10 @@ namespace AFKWindowsService.ServiceReference1 {
         System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        string EntryOutput(AFKWindowsService.ServiceReference1.DataBaseEntry str);
+        string EntryOutput(AFKApplet.ServiceReference1.DataBaseEntry str);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        System.Threading.Tasks.Task<string> EntryOutputAsync(AFKWindowsService.ServiceReference1.DataBaseEntry str);
+        System.Threading.Tasks.Task<string> EntryOutputAsync(AFKApplet.ServiceReference1.DataBaseEntry str);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
@@ -552,6 +611,12 @@ namespace AFKWindowsService.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
         System.Threading.Tasks.Task UpdateDataAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        bool UpdateADUsernames();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -561,16 +626,16 @@ namespace AFKWindowsService.ServiceReference1 {
         void SendResult(string test);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/FinishDataBaseEntry", ReplyAction="http://tempuri.org/IService/FinishDataBaseEntryResponse")]
-        void FinishDataBaseEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry);
+        void FinishDataBaseEntry(AFKApplet.ServiceReference1.DataBaseEntry entry);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IServiceChannel : AFKWindowsService.ServiceReference1.IService, System.ServiceModel.IClientChannel {
+    public interface IServiceChannel : AFKApplet.ServiceReference1.IService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceClient : System.ServiceModel.DuplexClientBase<AFKWindowsService.ServiceReference1.IService>, AFKWindowsService.ServiceReference1.IService {
+    public partial class ServiceClient : System.ServiceModel.DuplexClientBase<AFKApplet.ServiceReference1.IService>, AFKApplet.ServiceReference1.IService {
         
         public ServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -592,75 +657,75 @@ namespace AFKWindowsService.ServiceReference1 {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection) {
+        public AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetAllEntries(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntries(indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntriesAsync(indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
+        public AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUser(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUserAsync(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetween(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenAsync(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93 GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUser(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<AFKApplet.ServiceReference1.TupleOfArrayOfDataBaseEntryintvHVz0_S93> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUserAsync(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee> GetEntriesForAlice() {
+        public System.Collections.Generic.List<AFKApplet.ServiceReference1.Employee> GetEntriesForAlice() {
             return base.Channel.GetEntriesForAlice();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKWindowsService.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKApplet.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
         }
         
-        public void AddServiceEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+        public void AddServiceEntry(AFKApplet.ServiceReference1.DataBaseEntry entry) {
             base.Channel.AddServiceEntry(entry);
         }
         
-        public System.Threading.Tasks.Task AddServiceEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+        public System.Threading.Tasks.Task AddServiceEntryAsync(AFKApplet.ServiceReference1.DataBaseEntry entry) {
             return base.Channel.AddServiceEntryAsync(entry);
         }
         
-        public void AddAppletEntry(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+        public void AddAppletEntry(AFKApplet.ServiceReference1.DataBaseEntry entry) {
             base.Channel.AddAppletEntry(entry);
         }
         
-        public System.Threading.Tasks.Task AddAppletEntryAsync(AFKWindowsService.ServiceReference1.DataBaseEntry entry) {
+        public System.Threading.Tasks.Task AddAppletEntryAsync(AFKApplet.ServiceReference1.DataBaseEntry entry) {
             return base.Channel.AddAppletEntryAsync(entry);
         }
         
-        public bool AddDevice(AFKWindowsService.ServiceReference1.Device device) {
+        public bool AddDevice(AFKApplet.ServiceReference1.Device device) {
             return base.Channel.AddDevice(device);
         }
         
-        public System.Threading.Tasks.Task<bool> AddDeviceAsync(AFKWindowsService.ServiceReference1.Device device) {
+        public System.Threading.Tasks.Task<bool> AddDeviceAsync(AFKApplet.ServiceReference1.Device device) {
             return base.Channel.AddDeviceAsync(device);
         }
         
-        public bool AddUser(AFKWindowsService.ServiceReference1.User user) {
+        public bool AddUser(AFKApplet.ServiceReference1.User user) {
             return base.Channel.AddUser(user);
         }
         
-        public System.Threading.Tasks.Task<bool> AddUserAsync(AFKWindowsService.ServiceReference1.User user) {
+        public System.Threading.Tasks.Task<bool> AddUserAsync(AFKApplet.ServiceReference1.User user) {
             return base.Channel.AddUserAsync(user);
         }
         
@@ -672,11 +737,11 @@ namespace AFKWindowsService.ServiceReference1 {
             return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
-        public string EntryOutput(AFKWindowsService.ServiceReference1.DataBaseEntry str) {
+        public string EntryOutput(AFKApplet.ServiceReference1.DataBaseEntry str) {
             return base.Channel.EntryOutput(str);
         }
         
-        public System.Threading.Tasks.Task<string> EntryOutputAsync(AFKWindowsService.ServiceReference1.DataBaseEntry str) {
+        public System.Threading.Tasks.Task<string> EntryOutputAsync(AFKApplet.ServiceReference1.DataBaseEntry str) {
             return base.Channel.EntryOutputAsync(str);
         }
         
@@ -702,6 +767,14 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task UpdateDataAsync() {
             return base.Channel.UpdateDataAsync();
+        }
+        
+        public bool UpdateADUsernames() {
+            return base.Channel.UpdateADUsernames();
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync() {
+            return base.Channel.UpdateADUsernamesAsync();
         }
     }
 }

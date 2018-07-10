@@ -1,6 +1,6 @@
-﻿namespace AppletTesting
+﻿namespace AFKApplet
 {
-    partial class AFKApplet
+    partial class AFKAppletForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AFKApplet));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AFKAppletForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnAddDevice = new System.Windows.Forms.Button();
             this.btnSet = new System.Windows.Forms.Button();

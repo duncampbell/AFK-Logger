@@ -13,23 +13,29 @@ using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
 using Raven.Client.Documents.Queries;
+using System.Security.Claims;
+using Microsoft.Owin.Security.ActiveDirectory;
+using System.DirectoryServices.AccountManagement;
+using System.Security.Principal;
 
 namespace AFKHostedService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "AFKHostedService" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select AFKHostedService.svc or AFKHostedService.svc.cs at the Solution Explorer and start debugging.
+
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AFKHostedService : IService
     {
+        #region Variable Declaration
         private static Dictionary<string, IMyContractCallback> clients = new Dictionary<string, IMyContractCallback>();
         private static object locker = new object();
         IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
+        #endregion
 
         public AFKHostedService()
         {
             ds.Initialize();
         }
 
+        #region Get Methods
         public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
             int numResults = 0;
@@ -109,7 +115,7 @@ namespace AFKHostedService
             catch(Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", "NoMachineName","NoSessionID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
             return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
@@ -196,7 +202,7 @@ namespace AFKHostedService
             catch(Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error","Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error","Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
             return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
@@ -280,7 +286,7 @@ namespace AFKHostedService
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
 
@@ -367,7 +373,7 @@ namespace AFKHostedService
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero);
+                DataBaseEntry error = new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero);
                 ret.Add(error);
             }
 
@@ -420,7 +426,7 @@ namespace AFKHostedService
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                Employee error = new Employee(new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", DateTime.Now, false, false, TimeSpan.Zero));
+                Employee error = new Employee(new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero));
                 error.Name = "NoUserName";
                 ret.Add(error);
             }
@@ -428,7 +434,11 @@ namespace AFKHostedService
             return ret.OrderBy(x=>x.Name).ToList();
 
         }
-        
+
+        #endregion
+
+        #region Add Methods
+
         public void AddServiceEntry(DataBaseEntry entry)
         {
             //Record log-off events immediately
@@ -441,7 +451,7 @@ namespace AFKHostedService
                 var inactiveClients = new List<string>();
                 foreach (var client in clients)
                 {
-                    if (client.Key.Substring(client.Key.Length-8) !=  "-Service")//stops services being called
+                    if (client.Key.Substring(client.Key.Length-7) !=  "-Service")//stops services being called
                     {   
                         try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
                         {
@@ -539,18 +549,39 @@ namespace AFKHostedService
             return success;
         }
 
-        public TimeSpan RemainingTime(DataBaseEntry entry)
+        public bool RegisterClient(string deviceID, bool service)
         {
-            TimeSpan remaining = entry.ETA - (DateTime.Now.Subtract(entry.TimeOfEvent));
-            if (remaining < new TimeSpan(0, 0, 0))
+            bool success = false;
+            //Generate unique clientID based on device + whether client is service or applet
+            string clientID = deviceID;
+            clientID += service ? "-Service" : "-Applet";
+
+            if (clientID != null && clientID != "")
             {
-                return new TimeSpan(0, 0, 0);
+                try
+                {
+                    IMyContractCallback callback = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
+                    lock (locker)
+                    {
+                        //remove old client
+                        if (clients.Keys.Contains(clientID))
+                        {
+                            clients.Remove(clientID);
+                        }
+                        clients.Add(clientID, callback);
+                        success = true;
+                    }
+                }
+                catch
+                {
+
+                }
             }
-            else
-            {
-                return remaining;
-            }
+            return success;
         }
+        #endregion
+
+        #region Testing Methods
 
         public string EntryOutput(DataBaseEntry str)
         {
@@ -596,36 +627,6 @@ namespace AFKHostedService
             }
         }
 
-        public bool RegisterClient(string deviceID, bool service)
-        {
-            bool success = false;
-            //Generate unique clientID based on device + whether client is service or applet
-            string clientID = deviceID;
-            clientID += service ? "-Service" : "-Applet";
-
-            if (clientID   != null && clientID != "")
-            {
-                try
-                {
-                    IMyContractCallback callback = OperationContext.Current.GetCallbackChannel<IMyContractCallback>();
-                    lock (locker)
-                    {
-                        //remove old client
-                        if (clients.Keys.Contains(clientID))
-                        {
-                            clients.Remove(clientID);
-                        }
-                        clients.Add(clientID,callback);
-                        success = true;
-                    }
-                }
-                catch
-                {
-
-                }
-            }
-            return success;
-        }
 
         public void ClearAllDatabases()
         {
@@ -656,10 +657,51 @@ namespace AFKHostedService
             {
                 foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
                 {
-                    d.UserName = "UserName";
+                    d.MachineName = "MachineName";
                 }
                 s.SaveChanges();
             }
         }
+
+        #endregion
+
+        #region Update Methods
+        
+        //Updates usernames in database according to active directory names
+        public async Task<bool> UpdateADUsernames()
+        {
+            bool success = false;
+
+            try
+            {
+                PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
+                using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                {
+                    foreach (DataBaseEntry d in await s.Query<DataBaseEntry>("DataBaseEntry_Search").ToListAsync())
+                    {try
+                        {
+                            SecurityIdentifier si = new SecurityIdentifier(d.UserID);
+                            //bool test = si.;
+                            d.UserName = UserPrincipal.FindByIdentity(ctx,IdentityType.Sid,d.UserID).DisplayName;
+                        }
+                        catch(Exception e)
+                        {
+                            //Ignore missed matches for now
+                            //TODO: log
+                        }
+
+                    }
+                    await s.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+                //Database connection error
+            }
+
+            return success;
+        }
+
+        #endregion
     }
 }
