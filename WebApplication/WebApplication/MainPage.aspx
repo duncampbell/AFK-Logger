@@ -68,7 +68,7 @@
                 <StaticSelectedStyle BackColor="#174669" ForeColor="White" Font-Bold="True" />
             </asp:Menu>
         </asp:Panel>
-        <asp:ScriptManager  EnablePartialRendering="true" ID="ScriptManager1" runat="server">
+        <asp:ScriptManager  ID="ScriptManager1" runat="server">
                     </asp:ScriptManager>
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
                 <asp:View ID="View2" runat="server">
@@ -512,7 +512,7 @@
                                     </td>
                                     <td class="auto-style8">
 
-                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" />
+                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" CausesValidation="False" />
 
                                     </td>
                                     <td class="auto-style6">
