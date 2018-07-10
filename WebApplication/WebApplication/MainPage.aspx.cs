@@ -130,6 +130,7 @@ namespace WebApplication
                 pageMenu.Visible = true;
                 exportAllBtn.Visible = true;
                 exportPageBtn.Visible = true;
+                updateUsers.Visible = true;
                 ViewState["PageStart"] = (((int)ViewState["Index"] / 100) * 5) + 1;
                 pageMenu.Items.Clear();
                 MenuItem childItm = new MenuItem("<<");
@@ -195,6 +196,7 @@ namespace WebApplication
                 pageMenu.Visible = false;
                 exportAllBtn.Visible = false;
                 exportPageBtn.Visible = false;
+                updateUsers.Visible = false;
             }
         }
 
@@ -344,45 +346,7 @@ namespace WebApplication
             }else { 
                 ViewState["TypeSort"] = "Ascending";
             }
-
-            if (e.SortExpression.Equals("User Name"))
-            {
-                ViewState["SortOn"] = "UserName";
-            }
-
-            if (e.SortExpression.Equals("Event Type")){
-                ViewState["SortOn"] = "EventType";
-            }
-
-            if (e.SortExpression.Equals("User ID"))
-            {
-                ViewState["SortOn"] = "UserID";
-            }
-
-            if (e.SortExpression.Equals("Device ID"))
-            {
-                ViewState["SortOn"] = "DeviceID";
-            }
-
-            if (e.SortExpression.Equals("Time of Event"))
-            {
-                ViewState["SortOn"] = "TimeOfEvent";
-            }
-
-            if (e.SortExpression.Equals("Automatic"))
-            {
-                ViewState["SortOn"] = "AutomaticLock";
-            }
-
-            if (e.SortExpression.Equals("Remote"))
-            {
-                ViewState["SortOn"] = "RemoteAccess";
-            }
-
-            if (e.SortExpression.Equals("ETA"))
-            {
-                ViewState["SortOn"] = "ETA";
-            }
+            ViewState["SortOn"] = e.SortExpression;
             
             tableSetUp();
         }
@@ -552,6 +516,11 @@ namespace WebApplication
             }else{
                 ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('The amount of data is too much to export.');", true);
             }
+        }
+
+        protected void updateUserNames(object sender, EventArgs e)
+        {
+            Proxy.UpdateADUsernames();
         }
     }
 }

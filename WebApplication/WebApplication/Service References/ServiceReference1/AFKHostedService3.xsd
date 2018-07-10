@@ -13,7 +13,9 @@
       <xs:element minOccurs="0" name="DeviceID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ETA" type="ser:duration" />
       <xs:element minOccurs="0" name="EventType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MachineName" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RemoteAccess" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SessionID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TimeOfEvent" type="xs:dateTime" />
       <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
