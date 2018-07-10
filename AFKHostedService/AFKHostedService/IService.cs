@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace AFKHostedService
 {
+    #region Interfaces
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
     [ServiceContract(CallbackContract = typeof(IMyContractCallback))]
     public interface IService
     {
+
+        #region Get Methods
         [OperationContract]
         Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string  sortField, string sortDirection);
 
@@ -26,13 +29,11 @@ namespace AFKHostedService
         Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetweenForUser(string UserID, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection);
 
         [OperationContract]
-        TimeSpan RemainingTime(DataBaseEntry entry);
-
-        [OperationContract]
         Task<List<Employee>> GetEntriesForAlice();
 
-        [OperationContract]
-        string EntryOutput(DataBaseEntry str);
+        #endregion
+
+        #region Add Methods
 
         [OperationContract(IsOneWay =true)]
         void AddServiceEntry(DataBaseEntry entry);
@@ -48,6 +49,12 @@ namespace AFKHostedService
 
         [OperationContract]
         bool RegisterClient(string deviceID, bool service);
+        #endregion
+
+        #region Test Methods
+
+        [OperationContract]
+        string EntryOutput(DataBaseEntry str);
 
         [OperationContract]
         string DBTest();
@@ -58,6 +65,11 @@ namespace AFKHostedService
         [OperationContract]
         void UpdateData();
 
+        #endregion
+        #region Update Methods
+        [OperationContract]
+        Task<bool> UpdateADUsernames();
+        #endregion
     }
 
     public interface IMyContractCallback
@@ -68,7 +80,9 @@ namespace AFKHostedService
         [OperationContract]
         void FinishDataBaseEntry(DataBaseEntry entry);
     }
+    #endregion
 
+    #region DataContracts
     [DataContract]
     public class Employee
     {
@@ -90,6 +104,7 @@ namespace AFKHostedService
             eta = x.ETA;
             time = x.TimeOfEvent;
         }
+
         [DataMember]
         public string Name
         {
@@ -124,14 +139,16 @@ namespace AFKHostedService
         string eventType;
         string userID;
         string deviceID;
+        string machineName;
         DateTime timeOfEvent;
         bool automaticLock;
         bool remoteAccess;
         TimeSpan eta;
         string userName;
+        string sessionID;
 
 
-        public DataBaseEntry(string UserName, string EventType, string UserID, string DeviceID, DateTime TimeofEvent, bool AutomaticLock, bool RemoteAccess, TimeSpan ETA)
+        public DataBaseEntry(string UserName, string EventType, string UserID, string DeviceID,string MachineName, string SessionID, DateTime TimeofEvent, bool AutomaticLock, bool RemoteAccess, TimeSpan ETA)
         {
             userName = UserName;
             eventType = EventType;
@@ -141,6 +158,7 @@ namespace AFKHostedService
             automaticLock = AutomaticLock;
             remoteAccess = RemoteAccess;
             eta = ETA;
+            sessionID = SessionID;
         }
 
         [DataMember]
@@ -197,6 +215,34 @@ namespace AFKHostedService
         {
             get{ return remoteAccess;}
             set{remoteAccess = value;}
+        }
+
+        [DataMember]
+        public string SessionID
+        {
+            get
+            {
+                return sessionID;
+            }
+
+            set
+            {
+                sessionID = value;
+            }
+        }
+
+        [DataMember]
+        public string MachineName
+        {
+            get
+            {
+                return machineName;
+            }
+
+            set
+            {
+                machineName = value;
+            }
         }
     }
     
@@ -323,5 +369,6 @@ namespace AFKHostedService
             }
         }
     }
+    #endregion
 }
 

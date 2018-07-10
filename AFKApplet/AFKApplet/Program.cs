@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AppletTesting
+namespace AFKApplet
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace AppletTesting
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AFKApplet());
+            Application.Run(new AFKAppletForm());
         }
     }
 }
