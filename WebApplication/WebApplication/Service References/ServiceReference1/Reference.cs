@@ -35,7 +35,13 @@ namespace WebApplication.ServiceReference1 {
         private string EventTypeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MachineNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool RemoteAccessField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SessionIDField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime TimeOfEventField;
@@ -109,6 +115,19 @@ namespace WebApplication.ServiceReference1 {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string MachineName {
+            get {
+                return this.MachineNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MachineNameField, value) != true)) {
+                    this.MachineNameField = value;
+                    this.RaisePropertyChanged("MachineName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public bool RemoteAccess {
             get {
                 return this.RemoteAccessField;
@@ -117,6 +136,19 @@ namespace WebApplication.ServiceReference1 {
                 if ((this.RemoteAccessField.Equals(value) != true)) {
                     this.RemoteAccessField = value;
                     this.RaisePropertyChanged("RemoteAccess");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string SessionID {
+            get {
+                return this.SessionIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SessionIDField, value) != true)) {
+                    this.SessionIDField = value;
+                    this.RaisePropertyChanged("SessionID");
                 }
             }
         }
@@ -461,23 +493,11 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
         System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
-        System.TimeSpan RemainingTime(WebApplication.ServiceReference1.DataBaseEntry entry);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
-        System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(WebApplication.ServiceReference1.DataBaseEntry entry);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
         System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> GetEntriesForAlice();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
         System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        string EntryOutput(WebApplication.ServiceReference1.DataBaseEntry str);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
         void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
@@ -509,6 +529,12 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
         System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
+        string EntryOutput(WebApplication.ServiceReference1.DataBaseEntry str);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
+        System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
         
@@ -526,6 +552,12 @@ namespace WebApplication.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
         System.Threading.Tasks.Task UpdateDataAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        bool UpdateADUsernames();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -598,28 +630,12 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.GetEntriesBetweenForUserAsync(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.TimeSpan RemainingTime(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.RemainingTime(entry);
-        }
-        
-        public System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(WebApplication.ServiceReference1.DataBaseEntry entry) {
-            return base.Channel.RemainingTimeAsync(entry);
-        }
-        
         public System.Collections.Generic.List<WebApplication.ServiceReference1.Employee> GetEntriesForAlice() {
             return base.Channel.GetEntriesForAlice();
         }
         
         public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
-        }
-        
-        public string EntryOutput(WebApplication.ServiceReference1.DataBaseEntry str) {
-            return base.Channel.EntryOutput(str);
-        }
-        
-        public System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str) {
-            return base.Channel.EntryOutputAsync(str);
         }
         
         public void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {
@@ -662,6 +678,14 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
+        public string EntryOutput(WebApplication.ServiceReference1.DataBaseEntry str) {
+            return base.Channel.EntryOutput(str);
+        }
+        
+        public System.Threading.Tasks.Task<string> EntryOutputAsync(WebApplication.ServiceReference1.DataBaseEntry str) {
+            return base.Channel.EntryOutputAsync(str);
+        }
+        
         public string DBTest() {
             return base.Channel.DBTest();
         }
@@ -684,6 +708,14 @@ namespace WebApplication.ServiceReference1 {
         
         public System.Threading.Tasks.Task UpdateDataAsync() {
             return base.Channel.UpdateDataAsync();
+        }
+        
+        public bool UpdateADUsernames() {
+            return base.Channel.UpdateADUsernames();
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync() {
+            return base.Channel.UpdateADUsernamesAsync();
         }
     }
 }
