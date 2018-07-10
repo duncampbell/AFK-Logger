@@ -459,7 +459,7 @@
                                     <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
                                     <ItemStyle Width="100px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="Mahcine Name" HeaderText="Machine Name" SortExpression="MachineName">
+                                    <asp:BoundField DataField="Machine Name" HeaderText="Machine Name" SortExpression="MachineName">
                                     <HeaderStyle Width="300px" />
                                     <ItemStyle Width="300px" />
                                     </asp:BoundField>
