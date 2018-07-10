@@ -1,22 +1,13 @@
 ﻿using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using Sparrow.Platform.Posix;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
 using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
 using System.Threading.Tasks;
-using Raven.Client.Documents.Queries;
-using System.Security.Claims;
-using Microsoft.Owin.Security.ActiveDirectory;
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
+using System.Security.Permissions;
 
 namespace AFKHostedService
 {
@@ -36,6 +27,7 @@ namespace AFKHostedService
         }
 
         #region Get Methods
+        [PrincipalPermission(SecurityAction.Demand,Role ="FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
             int numResults = 0;
@@ -127,6 +119,7 @@ namespace AFKHostedService
             return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesOfUser(string UserName, int indexStart, string sortField, string sortDirection)
         {
             int numResults = 0;
@@ -220,6 +213,7 @@ namespace AFKHostedService
             return new Tuple<List<DataBaseEntry>, int>(ret, numResults);
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetween(DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
             int numResults = 0;
@@ -313,6 +307,7 @@ namespace AFKHostedService
 
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetEntriesBetweenForUser(string UserName, DateTime start, DateTime end, int indexStart, string sortField, string sortDirection)
         {
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
@@ -691,10 +686,11 @@ namespace AFKHostedService
         #endregion
 
         #region Update Methods
-        
+
         //Updates usernames in database according to active directory names
         public async Task<bool> UpdateADUsernames()
         {
+            var x = System.Threading.Thread.CurrentPrincipal.Identity;
             bool success = false;
 
             try
