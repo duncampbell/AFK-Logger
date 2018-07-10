@@ -653,6 +653,7 @@ namespace AFKHostedService
 
         public void UpdateData()
         {
+           
             using (IDocumentSession s = ds.OpenSession())
             {
                 foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
