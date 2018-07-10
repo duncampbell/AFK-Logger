@@ -33,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -193,9 +194,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Service References\ServiceReference1\AFKHostedService.disco" />
-    <None Include="Service References\ServiceReference1\AFKHostedService3.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
     <None Include="Service References\ServiceReference1\configuration.svcinfo" />
     <None Include="Service References\ServiceReference1\Reference.svcmap">
@@ -220,6 +218,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceReference1\AFKHostedService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference1\AFKHostedService3.xsd">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Service References\ServiceReference1\WebApplication.ServiceReference1.DataBaseEntry.datasource">

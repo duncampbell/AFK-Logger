@@ -10,6 +10,7 @@ using System.DirectoryServices;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using AFKApplet.ServiceReference1;
+using System.DirectoryServices.AccountManagement;
 
 namespace AFKApplet
 {
@@ -23,6 +24,7 @@ namespace AFKApplet
         string deviceID;
         string machineName;
         string userID;
+        string userName;
         string sessionID;
         InstanceContext iC;
         ServiceClient c;
@@ -38,6 +40,7 @@ namespace AFKApplet
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             machineName = Environment.MachineName;
             userID = WindowsIdentity.GetCurrent().User.Value;
+            userName = UserPrincipal.FindByIdentity(new PrincipalContext(ContextType.Domain), IdentityType.Sid, userID).DisplayName;
             sessionID = System.Diagnostics.Process.GetCurrentProcess().SessionId.ToString();
 
 
@@ -52,6 +55,7 @@ namespace AFKApplet
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad2);
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad3);
 
+            c.GetAllEntries(0,"","");
         }
 
         #region Button Methods
@@ -89,8 +93,7 @@ namespace AFKApplet
                 DataBaseEntry dBE = new DataBaseEntry();
                 dBE.EventType = "SessionLock";
                 dBE.UserID = userID;
-                //Too lazy to make this a class variable like the others, also allows for more accurate records
-                dBE.UserName = Environment.UserName;
+                dBE.UserName = userName;
                 dBE.DeviceID = deviceID;
                 dBE.MachineName = machineName;
                 dBE.TimeOfEvent = DateTime.Now;
@@ -255,6 +258,7 @@ namespace AFKApplet
             if (this.deviceID == entry.DeviceID && sessionID == entry.SessionID &&  !recentEntry)
             {
                 entry.UserID = this.userID;
+                entry.UserName = userName;
                 entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
                 recentEntry = false;
             }

@@ -10,6 +10,8 @@ using System.ServiceModel;
 using System.Text;
 using System.IO;
 using System.Security;
+using System.ServiceModel.Security;
+
 namespace WebApplication
 {
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
@@ -353,8 +355,14 @@ namespace WebApplication
 
         protected void StatusMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
+            try
+            {
             if (e.Item.Value == "1")
             {
+          
+                //throws exception if user isn't authorised
+                Proxy.GetAllEntries(0, "", "");
+
                 ViewState["State"] = "Normal";
                 ViewState["Index"] = 0;
                 this.StatusMenu.Items[0].Selected = true;
@@ -367,10 +375,15 @@ namespace WebApplication
                 ViewState["PageTotal"] = numPages;
                 ViewState["PageStart"] = 1;
                 tableSetUp();
-            }
+                }
 
-            int index = Int32.Parse(e.Item.Value);
-            PageNavigation.ActiveViewIndex = index;
+                int index = Int32.Parse(e.Item.Value);
+                PageNavigation.ActiveViewIndex = index;
+            }
+            catch (SecurityAccessDeniedException ex)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('You are not authorised to view these records. Please speak to your sysadmin to be added to the AFKLogAdmin group.');", true);
+            }
         }
 
         public void FinishDataBaseEntry(DataBaseEntry entry)
