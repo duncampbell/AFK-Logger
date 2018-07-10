@@ -552,6 +552,12 @@ namespace AFKWindowsService.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
         System.Threading.Tasks.Task UpdateDataAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        bool UpdateADUsernames();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
+        System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -702,6 +708,14 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task UpdateDataAsync() {
             return base.Channel.UpdateDataAsync();
+        }
+        
+        public bool UpdateADUsernames() {
+            return base.Channel.UpdateADUsernames();
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync() {
+            return base.Channel.UpdateADUsernamesAsync();
         }
     }
 }
