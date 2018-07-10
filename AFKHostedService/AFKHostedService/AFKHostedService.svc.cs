@@ -652,6 +652,7 @@ namespace AFKHostedService
 
         public void UpdateData()
         {
+            /*
             using (IDocumentSession s = ds.OpenSession())
             {
                 foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
@@ -660,6 +661,16 @@ namespace AFKHostedService
                 }
                 s.SaveChanges();
             }
-        }
+            */
+            using (IDocumentSession s = ds.OpenSession())
+            {
+                for (int i =0; i<1000; i++)
+                {
+                    DataBaseEntry x = new DataBaseEntry("a", "SessionLock", "a", "a", DateTime.Now, true, false, new TimeSpan(1,0,0));
+                    AddAppletEntry(x);
+                }
+                s.SaveChanges();
+            }
+            }
     }
 }

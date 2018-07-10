@@ -28,26 +28,35 @@
         .auto-style10 {
             width: 1400px;
         }
+        .auto-style11 {
+            margin-left: 575px;
+        }
+        .auto-style12 {
+            margin-top: 0px;
+        }
         </style>
 </head>
-<body style ="background-color:#174669">
+<body style ="background: #fafeff">
     <form id="form1" runat="server" >
     <div style="margin-left:auto; margin-right:auto; " class="auto-style10">
+        <asp:Panel ID="Panel2" runat="server" BackColor="#FAFEFF" Height="85px" Width="1400px">
+            <asp:Image ID="Image1" runat="server" CssClass="auto-style11" Height="75px" ImageUrl="~/Content/Capture.PNG" Width="250px" />
+            <br />
+            <br />
+        </asp:Panel>
     
         <asp:Panel ID="Panel1" runat="server" BackColor="#174669" Height="40px" style="margin-left: 0px; width:100%;" >
-            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial" BackColor="#6699FF">
+            <asp:Menu ID="StatusMenu" runat="server" Orientation="Horizontal" RenderingMode="Table" style="margin-left: 450px" Width="500px" OnMenuItemClick="StatusMenu_MenuItemClick" Font-Bold="True" ForeColor="White" Height="0px" Font-Names="Arial" BackColor="#174669">
                 <DynamicHoverStyle Font-Bold="True" Font-Italic="False" />
                 <Items>
                     <asp:MenuItem Text="Employee Status" Value="0"></asp:MenuItem>
                     <asp:MenuItem Text="Historical Data" Value="1"></asp:MenuItem>
                 </Items>
-                <StaticHoverStyle BackColor="#99CCFF" ForeColor="White" />
-                <StaticMenuItemStyle Font-Bold="False" ForeColor="White" Height="40px" HorizontalPadding="60px" />
-                <StaticSelectedStyle BackColor="#6699FF" ForeColor="White" />
+                <StaticHoverStyle BackColor="#5A788E" ForeColor="White" Font-Bold="True" />
+                <StaticMenuItemStyle Font-Bold="True" ForeColor="White" Height="40px" HorizontalPadding="60px" />
+                <StaticSelectedStyle BackColor="#174669" ForeColor="White" Font-Bold="True" />
             </asp:Menu>
         </asp:Panel>
-        
-        
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
                 <asp:View ID="View2" runat="server">
                     <asp:ScriptManager ID="ScriptManager1" runat="server">
@@ -63,15 +72,15 @@
                             <asp:AsyncPostBackTrigger ControlID = "etaTimer" />
                         </Triggers>
                         <ContentTemplate>
-                            <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Arial">
+                            <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Arial" Font-Bold="False">
                                 <AlternatingRowStyle BackColor="White" />
                                 <Columns>
                                     <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
-                                    <ControlStyle Width="0px" />
-                                    <ItemStyle Width="300px" />
+                                    <ItemStyle Width="400px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" >
-                                    <ItemStyle Width="400px" />
+                                    <ControlStyle Width="0px" />
+                                    <ItemStyle Width="300px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
                                     <HeaderStyle Width="200px" />
@@ -83,7 +92,7 @@
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />
                                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#6699FF" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#174669" Font-Bold="False" ForeColor="White" Font-Italic="False" Font-Names="Arial" Font-Overline="False" Font-Size="Medium" Font-Strikeout="False" Font-Underline="False" Wrap="True" />
                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
                                 <RowStyle BackColor="#EFF3FB" />
                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
@@ -100,11 +109,11 @@
                     <br />
                 </asp:View>
                 <asp:View ID="View1" runat="server">
-                    
+                   
         <br />
-            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 450px; margin-bottom: 7px" Width="300px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
+            <asp:TextBox ID="txtStartTime" runat="server" Height="20px" style="margin-left: 465px; margin-bottom: 7px" Width="240px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
             &nbsp;
-            <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            <asp:DropDownList ID="startTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -130,7 +139,7 @@
             <asp:ListItem>22</asp:ListItem>
             <asp:ListItem>23</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -192,7 +201,7 @@
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -268,7 +277,7 @@
                     numberOfMonths: 1,
                 });
             </script>
-                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 450px" Width="300px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <asp:TextBox ID="txtEndTime" runat="server" Height="20px" style="margin-left: 465px" Width="240px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
                     <script type="text/javascript">
                 var picker = new Pikaday(
                 {
@@ -281,7 +290,7 @@
                 });
             </script>
             &nbsp;
-            <asp:DropDownList ID="endTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            <asp:DropDownList ID="endTimeHour" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -307,7 +316,7 @@
             <asp:ListItem>22</asp:ListItem>
             <asp:ListItem>23</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -369,7 +378,7 @@
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
         </asp:DropDownList>
-            &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="50px">
+            &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="40px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -434,9 +443,9 @@
             &nbsp;
         <asp:Label ID="endTimeLabel" runat="server"></asp:Label>
             <br />
-            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 550px" Width="300px" Height="17px"></asp:TextBox>
+            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 565px" Width="240px" Height="20px"></asp:TextBox>
             <br />
-            <asp:Button ID="searchBtn" runat="server" OnClick="SearchUser_Click" style="margin-left: 550px; margin-top: 5px; margin-bottom: 7px;" Text="Search" Width="320px" Height="36px" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" />
+            <asp:Button ID="searchBtn" runat="server" OnClick="SearchUser_Click" style="margin-left: 565px; margin-bottom: 7px;" Text="Search" Width="260px" Height="40px" BackColor="#174669" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" CssClass="auto-style12" />
         <br />
         
                     <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
@@ -448,9 +457,9 @@
                                     <ItemStyle Width="150px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Event Type" HeaderText="Event Type" ReadOnly="True" SortExpression="Event Type">
-                                    <ItemStyle Width="150px" />
+                                    <ItemStyle Width="100px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="Device ID" HeaderText="Device ID" SortExpression="Device ID">
+                                    <asp:BoundField DataField="Mahcine Name" HeaderText="Machine Name" SortExpression="MachineName">
                                     <HeaderStyle Width="300px" />
                                     <ItemStyle Width="300px" />
                                     </asp:BoundField>
@@ -458,7 +467,7 @@
                                     <HeaderStyle Width="200px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Automatic" HeaderText="Automatic" ReadOnly="True" SortExpression="Automatic">
-                                    <ItemStyle Width="100px" />
+                                    <ItemStyle Width="150px" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="Remote" HeaderText="Remote" ReadOnly="True" SortExpression="Remote">
                                     <ItemStyle Width="100px" />
@@ -469,7 +478,7 @@
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />
                                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#6699FF" Font-Bold="True" ForeColor="White" />
+                                <HeaderStyle BackColor="#174669" Font-Bold="False" ForeColor="White" Font-Underline="False" />
                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
                                 <RowStyle BackColor="#EFF3FB" />
                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
@@ -482,21 +491,21 @@
                                 <tr>
                                     <td class="auto-style7">
 
-                                        <asp:Menu ID="pageMenu" runat="server" ForeColor="White" OnMenuItemClick="pageMenu_MenuItemClick" Orientation="Horizontal">
-                                            <StaticMenuItemStyle BackColor="#6699FF" BorderStyle="Solid" HorizontalPadding="10px" />
-                                            <StaticMenuStyle BackColor="#6699FF" />
-                                            <StaticSelectedStyle BackColor="Blue" ForeColor="White" />
+                                        <asp:Menu ID="pageMenu" runat="server" ForeColor="White" OnMenuItemClick="pageMenu_MenuItemClick" Orientation="Horizontal" Font-Bold="True">
+                                            <StaticMenuItemStyle BackColor="#174669" BorderStyle="Solid" HorizontalPadding="10px" />
+                                            <StaticMenuStyle BackColor="#174669" />
+                                            <StaticSelectedStyle BackColor="#5A788E" ForeColor="White" />
                                         </asp:Menu>
 
                                     </td>
                                     <td class="auto-style8">
 
-                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#6699FF" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" />
+                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" />
 
                                     </td>
                                     <td class="auto-style6">
 
-                                        <asp:Button ID="exportAllBtn" runat="server" BackColor="#6699FF" CssClass="auto-style9" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportAll_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export All" Width="200px" />
+                                        <asp:Button ID="exportAllBtn" runat="server" BackColor="#174669" CssClass="auto-style9" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportAll_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export All" Width="200px" />
 
                                     </td>
                                 </tr>

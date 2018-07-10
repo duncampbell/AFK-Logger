@@ -9,7 +9,7 @@ using WebApplication.ServiceReference1;
 using System.ServiceModel;
 using System.Text;
 using System.IO;
-
+using System.Security;
 namespace WebApplication
 {
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
@@ -23,7 +23,6 @@ namespace WebApplication
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
@@ -31,7 +30,6 @@ namespace WebApplication
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 CreateEmployeeTable();
             }
-            
 
         }
 
@@ -205,7 +203,7 @@ namespace WebApplication
             dt = new DataTable();
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
-            dt.Columns.Add("Device ID");
+            dt.Columns.Add("Machine Name");
             dt.Columns.Add("Time of Event", typeof(System.DateTime));
             dt.Columns.Add("Automatic");
             dt.Columns.Add("Remote");
@@ -222,7 +220,7 @@ namespace WebApplication
                     DataRow oItem = dt.NewRow();
                     oItem[0] = Entries.ElementAt(i).UserName;
                     oItem[1] = Entries.ElementAt(i).EventType;
-                    oItem[2] = Entries.ElementAt(i).DeviceID;
+                    oItem[2] = Entries.ElementAt(i).MachineName;
                     oItem[3] = Entries.ElementAt(i).TimeOfEvent;
                     oItem[4] = Entries.ElementAt(i).AutomaticLock;
                     oItem[5] = Entries.ElementAt(i).RemoteAccess;
@@ -492,7 +490,7 @@ namespace WebApplication
             }
             //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
             string FilePath = Server.MapPath("~/");
-            string FileName = "test.csv";
+            string FileName = "SessionLocks.csv";
 
             // Creates the file on server
             File.WriteAllText(FilePath + FileName, sb.ToString());
@@ -504,7 +502,56 @@ namespace WebApplication
 
         protected void ExportAll_Click(object sender, EventArgs e)
         {
+            if ((int)ViewState["PageTotal"] < 100)
+            {
+                List<DataBaseEntry> ent = new List<DataBaseEntry>();
+                switch ((string)ViewState["State"])
+                {
 
+                    case "Normal":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
+                        }
+                        break;
+                    case "SearchName":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                    case "SearchTime":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                    case "SearchNameTime":
+                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                        {
+                            ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                        }
+                        break;
+                }
+
+                var sb = new StringBuilder();
+                foreach (var data in ent)
+                {
+                    sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+                }
+                //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+                string FilePath = Server.MapPath("~/");
+                string FileName = "SessionLocks.csv";
+
+                // Creates the file on server
+                File.WriteAllText(FilePath + FileName, sb.ToString());
+                Response.ContentType = "application/octet-stream";
+                Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+                Response.TransmitFile(FilePath + FileName);
+                Response.End();
+            }else{
+                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('The amount of data is too much to export.');", true);
+            }
         }
     }
 }
