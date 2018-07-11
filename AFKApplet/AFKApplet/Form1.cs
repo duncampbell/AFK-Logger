@@ -55,7 +55,7 @@ namespace AFKApplet
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad2);
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad3);
 
-            c.GetAllEntries(0,"","");
+            //List<Employee> testList = c.GetEntriesForAlice();
         }
 
         #region Button Methods

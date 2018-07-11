@@ -93,7 +93,7 @@ namespace AFKHostedService
 
         public Employee(DataBaseEntry x)
         {
-            if (x.EventType.Equals("SessionLock") || x.EventType.Equals("SessionLogOff") || x.RemoteAccess == true)//Change When We know session names
+            if (x.EventType.Equals("SessionLock") || x.EventType.Equals("SessionLogOff") || x.EventType.Equals("AssumedAway") || x.RemoteAccess == true)//Change When We know session names
             {
                 atDesk = false;
             }
@@ -101,6 +101,7 @@ namespace AFKHostedService
             {
                 atDesk = true;
             }
+            name = x.UserName;
             eta = x.ETA;
             time = x.TimeOfEvent;
         }
