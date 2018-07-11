@@ -40,24 +40,11 @@ namespace AFKWindowsService
 
                 //c.AddDevice(device);
             }
-
-
-            //TESTING: event log serves as console output
-            eL = new EventLog();
-            if (!EventLog.SourceExists("MySource"))
-            {
-                EventLog.CreateEventSource("MySource", "MyNewLog");
-            }
-
-            eL.Source = "MySource";
-            eL.Log = "MyNewLog";
             #endregion
 
         }
-
         protected override void OnStart(string[] args)
         {
-            eL.WriteEntry("Started at " + DateTime.Now.ToShortTimeString());
         }
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
@@ -75,11 +62,10 @@ namespace AFKWindowsService
                     dBE.TimeOfEvent = DateTime.Now;
                     dBE.AutomaticLock = true;
                     dBE.RemoteAccess = true;
-                    dBE.ETA = new TimeSpan(0,30,0);
+                    dBE.ETA = new TimeSpan(0,20,0);
                     if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
                     c.AddServiceEntry(dBE);
-                    eL.WriteEntry("SessionChangeDescription.Reason: " + changeDescription.Reason);
                 }
             }
             catch (Exception e)
