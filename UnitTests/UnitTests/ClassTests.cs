@@ -11,7 +11,7 @@ namespace UnitTests
         [TestMethod]
         public void DataBaseEntryTest()
         {
-            DataBaseEntry db = new DataBaseEntry("Event Type", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            DataBaseEntry db = new DataBaseEntry("UserName", "Event Type", "User ID", "Device ID", "MachineName", "SessionID", new DateTime(), false, false, new TimeSpan());
             Assert.AreEqual(db.EventType, "Event Type");
             Assert.AreNotEqual(db.EventType, "esgsedg");
             Assert.AreEqual(db.UserID, "User ID");
@@ -31,11 +31,11 @@ namespace UnitTests
         [TestMethod]
         public void EmployeeEntryTest()
         {
-            DataBaseEntry era = new DataBaseEntry("SessionUnlocked", "User ID", "Device ID", new DateTime(), false, true, new TimeSpan(1, 50, 20));
+            DataBaseEntry era = new DataBaseEntry("UserName", "SessionUnlocked", "User ID", "Device ID", "MachineName", "SessionID", new DateTime(), false, true, new TimeSpan(1, 50, 20));
             Employee entryRemoteAccess = new Employee(era);
-            DataBaseEntry el = new DataBaseEntry("SessionLock", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            DataBaseEntry el = new DataBaseEntry("UserName", "SessionLock", "User ID", "Device ID", "MachineName", "SessionID", new DateTime(), false, false, new TimeSpan());
             Employee entryLocked = new Employee(el);
-            DataBaseEntry elo = new DataBaseEntry("SessionUnlocked", "User ID", "Device ID", new DateTime(), false, false, new TimeSpan());
+            DataBaseEntry elo = new DataBaseEntry("UserName", "SessionUnlocked", "User ID", "Device ID", "MachineName", "SessionID", new DateTime(), false, false, new TimeSpan());
             Employee entryUnlocked = new Employee(elo);
             Assert.IsFalse(entryRemoteAccess.AtDesk);
             Assert.AreEqual(entryRemoteAccess.Eta, new TimeSpan(1, 50, 20));
