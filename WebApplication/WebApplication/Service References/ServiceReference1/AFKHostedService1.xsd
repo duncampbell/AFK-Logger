@@ -177,12 +177,12 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="UpdateData">
+  <xs:element name="PopulateDataBase">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="UpdateDataResponse">
+  <xs:element name="PopulateDataBaseResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

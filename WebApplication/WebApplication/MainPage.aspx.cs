@@ -29,6 +29,7 @@ namespace WebApplication
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
+               // Proxy.PopulateDataBase();
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 CreateEmployeeTable();
             }
@@ -39,6 +40,7 @@ namespace WebApplication
         public void CreateEmployeeTable()
         {
             emp = new DataTable();
+            emp.Columns.Add("Image");
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
@@ -49,34 +51,40 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
-                oItem[0] = employees.ElementAt(i).Name;
+                
+                ///////////////////////////////////////
+                oItem[0] = employees.ElementAt(i).ProfilePic;
+                //////////////////////////////////////
+
+                oItem[1] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
-                    oItem[1] = "At Desk";
+                    oItem[2] = "At Desk";
                     remaining = new TimeSpan(0, 0, 0);
                 }
                 else
                 {
                     if (remaining > new TimeSpan(0, 0, 0))
                     {
-                        oItem[1] = "Expected Back";
+                        oItem[2] = "Expected Back";
                     }
                     else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
-                        oItem[1] = "Out of Office";
+                        oItem[2] = "Out of Office";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                     else
                     {
-                        oItem[1] = "Expected back, but late";
+                        oItem[2] = "Expected back, but late";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                 }
 
-                oItem[2] = employees.ElementAt(i).Time;
-                oItem[3] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours,remaining.Minutes,remaining.Seconds); 
+                oItem[3] = employees.ElementAt(i).Time;
+                oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours,remaining.Minutes,remaining.Seconds); 
                 emp.Rows.Add(oItem);
             }
+            ViewState["Employees"] = employees;
             employeeGrid.DataSource = emp;
             employeeGrid.DataBind();
         }
@@ -547,6 +555,52 @@ namespace WebApplication
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
             //Ignore
+        }
+
+        public void DataGridView_RowDataBound(Object sender, GridViewRowEventArgs e)
+        {
+            //Check as data
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Cells[0].Attributes.Add("OnClick", "CellClick("+e.Row.RowIndex+")");
+            }
+
+        }
+
+        protected void imageCellButton_Click(object sender, EventArgs e)
+        {
+           string x=  btn.Text;
+            x = RowSelected.Value;
+            int emp = Int32.Parse(x);
+            System.Drawing.Image img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
+            string imageName = "~/Images/hw.jpg";
+            string savePath = Server.MapPath(@"Images\hw.jpg");
+            //img.Save(savePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+           
+            employeeImage.ImageUrl = imageName;
+            PageNavigation.ActiveViewIndex = 2;
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('" + x + "');", true);
+        }
+
+        protected void SaveBtn_Click(object sender, EventArgs e)
+        {
+            if (ImageUpload.HasFile)
+            {
+                string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
+                if (extension == ".jpg" || extension == ".PNG")
+                {
+                    string path = Server.MapPath("~/Folder/");
+                    string ImageName = ImageUpload.FileName;
+                    ImageUpload.SaveAs(path+ImageName);
+                    employeeImage.ImageUrl = "Folder/" + ImageName;
+                }else
+                {
+
+                }
+
+
+            }
+            
         }
     }
 }

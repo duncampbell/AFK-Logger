@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -63,9 +64,10 @@ namespace AFKHostedService
         void ClearAllDatabases();
 
         [OperationContract]
-        void UpdateData();
+        void PopulateDataBase();
 
         #endregion
+
         #region Update Methods
         [OperationContract]
         Task<bool> UpdateADUsernames();
@@ -90,6 +92,7 @@ namespace AFKHostedService
         bool atDesk;
         TimeSpan eta;
         DateTime time;
+        Image profilePic;
 
         public Employee(DataBaseEntry x)
         {
@@ -104,7 +107,12 @@ namespace AFKHostedService
             eta = x.ETA;
             time = x.TimeOfEvent;
         }
-
+        [DataMember]
+        public Image ProfilePic
+        {
+            get { return profilePic; }
+            set { profilePic = value; }
+        }
         [DataMember]
         public string Name
         {

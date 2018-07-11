@@ -655,7 +655,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_UpdateData_Input_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_PopulateDataBase_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -678,7 +678,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_UpdateData_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_PopulateDataBase_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -845,6 +845,7 @@
       <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System" />
       <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
+      <xsd:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System.Drawing" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IService_GetAllEntries_InputMessage">
@@ -919,11 +920,11 @@
   <wsdl:message name="IService_ClearAllDatabases_OutputMessage">
     <wsdl:part name="parameters" element="tns:ClearAllDatabasesResponse" />
   </wsdl:message>
-  <wsdl:message name="IService_UpdateData_InputMessage">
-    <wsdl:part name="parameters" element="tns:UpdateData" />
+  <wsdl:message name="IService_PopulateDataBase_InputMessage">
+    <wsdl:part name="parameters" element="tns:PopulateDataBase" />
   </wsdl:message>
-  <wsdl:message name="IService_UpdateData_OutputMessage">
-    <wsdl:part name="parameters" element="tns:UpdateDataResponse" />
+  <wsdl:message name="IService_PopulateDataBase_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PopulateDataBaseResponse" />
   </wsdl:message>
   <wsdl:message name="IService_UpdateADUsernames_InputMessage">
     <wsdl:part name="parameters" element="tns:UpdateADUsernames" />
@@ -994,9 +995,9 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IService/ClearAllDatabases" message="tns:IService_ClearAllDatabases_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService/ClearAllDatabasesResponse" message="tns:IService_ClearAllDatabases_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UpdateData">
-      <wsdl:input wsaw:Action="http://tempuri.org/IService/UpdateData" message="tns:IService_UpdateData_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IService/UpdateDataResponse" message="tns:IService_UpdateData_OutputMessage" />
+    <wsdl:operation name="PopulateDataBase">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/PopulateDataBase" message="tns:IService_PopulateDataBase_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/PopulateDataBaseResponse" message="tns:IService_PopulateDataBase_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="UpdateADUsernames">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/UpdateADUsernames" message="tns:IService_UpdateADUsernames_InputMessage" />
@@ -1149,14 +1150,14 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UpdateData">
-      <soap12:operation soapAction="http://tempuri.org/IService/UpdateData" style="document" />
+    <wsdl:operation name="PopulateDataBase">
+      <soap12:operation soapAction="http://tempuri.org/IService/PopulateDataBase" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_UpdateData_Input_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_PopulateDataBase_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_UpdateData_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_PopulateDataBase_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

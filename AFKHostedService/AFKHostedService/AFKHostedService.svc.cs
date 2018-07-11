@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
 using System.Security.Permissions;
+using System.IO;
 
 namespace AFKHostedService
 {
@@ -185,7 +186,7 @@ namespace AFKHostedService
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, UserName).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
@@ -431,6 +432,9 @@ namespace AFKHostedService
                                 Employee emp = new Employee(entry);
                                 //Get name of user
                                 emp.Name = u.UserName;
+
+                                //Add image from user table to employee
+
                                 //Add to list
                                 ret.Add(emp);
                             }
@@ -670,19 +674,43 @@ namespace AFKHostedService
             }
         }
 
-        public void UpdateData()
+        public void PopulateDataBase()
         {
-           
             using (IDocumentSession s = ds.OpenSession())
             {
-                foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
+                string locked = "";
+                for (int i = 0; i<1000; i++)
                 {
-                    d.MachineName = "MachineName";
+                    if (i % 2 == 0)
+                    {
+                        locked = "SessionLock";
+                    }
+                    else
+                    {
+                        locked = "SessionUnLock";
+                    }
+                    string user= Path.GetRandomFileName();
+                    user = user.Replace(".", ""); // Remove period.
+                    string machine = Path.GetRandomFileName();
+                    machine = machine.Replace(".", ""); // Remove period.
+                    Random gen = new Random();
+                    DateTime start = new DateTime(2017, 1, 1);
+                    int range = (DateTime.Now - start).Days;
+                    DateTime time = start.AddDays(gen.Next(range));
+
+                    DateTime from = (DateTime.Now - new TimeSpan(8, 0, 0));
+                    DateTime to = DateTime.Now;
+                    Random rnd = new Random();
+                    TimeSpan ranges = new TimeSpan(to.Ticks - from.Ticks);
+                    TimeSpan eta = new TimeSpan((long)(ranges.Ticks * rnd.NextDouble()));
+
+                    DataBaseEntry x = new DataBaseEntry(user, locked, "a", "a", machine, "sessionID", time, false, false, eta);
+                    AddAppletEntry(x);
                 }
                 s.SaveChanges();
             }
         }
-
+        
         #endregion
 
         #region Update Methods
