@@ -192,6 +192,18 @@ namespace AFKApplet
         {
             if (this.WindowState == FormWindowState.Minimized) { this.Hide(); }
         }
+
+        private void AFKAppletForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
+            notifyIcon1.ShowBalloonTip(3);
+        }
+               private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //TODO: add website url once finalised
+            System.Diagnostics.Process.Start("http://Google.com");
+        }
         #endregion
 
         #region Registry Methods
@@ -259,7 +271,6 @@ namespace AFKApplet
             {
                 entry.UserID = this.userID;
                 entry.UserName = userName;
-                entry.ETA = (ETA != null) ? ETA : TimeSpan.Zero;
                 recentEntry = false;
             }
             c.AddAppletEntryAsync(entry);
@@ -278,7 +289,10 @@ namespace AFKApplet
             //Ignore
         }
 
+
         #endregion
+
+
     }
 
     #region Keyboard Hook Classes

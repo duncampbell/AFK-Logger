@@ -40,6 +40,7 @@
             // 
             // serviceInstaller
             // 
+            this.serviceInstaller.Description = "Provides historical logging functionality for the AFKLogger System. Do not stop.";
             this.serviceInstaller.ServiceName = "AFKLogger";
             this.serviceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             this.serviceInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);

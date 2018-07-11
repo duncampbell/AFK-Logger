@@ -21,15 +21,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:64626/AFKHostedService.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://192.168.10.153/AFKHostedService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AFKHostedService.xsd" MetadataType="Schema" ID="354526dd-6e0e-4ba0-91f2-da82ff060729" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd3" />
-    <MetadataFile FileName="AFKHostedService1.xsd" MetadataType="Schema" ID="af39a0ee-4d9f-41e9-a51f-9f1357b197d9" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd0" />
-    <MetadataFile FileName="AFKHostedService2.xsd" MetadataType="Schema" ID="49d941aa-ccb7-4c61-a51b-63baf8025599" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" />
-    <MetadataFile FileName="AFKHostedService.wsdl" MetadataType="Wsdl" ID="5ee1d0bd-4428-440d-ad54-95f5088f027c" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?wsdl" />
-    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="c3421409-f001-43f9-8f57-4258661d2f50" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" />
-    <MetadataFile FileName="AFKHostedService.disco" MetadataType="Disco" ID="8c09a2c9-bcef-4aa7-be2e-f3fefdd6e4a4" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?disco" />
+    <MetadataFile FileName="AFKHostedService1.wsdl" MetadataType="Wsdl" ID="db83c7fc-22d7-4dd4-bc33-4045fa55e5c8" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?wsdl" />
+    <MetadataFile FileName="AFKHostedService4.xsd" MetadataType="Schema" ID="259f95a7-5f76-4f42-ad86-45b5dd69838c" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AFKHostedService41.xsd" MetadataType="Schema" ID="e26d4816-0a91-4cd3-a368-27f668d9d7b5" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd3" />
+    <MetadataFile FileName="AFKHostedService42.xsd" MetadataType="Schema" ID="261c705b-5834-4449-b97f-53a1a8a777c1" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AFKHostedService1.disco" MetadataType="Disco" ID="f2d4ad3c-b93b-4ba8-b0b1-b67479f875a0" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?disco" />
+    <MetadataFile FileName="AFKHostedService43.xsd" MetadataType="Schema" ID="d63cd759-d296-42f1-ae12-eb481cbbdb7b" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
