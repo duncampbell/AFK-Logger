@@ -20,7 +20,7 @@ namespace AFKWindowsService
 
         void ServiceInstaller_AfterInstall(object sender, InstallEventArgs e)
         {
-            using (ServiceController sc = new ServiceController(serviceInstaller1.ServiceName))
+            using (ServiceController sc = new ServiceController(serviceInstaller.ServiceName))
             {
                 sc.Start();
             }

@@ -53,6 +53,9 @@ namespace AFKHostedService
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -81,6 +84,9 @@ namespace AFKHostedService
                                     break;
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
@@ -140,6 +146,9 @@ namespace AFKHostedService
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -168,6 +177,9 @@ namespace AFKHostedService
                                     break;
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
@@ -226,6 +238,9 @@ namespace AFKHostedService
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -254,6 +269,9 @@ namespace AFKHostedService
                                     break;
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
@@ -314,6 +332,9 @@ namespace AFKHostedService
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
@@ -342,6 +363,9 @@ namespace AFKHostedService
                                     break;
                                 case "UserID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    break;
+                                case "MachineName":
+                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();

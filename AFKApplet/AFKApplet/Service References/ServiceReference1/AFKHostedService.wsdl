@@ -1200,7 +1200,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>http://localhost:64626/AFKHostedService.svc</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>BensonJ@fofx.co.za</Upn>
+          <Upn>DuncanC@fofx.co.za</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>
