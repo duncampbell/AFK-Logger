@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
 using System.Security.Permissions;
-using System.IO;
+using System.Diagnostics;
 
 namespace AFKHostedService
 {
@@ -25,6 +25,8 @@ namespace AFKHostedService
         public AFKHostedService()
         {
             ds.Initialize();
+            Trace.WriteLine("STARTING TRACE");
+            
         }
 
         #region Get Methods
@@ -186,11 +188,7 @@ namespace AFKHostedService
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-<<<<<<< HEAD
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*"+UserName+"*").OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
-=======
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, UserName).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
->>>>>>> Duncan's-Branch
                                     break;
                                 case "AutomaticLock":
                                     ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
@@ -432,32 +430,25 @@ namespace AFKHostedService
                             int index = 0;
                             for (int i = 0; i < entries.Count; i++)
                             {
-<<<<<<< HEAD
                                 if (!entries[i].RemoteAccess && !devices.Find(x => x.DeviceID == entries[i].DeviceID).VM)
                                 {
                                     index = i;
                                     validEntry = true;
                                     break;
                                 }
-=======
-                                //Find the user's device
-                                Device ownDevice = ownDevices.Where(x => x.UserID == u.UserID).FirstOrDefault();
-                                //Fetch latest DataBaseEntry from user on their own device
-                                DataBaseEntry entry = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x=>x.UserID == u.UserID && x.DeviceID == ownDevice.DeviceID).OrderByDescending(x => x.TimeOfEvent).FirstOrDefaultAsync();
-                                //Create Employee from Entry
-                                Employee emp = new Employee(entry);
-                                //Get name of user
-                                emp.Name = u.UserName;
-
-                                //Add image from user table to employee
-
-                                //Add to list
-                                ret.Add(emp);
->>>>>>> Duncan's-Branch
                             }
                             DataBaseEntry entry = validEntry? entries[index]:null;
                             //Create Employee from Entry
                             Employee emp = new Employee(entry);
+                            try
+                            {
+                                emp.ProfilePic = s.Query<User>("User_Search").Where(x => x.UserID == emp.UserID).FirstOrDefault().ProfilePic;
+                            }
+                            catch (Exception)
+                            {
+
+                                //No profile pic for you
+                            }
                             //Add to list
                             ret.Add(emp);
                             
@@ -494,8 +485,9 @@ namespace AFKHostedService
 
         public void AddServiceEntry(DataBaseEntry entry)
         {
+            Trace.WriteLine("ADD SERVICE ENTRY ENTERED TRACE");
             //Record log-off events immediately
-            if(entry.EventType == "SessionLogfOff")
+            if (entry.EventType == "SessionLogfOff")
             {
                 AddAppletEntry(entry);
             }
@@ -530,6 +522,7 @@ namespace AFKHostedService
 
         public async void AddAppletEntry(DataBaseEntry entry)
         {
+            Trace.WriteLine("ADD APPLET ENTRY ENTERED TRACE");
             using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
                 //Load UserIDs from db
@@ -549,6 +542,8 @@ namespace AFKHostedService
 
         public bool AddDevice(Device device)
         {
+            Trace.WriteLine("ADD DEVICE ENTERED TRACE");
+
             bool success = false;
             //bool flag for the uniqueness of the device to be added
             bool unique = true;
@@ -704,43 +699,19 @@ namespace AFKHostedService
             }
         }
 
-        public void PopulateDataBase()
+        public void UpdateData()
         {
+           
             using (IDocumentSession s = ds.OpenSession())
             {
-                string locked = "";
-                for (int i = 0; i<1000; i++)
+                foreach(DataBaseEntry d in s.Query<DataBaseEntry>("DataBaseEntry_Search").ToList())
                 {
-                    if (i % 2 == 0)
-                    {
-                        locked = "SessionLock";
-                    }
-                    else
-                    {
-                        locked = "SessionUnLock";
-                    }
-                    string user= Path.GetRandomFileName();
-                    user = user.Replace(".", ""); // Remove period.
-                    string machine = Path.GetRandomFileName();
-                    machine = machine.Replace(".", ""); // Remove period.
-                    Random gen = new Random();
-                    DateTime start = new DateTime(2017, 1, 1);
-                    int range = (DateTime.Now - start).Days;
-                    DateTime time = start.AddDays(gen.Next(range));
-
-                    DateTime from = (DateTime.Now - new TimeSpan(8, 0, 0));
-                    DateTime to = DateTime.Now;
-                    Random rnd = new Random();
-                    TimeSpan ranges = new TimeSpan(to.Ticks - from.Ticks);
-                    TimeSpan eta = new TimeSpan((long)(ranges.Ticks * rnd.NextDouble()));
-
-                    DataBaseEntry x = new DataBaseEntry(user, locked, "a", "a", machine, "sessionID", time, false, false, eta);
-                    AddAppletEntry(x);
+                    d.MachineName = "MachineName";
                 }
                 s.SaveChanges();
             }
         }
-        
+
         #endregion
 
         #region Update Methods
@@ -780,7 +751,27 @@ namespace AFKHostedService
 
             return success;
         }
+        public void UpdateUser(Employee emp)
+        {
+            try
+            {
+                using (IDocumentSession s = ds.OpenSession())
+                {
+                    //Loads user from db
+                    User user = s.Query<User>("User_Search").Where(u => u.UserID == emp.UserID).FirstOrDefault();
+                    //Sets user profile pic url to employee profile pic url
+                    user.ProfilePic = emp.ProfilePic;
+                    //Save to db
+                    s.SaveChanges();
+                }
+            }
+            catch
+            {
 
+            }
+
+
+        }
         #endregion
     }
 }

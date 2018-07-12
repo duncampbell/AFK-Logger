@@ -24,22 +24,12 @@
     <MetadataSource Address="http://192.168.10.153/AFKHostedService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-<<<<<<< HEAD
     <MetadataFile FileName="AFKHostedService1.wsdl" MetadataType="Wsdl" ID="9a2d9106-b2ad-40b3-9a8d-7aba6d2ef6af" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?wsdl" />
     <MetadataFile FileName="AFKHostedService4.xsd" MetadataType="Schema" ID="cdb64e21-f84d-401e-8a8d-61b4badf8223" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd2" />
     <MetadataFile FileName="AFKHostedService41.xsd" MetadataType="Schema" ID="5ab871fd-ff4c-4c9d-972c-3ec78ad88845" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd3" />
     <MetadataFile FileName="AFKHostedService42.xsd" MetadataType="Schema" ID="3c6169d3-910d-4725-88b6-0eb6324d7b75" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd0" />
     <MetadataFile FileName="AFKHostedService1.disco" MetadataType="Disco" ID="867ec193-acc6-4b60-a2df-d3f0b9d7aced" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?disco" />
     <MetadataFile FileName="AFKHostedService43.xsd" MetadataType="Schema" ID="7e9fe490-2109-4e1a-b618-9be51027bf72" SourceId="1" SourceUrl="http://192.168.10.153/AFKHostedService.svc?xsd=xsd1" />
-=======
-    <MetadataFile FileName="AFKHostedService.xsd" MetadataType="Schema" ID="488f6e46-4787-4b9a-b761-4c4dc17070b7" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd3" />
-    <MetadataFile FileName="AFKHostedService1.xsd" MetadataType="Schema" ID="169f3354-5fd8-4e2f-8d26-59571f3d9208" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd0" />
-    <MetadataFile FileName="AFKHostedService2.xsd" MetadataType="Schema" ID="e1719436-9053-4150-8189-9781cae0ebcc" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd2" />
-    <MetadataFile FileName="AFKHostedService4.xsd" MetadataType="Schema" ID="c4f58c6e-4732-4358-b842-3fcd75b09bbf" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd4" />
-    <MetadataFile FileName="AFKHostedService.wsdl" MetadataType="Wsdl" ID="40f5057d-75ef-4187-9036-fd14161cc86c" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?wsdl" />
-    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="c4ba68a1-d055-4900-ac7f-e4aef292c5cd" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" />
-    <MetadataFile FileName="AFKHostedService.disco" MetadataType="Disco" ID="32331b75-866e-4d93-aeb7-f22fecc69ea7" SourceId="1" SourceUrl="http://localhost:64626/AFKHostedService.svc?disco" />
->>>>>>> Duncan's-Branch
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

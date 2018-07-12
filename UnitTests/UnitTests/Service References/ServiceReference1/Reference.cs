@@ -16,34 +16,46 @@ namespace UnitTests.ServiceReference1 {
     public interface IService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection);
+        System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetAllEntries(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetAllEntries", ReplyAction="http://tempuri.org/IService/GetAllEntriesResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
+        System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesOfUser", ReplyAction="http://tempuri.org/IService/GetEntriesOfUserResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetween", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesBetweenForUser", ReplyAction="http://tempuri.org/IService/GetEntriesBetweenForUserResponse")]
-        System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
+        System.TimeSpan RemainingTime(AFKHostedService.DataBaseEntry entry);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RemainingTime", ReplyAction="http://tempuri.org/IService/RemainingTimeResponse")]
+        System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(AFKHostedService.DataBaseEntry entry);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
         System.Collections.Generic.List<AFKHostedService.Employee> GetEntriesForAlice();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
         System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.Employee>> GetEntriesForAliceAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
+        string EntryOutput(AFKHostedService.DataBaseEntry str);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
+        System.Threading.Tasks.Task<string> EntryOutputAsync(AFKHostedService.DataBaseEntry str);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
         void AddServiceEntry(AFKHostedService.DataBaseEntry entry);
@@ -75,12 +87,6 @@ namespace UnitTests.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterClient", ReplyAction="http://tempuri.org/IService/RegisterClientResponse")]
         System.Threading.Tasks.Task<bool> RegisterClientAsync(string deviceID, bool service);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        string EntryOutput(AFKHostedService.DataBaseEntry str);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/EntryOutput", ReplyAction="http://tempuri.org/IService/EntryOutputResponse")]
-        System.Threading.Tasks.Task<string> EntryOutputAsync(AFKHostedService.DataBaseEntry str);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/DBTest", ReplyAction="http://tempuri.org/IService/DBTestResponse")]
         string DBTest();
         
@@ -92,18 +98,6 @@ namespace UnitTests.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ClearAllDatabases", ReplyAction="http://tempuri.org/IService/ClearAllDatabasesResponse")]
         System.Threading.Tasks.Task ClearAllDatabasesAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
-        void UpdateData();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
-        System.Threading.Tasks.Task UpdateDataAsync();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
-        bool UpdateADUsernames();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
-        System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -144,36 +138,44 @@ namespace UnitTests.ServiceReference1 {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection) {
+        public System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetAllEntries(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntries(indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetAllEntriesAsync(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntriesAsync(indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
+        public System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesOfUser(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUser(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesOfUserAsync(string UserID, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesOfUserAsync(UserID, indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesBetween(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetween(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesBetweenAsync(System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenAsync(start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Collections.Generic.List<AFKHostedService.DataBaseEntry> GetEntriesBetweenForUser(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUser(UserID, start, end, indexStart, sortField, sortDirection);
         }
         
-        public System.Threading.Tasks.Task<System.Tuple<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>, int>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.DataBaseEntry>> GetEntriesBetweenForUserAsync(string UserID, System.DateTime start, System.DateTime end, int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetEntriesBetweenForUserAsync(UserID, start, end, indexStart, sortField, sortDirection);
+        }
+        
+        public System.TimeSpan RemainingTime(AFKHostedService.DataBaseEntry entry) {
+            return base.Channel.RemainingTime(entry);
+        }
+        
+        public System.Threading.Tasks.Task<System.TimeSpan> RemainingTimeAsync(AFKHostedService.DataBaseEntry entry) {
+            return base.Channel.RemainingTimeAsync(entry);
         }
         
         public System.Collections.Generic.List<AFKHostedService.Employee> GetEntriesForAlice() {
@@ -182,6 +184,14 @@ namespace UnitTests.ServiceReference1 {
         
         public System.Threading.Tasks.Task<System.Collections.Generic.List<AFKHostedService.Employee>> GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
+        }
+        
+        public string EntryOutput(AFKHostedService.DataBaseEntry str) {
+            return base.Channel.EntryOutput(str);
+        }
+        
+        public System.Threading.Tasks.Task<string> EntryOutputAsync(AFKHostedService.DataBaseEntry str) {
+            return base.Channel.EntryOutputAsync(str);
         }
         
         public void AddServiceEntry(AFKHostedService.DataBaseEntry entry) {
@@ -224,14 +234,6 @@ namespace UnitTests.ServiceReference1 {
             return base.Channel.RegisterClientAsync(deviceID, service);
         }
         
-        public string EntryOutput(AFKHostedService.DataBaseEntry str) {
-            return base.Channel.EntryOutput(str);
-        }
-        
-        public System.Threading.Tasks.Task<string> EntryOutputAsync(AFKHostedService.DataBaseEntry str) {
-            return base.Channel.EntryOutputAsync(str);
-        }
-        
         public string DBTest() {
             return base.Channel.DBTest();
         }
@@ -246,22 +248,6 @@ namespace UnitTests.ServiceReference1 {
         
         public System.Threading.Tasks.Task ClearAllDatabasesAsync() {
             return base.Channel.ClearAllDatabasesAsync();
-        }
-        
-        public void UpdateData() {
-            base.Channel.UpdateData();
-        }
-        
-        public System.Threading.Tasks.Task UpdateDataAsync() {
-            return base.Channel.UpdateDataAsync();
-        }
-        
-        public bool UpdateADUsernames() {
-            return base.Channel.UpdateADUsernames();
-        }
-        
-        public System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync() {
-            return base.Channel.UpdateADUsernamesAsync();
         }
     }
 }

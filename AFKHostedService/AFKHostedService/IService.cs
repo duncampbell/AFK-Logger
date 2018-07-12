@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -64,13 +63,14 @@ namespace AFKHostedService
         void ClearAllDatabases();
 
         [OperationContract]
-        void PopulateDataBase();
+        void UpdateData();
 
         #endregion
-
         #region Update Methods
         [OperationContract]
         Task<bool> UpdateADUsernames();
+        [OperationContract]
+        void UpdateUser(Employee emp);
         #endregion
     }
 
@@ -89,10 +89,11 @@ namespace AFKHostedService
     public class Employee
     {
         string name = "";
+        string userID;
         bool atDesk;
         TimeSpan eta;
         DateTime time;
-        Image profilePic;
+        string profilePic;
 
         public Employee(DataBaseEntry x)
         {
@@ -105,15 +106,11 @@ namespace AFKHostedService
                 atDesk = true;
             }
             name = x.UserName;
+            userID = x.UserID;
             eta = x.ETA;
             time = x.TimeOfEvent;
         }
-        [DataMember]
-        public Image ProfilePic
-        {
-            get { return profilePic; }
-            set { profilePic = value; }
-        }
+
         [DataMember]
         public string Name
         {
@@ -138,7 +135,32 @@ namespace AFKHostedService
             get { return time; }
             set { time = value; }
         }
+        [DataMember]
+        public string ProfilePic
+        {
+            get
+            {
+                return profilePic;
+            }
 
+            set
+            {
+                profilePic = value;
+            }
+        }
+        [DataMember]
+        public string UserID
+        {
+            get
+            {
+                return userID;
+            }
+
+            set
+            {
+                userID = value;
+            }
+        }
     }
 
     [DataContract]
@@ -350,7 +372,7 @@ namespace AFKHostedService
     {
         string userID;
         string userName;
-
+        string profilePic;
         [DataMember]
         public string UserID
         {
@@ -375,6 +397,19 @@ namespace AFKHostedService
             set
             {
                 userName = value;
+            }
+        }
+        [DataMember]
+        public string ProfilePic
+        {
+            get
+            {
+                return profilePic;
+            }
+
+            set
+            {
+                profilePic = value;
             }
         }
     }

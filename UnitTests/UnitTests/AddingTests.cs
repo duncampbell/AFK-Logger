@@ -83,11 +83,11 @@ namespace UnitTests
             ServiceReference1.ServiceClient Proxy = new ServiceReference1.ServiceClient(context);
 
             List<DataBaseEntry> dataTest = new List<DataBaseEntry>();
-            DataBaseEntry dbTest = new DataBaseEntry("b", "b", "b", "b", "b", "b", new DateTime(50000), true, false, new TimeSpan(1, 50, 20));
+            DataBaseEntry dbTest = new DataBaseEntry("b", "b", "b", new DateTime(50000), true, false, new TimeSpan(1, 50, 20));
             Proxy.AddAppletEntry(dbTest);
-            dbTest = new DataBaseEntry("c", "c", "c", "c", "c", "c", new DateTime(55000), false, true, new TimeSpan(8, 50, 20));
+            dbTest = new DataBaseEntry("c", "c", "c", new DateTime(55000), false, true, new TimeSpan(8, 50, 20));
             Proxy.AddAppletEntry(dbTest);
-            dbTest = new DataBaseEntry("a", "a", "a", "a", "a", "a", new DateTime(2018, 7, 6, 11, 58, 0), false, false, new TimeSpan(1, 20, 50));
+            dbTest = new DataBaseEntry("a", "a", "a", new DateTime(2018, 7, 6, 11, 58, 0), false, false, new TimeSpan(1, 20, 50));
             Proxy.AddAppletEntry(dbTest);
 
             Assert.IsTrue(true);

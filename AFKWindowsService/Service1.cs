@@ -51,6 +51,7 @@ namespace AFKWindowsService
         {
             try
             {
+                Trace.WriteLine("Session Changed. Details: " + changeDescription.Reason);
                 InstanceContext iC = new InstanceContext(this);
                 using (ServiceClient c = new ServiceClient(iC))
                 {

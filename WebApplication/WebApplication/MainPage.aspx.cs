@@ -29,18 +29,15 @@ namespace WebApplication
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
-               // Proxy.PopulateDataBase();
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 CreateEmployeeTable();
             }
 
         }
 
-        #region Table/Grid Setups
         public void CreateEmployeeTable()
         {
             emp = new DataTable();
-            emp.Columns.Add("Image");
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
@@ -51,40 +48,34 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
-                
-                ///////////////////////////////////////
-                oItem[0] = employees.ElementAt(i).ProfilePic;
-                //////////////////////////////////////
-
-                oItem[1] = employees.ElementAt(i).Name;
+                oItem[0] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
-                    oItem[2] = "At Desk";
+                    oItem[1] = "At Desk";
                     remaining = new TimeSpan(0, 0, 0);
                 }
                 else
                 {
                     if (remaining > new TimeSpan(0, 0, 0))
                     {
-                        oItem[2] = "Expected Back";
+                        oItem[1] = "Expected Back";
                     }
                     else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
-                        oItem[2] = "Out of Office";
+                        oItem[1] = "Out of Office";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                     else
                     {
-                        oItem[2] = "Expected back, but late";
+                        oItem[1] = "Expected back, but late";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                 }
 
-                oItem[3] = employees.ElementAt(i).Time;
-                oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours,remaining.Minutes,remaining.Seconds); 
+                oItem[2] = employees.ElementAt(i).Time;
+                oItem[3] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours,remaining.Minutes,remaining.Seconds); 
                 emp.Rows.Add(oItem);
             }
-            ViewState["Employees"] = employees;
             employeeGrid.DataSource = emp;
             employeeGrid.DataBind();
         }
@@ -243,9 +234,163 @@ namespace WebApplication
             dataGridView.DataSource = dt;
             dataGridView.DataBind();
         }
-        #endregion
+        
+        public void SendResult(string test)
+        {
+            //Ignore
+        }
 
-        #region Timers
+        protected void SearchUser_Click(object sender, EventArgs e)
+        {
+            ViewState["Index"] = 0;
+            startTimeLabel.Text = "";
+            endTimeLabel.Text = "";
+            string startInput = txtStartTime.Text;
+            string endInput = txtEndTime.Text;
+            string userName = txtUser.Text;
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+
+            if (userName == "" && startInput == "" && endInput == "")//Search Blank
+            {
+                ViewState["TypeSort"] = "Descending";
+                ViewState["SortOn"] = "TimeOfEvent";
+                ViewState["State"] = "Normal";
+                tableSetUp();
+            }else if (userName != "" && startInput == "" && endInput == "")//Search Only UserName
+            {
+                ViewState["State"] = "SearchName";
+                ViewState["UserName"] = userName;
+                tableSetUp();
+            }else if (userName == "" && (startInput != "" || endInput != ""))//Search Only Time
+            {
+                bool searchable = true;
+                try
+                {
+                    string[] tokens = startInput.Split(' ');
+                    int day = Int32.Parse(tokens[2]);
+                    int month = months[tokens[1]];
+                    int year = Int32.Parse(tokens[3]);
+                    int hour = Int32.Parse(startTimeHour.Text);
+                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                    ViewState["StartTime"] = start;
+                }
+                catch
+                {
+                    searchable = false;
+                    startTimeLabel.Text = "Incorrect Format";
+                }
+                try
+                {
+                    string[] tokens = endInput.Split(' ');
+                    int day = Int32.Parse(tokens[2]);
+                    int month = months[tokens[1]];
+                    int year = Int32.Parse(tokens[3]);
+                    int hour = Int32.Parse(startTimeHour.Text);
+                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
+                    ViewState["EndTime"] = end;
+                }
+                catch{
+                    searchable = false;
+                    endTimeLabel.Text = "Incorrect Format";
+                }
+                if (searchable == true)
+                {
+                    ViewState["State"] = "SearchTime";
+                    tableSetUp();
+                }
+            }
+            else if (userName != "" && (startInput != "" || endInput != ""))//Search Time and UserName
+            {
+                bool searchable = true;
+                try
+                {
+                    string[] tokens = startInput.Split(' ');
+                    int day = Int32.Parse(tokens[2]);
+                    int month = months[tokens[1]];
+                    int year = Int32.Parse(tokens[3]);
+                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
+                    ViewState["StartTime"] = start;
+                } catch
+                {
+                    searchable = false;
+                    startTimeLabel.Text = "Incorrect Format";
+                }
+
+                try
+                {
+                    string[] tokens = endInput.Split(' ');
+                    int day = Int32.Parse(tokens[2]);
+                    int month = months[tokens[1]];
+                    int year = Int32.Parse(tokens[3]);
+                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
+                    ViewState["EndTime"] = end;
+                }
+                catch
+                {
+                    searchable = false;
+                    endTimeLabel.Text = "Incorrect Format";
+                }
+                if (searchable == true)
+                {
+                    ViewState["UserName"] = userName;
+                    ViewState["State"] = "SearchNameTime";
+                    tableSetUp();
+                }
+            }
+        }
+        
+        protected void gridView_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            if(ViewState["TypeSort"].ToString().Equals("Ascending"))
+            {
+                ViewState["TypeSort"] = "Descending";
+            }else { 
+                ViewState["TypeSort"] = "Ascending";
+            }
+            ViewState["SortOn"] = e.SortExpression;
+            
+            tableSetUp();
+        }
+
+        protected void StatusMenu_MenuItemClick(object sender, MenuEventArgs e)
+        {
+            try
+            {
+            if (e.Item.Value == "1")
+            {
+          
+                //throws exception if user isn't authorised
+                Proxy.GetAllEntries(0, "", "");
+
+                ViewState["State"] = "Normal";
+                ViewState["Index"] = 0;
+                this.StatusMenu.Items[0].Selected = true;
+                ViewState["SortOn"] = "TimeOfEvent";
+                ViewState["TypeSort"] = "Descending";
+                Tuple<List<DataBaseEntry>, int> ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
+                ViewState["Entries"] = ent.Item1;
+                int numEntries = ent.Item2;
+                int numPages = (int)Math.Ceiling((double)numEntries / 20);
+                ViewState["PageTotal"] = numPages;
+                ViewState["PageStart"] = 1;
+                tableSetUp();
+                }
+
+                int index = Int32.Parse(e.Item.Value);
+                PageNavigation.ActiveViewIndex = index;
+            }
+            catch (SecurityAccessDeniedException ex)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('You are not authorised to view these records. Please speak to your sysadmin to be added to the AFKLogAdmin group.');", true);
+            }
+        }
+
+        public void FinishDataBaseEntry(DataBaseEntry entry)
+        {
+            //Ignore
+        }
+
         protected void UpdateTimer_Tick(object sender, EventArgs e)
         {
             ViewState["Employees"] = Proxy.GetEntriesForAlice();
@@ -256,9 +401,7 @@ namespace WebApplication
         {
             CreateEmployeeTable();
         }
-        #endregion
 
-        #region Click Events
         protected void pageMenu_MenuItemClick(object sender, MenuEventArgs e)
         {
             if (e.Item.Value == "<")
@@ -290,6 +433,12 @@ namespace WebApplication
             }
             tableSetUp();
         }
+
+        public TimeSpan remainingTime(Employee em)
+        {
+            TimeSpan remaining = em.Eta - (DateTime.Now - em.Time);
+            return remaining;
+        }
         
         protected void ExportPage_Click(object sender, EventArgs e)
         {
@@ -316,15 +465,15 @@ namespace WebApplication
             {
                 sb.AppendLine(data.UserName + "," + data.EventType + "," +data.UserID+ ", "  +data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
-            string FilePath = Server.MapPath("~");
+            //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+            string FilePath = Server.MapPath("~/");
             string FileName = "SessionLocks.csv";
+
             // Creates the file on server
             File.WriteAllText(FilePath + FileName, sb.ToString());
-            //System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
-            Response.Clear();
-            Response.ContentType = "application/CSV";
-            Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-            Response.TransmitFile(Server.MapPath("~/" + FileName));
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+            Response.TransmitFile(FilePath + FileName);
             Response.End();
         }
 
@@ -367,240 +516,24 @@ namespace WebApplication
                 {
                     sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
                 }
-                string FilePath = Server.MapPath("~");
+                //File.WriteAllText("C:/Users/Public/Documents", sb.ToString());
+                string FilePath = Server.MapPath("~/");
                 string FileName = "SessionLocks.csv";
+
                 // Creates the file on server
                 File.WriteAllText(FilePath + FileName, sb.ToString());
-                //System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
-                Response.Clear();
-                Response.ContentType = "application/CSV";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-                Response.TransmitFile(Server.MapPath("~/" + FileName));
+                Response.ContentType = "application/octet-stream";
+                Response.AppendHeader("content-disposition", "attachment;filename=" + FileName);
+                Response.TransmitFile(FilePath + FileName);
                 Response.End();
-            }
-            else{
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
+            }else{
+                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('The amount of data is too much to export.');", true);
             }
         }
 
         protected void updateUserNames(object sender, EventArgs e)
         {
             Proxy.UpdateADUsernames();
-        }
-
-        protected void SearchUser_Click(object sender, EventArgs e)
-        {
-            ViewState["Index"] = 0;
-            startTimeLabel.Text = "";
-            endTimeLabel.Text = "";
-            string startInput = txtStartTime.Text;
-            string endInput = txtEndTime.Text;
-            string userName = txtUser.Text;
-            DateTime start = new DateTime();
-            DateTime end = new DateTime();
-
-            if (userName == "" && startInput == "" && endInput == "")//Search Blank
-            {
-                ViewState["TypeSort"] = "Descending";
-                ViewState["SortOn"] = "TimeOfEvent";
-                ViewState["State"] = "Normal";
-                tableSetUp();
-            }
-            else if (userName != "" && startInput == "" && endInput == "")//Search Only UserName
-            {
-                ViewState["State"] = "SearchName";
-                ViewState["UserName"] = userName;
-                tableSetUp();
-            }
-            else if (userName == "" && (startInput != "" || endInput != ""))//Search Only Time
-            {
-                bool searchable = true;
-                try
-                {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
-                    int hour = Int32.Parse(startTimeHour.Text);
-                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
-                    ViewState["StartTime"] = start;
-                }
-                catch
-                {
-                    searchable = false;
-                    startTimeLabel.Text = "Incorrect Format";
-                }
-                try
-                {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
-                    int hour = Int32.Parse(startTimeHour.Text);
-                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
-                    ViewState["EndTime"] = end;
-                }
-                catch
-                {
-                    searchable = false;
-                    endTimeLabel.Text = "Incorrect Format";
-                }
-                if (searchable == true)
-                {
-                    ViewState["State"] = "SearchTime";
-                    tableSetUp();
-                }
-            }
-            else if (userName != "" && (startInput != "" || endInput != ""))//Search Time and UserName
-            {
-                bool searchable = true;
-                try
-                {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
-                    start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
-                    ViewState["StartTime"] = start;
-                }
-                catch
-                {
-                    searchable = false;
-                    startTimeLabel.Text = "Incorrect Format";
-                }
-
-                try
-                {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
-                    end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
-                    ViewState["EndTime"] = end;
-                }
-                catch
-                {
-                    searchable = false;
-                    endTimeLabel.Text = "Incorrect Format";
-                }
-                if (searchable == true)
-                {
-                    ViewState["UserName"] = userName;
-                    ViewState["State"] = "SearchNameTime";
-                    tableSetUp();
-                }
-            }
-        }
-
-        protected void gridView_Sorting(object sender, GridViewSortEventArgs e)
-        {
-            if (ViewState["TypeSort"].ToString().Equals("Ascending"))
-            {
-                ViewState["TypeSort"] = "Descending";
-            }
-            else
-            {
-                ViewState["TypeSort"] = "Ascending";
-            }
-            ViewState["SortOn"] = e.SortExpression;
-
-            tableSetUp();
-        }
-
-        protected void StatusMenu_MenuItemClick(object sender, MenuEventArgs e)
-        {
-            try
-            {
-                if (e.Item.Value == "1")
-                {
-
-                    //throws exception if user isn't authorised
-                    Proxy.GetAllEntries(0, "", "");
-
-                    ViewState["State"] = "Normal";
-                    ViewState["Index"] = 0;
-                    this.StatusMenu.Items[0].Selected = true;
-                    ViewState["SortOn"] = "TimeOfEvent";
-                    ViewState["TypeSort"] = "Descending";
-                    Tuple<List<DataBaseEntry>, int> ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
-                    ViewState["Entries"] = ent.Item1;
-                    int numEntries = ent.Item2;
-                    int numPages = (int)Math.Ceiling((double)numEntries / 20);
-                    ViewState["PageTotal"] = numPages;
-                    ViewState["PageStart"] = 1;
-                    tableSetUp();
-                }
-
-                int index = Int32.Parse(e.Item.Value);
-                PageNavigation.ActiveViewIndex = index;
-            }
-            catch (SecurityAccessDeniedException ex)
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('You are not authorised to view these records. Please speak to your sysadmin to be added to the AFKLogAdmin group.');", true);
-            }
-        }
-        #endregion
-
-        public TimeSpan remainingTime(Employee em)
-        {
-            TimeSpan remaining = em.Eta - (DateTime.Now - em.Time);
-            return remaining;
-        }
-
-        public void SendResult(string test)
-        {
-            //Ignore
-        }
-
-        public void FinishDataBaseEntry(DataBaseEntry entry)
-        {
-            //Ignore
-        }
-
-        public void DataGridView_RowDataBound(Object sender, GridViewRowEventArgs e)
-        {
-            //Check as data
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                e.Row.Cells[0].Attributes.Add("OnClick", "CellClick("+e.Row.RowIndex+")");
-            }
-
-        }
-
-        protected void imageCellButton_Click(object sender, EventArgs e)
-        {
-           string x=  btn.Text;
-            x = RowSelected.Value;
-            int emp = Int32.Parse(x);
-            System.Drawing.Image img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string imageName = "~/Images/hw.jpg";
-            string savePath = Server.MapPath(@"Images\hw.jpg");
-            //img.Save(savePath, System.Drawing.Imaging.ImageFormat.Jpeg);
-           
-            employeeImage.ImageUrl = imageName;
-            PageNavigation.ActiveViewIndex = 2;
-            //ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('" + x + "');", true);
-        }
-
-        protected void SaveBtn_Click(object sender, EventArgs e)
-        {
-            if (ImageUpload.HasFile)
-            {
-                string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
-                if (extension == ".jpg" || extension == ".PNG")
-                {
-                    string path = Server.MapPath("~/Folder/");
-                    string ImageName = ImageUpload.FileName;
-                    ImageUpload.SaveAs(path+ImageName);
-                    employeeImage.ImageUrl = "Folder/" + ImageName;
-                }else
-                {
-
-                }
-
-
-            }
-            
         }
     }
 }

@@ -45,20 +45,12 @@
         .auto-style12 {
             margin-top: 0px;
         }
-        .auto-style13 {
-            margin-left: 590px;
-        }
-        .auto-style14 {
-            margin-left: 593px;
-        }
         </style>
 </head>
 <body style ="background: #fafeff">
      <meta http-equiv="Page-Enter" content="blendTrans(Duration=0.2)" />
     <meta http-equiv="Page-Exit" content="blendTrans(Duration=0.2)" />
-    
     <form id="form1" runat="server" >
-        <asp:HiddenField runat="server" ID="RowSelected" />
     <div style="margin-left:auto; margin-right:auto; " class="auto-style10">
         <asp:Panel ID="Panel2" runat="server" BackColor="#FAFEFF" Height="85px" Width="1400px">
             <asp:Image ID="Image1" runat="server" CssClass="auto-style11" Height="75px" ImageUrl="~/Content/Capture.PNG" Width="250px" />
@@ -76,36 +68,28 @@
                 <StaticSelectedStyle BackColor="#174669" ForeColor="White" Font-Bold="True" />
             </asp:Menu>
         </asp:Panel>
-        <asp:ScriptManager  ID="ScriptManager1" runat="server">
+        <asp:ScriptManager  EnablePartialRendering="true" ID="ScriptManager1" runat="server">
                     </asp:ScriptManager>
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
-            
                 <asp:View ID="View2" runat="server">
                     <asp:Timer ID="updateTimer" runat="server" Interval ="3000" OnTick="UpdateTimer_Tick">
                     </asp:Timer>
                     <asp:Timer ID="etaTimer" runat="server" Interval ="1000" OnTick="etaTimer_Tick">
                     </asp:Timer>
+                    <br />
                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID = "updateTimer" />
                             <asp:AsyncPostBackTrigger ControlID = "etaTimer" />
                         </Triggers>
                         <ContentTemplate>
-                            <asp:Button ID="btn" runat="server" Value = "0"  Style ="visibility:hidden" ClientIDMode="Static" onClick="imageCellButton_Click" Width="147px"/>
-                            
-                            <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" CellPadding="4" Font-Bold="False" Font-Names="Lato" ForeColor="#333333" GridLines="None" Height="50px" OnRowDataBound="DataGridView_RowDataBound" PageSize="100" style="margin-top: 0px" Width="1400px">
+                            <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" Height="50px" PageSize="100" style="margin-top: 0px" Width="1400px" CellPadding="4" ForeColor="#333333" GridLines="None" Font-Names="Lato" Font-Bold="False">
                                 <AlternatingRowStyle BackColor="White" />
                                 <Columns>
-                                    <asp:TemplateField HeaderText="Image">
-                                        <ItemTemplate>
-                                            <!-- ImageUrl='%# "ImageHandler.ashx?ImID="+ Eval("ImageID") %' -->
-                                            <asp:Image ID="Image1" runat="server" Height="150px" Width="150px" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
                                     <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
                                     <ItemStyle Width="400px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status">
+                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status" >
                                     <ControlStyle Width="0px" />
                                     <ItemStyle Width="300px" />
                                     </asp:BoundField>
@@ -113,13 +97,13 @@
                                     <HeaderStyle Width="200px" />
                                     <ItemStyle Width="400px" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA">
+                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA" >
                                     <ItemStyle Width="300px" />
                                     </asp:BoundField>
                                 </Columns>
                                 <EditRowStyle BackColor="#2461BF" />
                                 <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#174669" Font-Bold="False" Font-Italic="False" Font-Names="Lato" Font-Overline="False" Font-Size="Medium" Font-Strikeout="False" Font-Underline="False" ForeColor="White" Wrap="True" />
+                                <HeaderStyle BackColor="#174669" Font-Bold="False" ForeColor="White" Font-Italic="False" Font-Names="Lato" Font-Overline="False" Font-Size="Medium" Font-Strikeout="False" Font-Underline="False" Wrap="True" />
                                 <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
                                 <RowStyle BackColor="#EFF3FB" />
                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
@@ -128,13 +112,6 @@
                                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
-                            <script type="text/javascript" >
-                                function CellClick(rowNum)
-                                {
-                                    document.getElementById('<%=RowSelected.ClientID %>').value = rowNum;
-                                    document.getElementById('btn').click();
-                                    }
-                            </script>
                             <br />
                         </ContentTemplate>
                     </asp:UpdatePanel>
@@ -144,175 +121,175 @@
                 </asp:View>
                 <asp:View ID="View1" runat="server">
                    
-                <br />
-                <asp:TextBox ID="txtStartTime" runat="server" Height="10px" style="margin-left: 465px; margin-bottom: 7px" Width="240px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
-                &nbsp;
-                <asp:DropDownList ID="startTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
-                <asp:ListItem>00</asp:ListItem>
-                <asp:ListItem>01</asp:ListItem>
-                <asp:ListItem>02</asp:ListItem>
-                <asp:ListItem>03</asp:ListItem>
-                <asp:ListItem>04</asp:ListItem>
-                <asp:ListItem>05</asp:ListItem>
-                <asp:ListItem>06</asp:ListItem>
-                <asp:ListItem>07</asp:ListItem>
-                <asp:ListItem>08</asp:ListItem>
-                <asp:ListItem>09</asp:ListItem>
-                <asp:ListItem>10</asp:ListItem>
-                <asp:ListItem>11</asp:ListItem>
-                <asp:ListItem>12</asp:ListItem>
-                <asp:ListItem>13</asp:ListItem>
-                <asp:ListItem>14</asp:ListItem>
-                <asp:ListItem>15</asp:ListItem>
-                <asp:ListItem>16</asp:ListItem>
-                <asp:ListItem>17</asp:ListItem>
-                <asp:ListItem>18</asp:ListItem>
-                <asp:ListItem>19</asp:ListItem>
-                <asp:ListItem>20</asp:ListItem>
-                <asp:ListItem>21</asp:ListItem>
-                <asp:ListItem>22</asp:ListItem>
-                <asp:ListItem>23</asp:ListItem>
-            </asp:DropDownList>
-                &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
-                <asp:ListItem>00</asp:ListItem>
-                <asp:ListItem>01</asp:ListItem>
-                <asp:ListItem>02</asp:ListItem>
-                <asp:ListItem>03</asp:ListItem>
-                <asp:ListItem>04</asp:ListItem>
-                <asp:ListItem>05</asp:ListItem>
-                <asp:ListItem>06</asp:ListItem>
-                <asp:ListItem>07</asp:ListItem>
-                <asp:ListItem>08</asp:ListItem>
-                <asp:ListItem>09</asp:ListItem>
-                <asp:ListItem>10</asp:ListItem>
-                <asp:ListItem>11</asp:ListItem>
-                <asp:ListItem>12</asp:ListItem>
-                <asp:ListItem>13</asp:ListItem>
-                <asp:ListItem>14</asp:ListItem>
-                <asp:ListItem>15</asp:ListItem>
-                <asp:ListItem>16</asp:ListItem>
-                <asp:ListItem>17</asp:ListItem>
-                <asp:ListItem>18</asp:ListItem>
-                <asp:ListItem>19</asp:ListItem>
-                <asp:ListItem>20</asp:ListItem>
-                <asp:ListItem>21</asp:ListItem>
-                <asp:ListItem>22</asp:ListItem>
-                <asp:ListItem>23</asp:ListItem>
-                <asp:ListItem>24</asp:ListItem>
-                <asp:ListItem>25</asp:ListItem>
-                <asp:ListItem>26</asp:ListItem>
-                <asp:ListItem>27</asp:ListItem>
-                <asp:ListItem>28</asp:ListItem>
-                <asp:ListItem>29</asp:ListItem>
-                <asp:ListItem>30</asp:ListItem>
-                <asp:ListItem>31</asp:ListItem>
-                <asp:ListItem>32</asp:ListItem>
-                <asp:ListItem>33</asp:ListItem>
-                <asp:ListItem>34</asp:ListItem>
-                <asp:ListItem>35</asp:ListItem>
-                <asp:ListItem>36</asp:ListItem>
-                <asp:ListItem>37</asp:ListItem>
-                <asp:ListItem>38</asp:ListItem>
-                <asp:ListItem>39</asp:ListItem>
-                <asp:ListItem>40</asp:ListItem>
-                <asp:ListItem>41</asp:ListItem>
-                <asp:ListItem>42</asp:ListItem>
-                <asp:ListItem>43</asp:ListItem>
-                <asp:ListItem>44</asp:ListItem>
-                <asp:ListItem>45</asp:ListItem>
-                <asp:ListItem>46</asp:ListItem>
-                <asp:ListItem>47</asp:ListItem>
-                <asp:ListItem>48</asp:ListItem>
-                <asp:ListItem>49</asp:ListItem>
-                <asp:ListItem>50</asp:ListItem>
-                <asp:ListItem>51</asp:ListItem>
-                <asp:ListItem>52</asp:ListItem>
-                <asp:ListItem>53</asp:ListItem>
-                <asp:ListItem>54</asp:ListItem>
-                <asp:ListItem>55</asp:ListItem>
-                <asp:ListItem>56</asp:ListItem>
-                <asp:ListItem>57</asp:ListItem>
-                <asp:ListItem>58</asp:ListItem>
-                <asp:ListItem>59</asp:ListItem>
-            </asp:DropDownList>
-                &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
-                <asp:ListItem>00</asp:ListItem>
-                <asp:ListItem>01</asp:ListItem>
-                <asp:ListItem>02</asp:ListItem>
-                <asp:ListItem>03</asp:ListItem>
-                <asp:ListItem>04</asp:ListItem>
-                <asp:ListItem>05</asp:ListItem>
-                <asp:ListItem>06</asp:ListItem>
-                <asp:ListItem>07</asp:ListItem>
-                <asp:ListItem>08</asp:ListItem>
-                <asp:ListItem>09</asp:ListItem>
-                <asp:ListItem>10</asp:ListItem>
-                <asp:ListItem>11</asp:ListItem>
-                <asp:ListItem>12</asp:ListItem>
-                <asp:ListItem>13</asp:ListItem>
-                <asp:ListItem>14</asp:ListItem>
-                <asp:ListItem>15</asp:ListItem>
-                <asp:ListItem>16</asp:ListItem>
-                <asp:ListItem>17</asp:ListItem>
-                <asp:ListItem>18</asp:ListItem>
-                <asp:ListItem>19</asp:ListItem>
-                <asp:ListItem>20</asp:ListItem>
-                <asp:ListItem>21</asp:ListItem>
-                <asp:ListItem>22</asp:ListItem>
-                <asp:ListItem>23</asp:ListItem>
-                <asp:ListItem>24</asp:ListItem>
-                <asp:ListItem>25</asp:ListItem>
-                <asp:ListItem>26</asp:ListItem>
-                <asp:ListItem>27</asp:ListItem>
-                <asp:ListItem>28</asp:ListItem>
-                <asp:ListItem>29</asp:ListItem>
-                <asp:ListItem>30</asp:ListItem>
-                <asp:ListItem>31</asp:ListItem>
-                <asp:ListItem>32</asp:ListItem>
-                <asp:ListItem>33</asp:ListItem>
-                <asp:ListItem>34</asp:ListItem>
-                <asp:ListItem>35</asp:ListItem>
-                <asp:ListItem>36</asp:ListItem>
-                <asp:ListItem>37</asp:ListItem>
-                <asp:ListItem>38</asp:ListItem>
-                <asp:ListItem>39</asp:ListItem>
-                <asp:ListItem>40</asp:ListItem>
-                <asp:ListItem>41</asp:ListItem>
-                <asp:ListItem>42</asp:ListItem>
-                <asp:ListItem>43</asp:ListItem>
-                <asp:ListItem>44</asp:ListItem>
-                <asp:ListItem>45</asp:ListItem>
-                <asp:ListItem>46</asp:ListItem>
-                <asp:ListItem>47</asp:ListItem>
-                <asp:ListItem>48</asp:ListItem>
-                <asp:ListItem>49</asp:ListItem>
-                <asp:ListItem>50</asp:ListItem>
-                <asp:ListItem>51</asp:ListItem>
-                <asp:ListItem>52</asp:ListItem>
-                <asp:ListItem>53</asp:ListItem>
-                <asp:ListItem>54</asp:ListItem>
-                <asp:ListItem>55</asp:ListItem>
-                <asp:ListItem>56</asp:ListItem>
-                <asp:ListItem>57</asp:ListItem>
-                <asp:ListItem>58</asp:ListItem>
-                <asp:ListItem>59</asp:ListItem>
-            </asp:DropDownList>
-                &nbsp;
-                <asp:Label ID="startTimeLabel" runat="server"></asp:Label>
-                <br />
-                <script type="text/javascript">
-                    var picker = new Pikaday(
-                    {
-                        field: document.getElementById('txtStartTime'),
-                        firstDay: 1,
-                        minDate: new Date('2017-01-01'),
-                        maxDate: new Date('2030-12-31'),
-                        yearRange: [2017, 2030],
-                        numberOfMonths: 1,
-                    });
-                </script>
-                <asp:TextBox ID="txtEndTime" runat="server" Height="10px" style="margin-left: 465px" Width="240px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
-                <script type="text/javascript">
+        <br />
+            <asp:TextBox ID="txtStartTime" runat="server" Height="10px" style="margin-left: 465px; margin-bottom: 7px" Width="240px" AutoCompleteType="Disabled" EnableTheming="True"></asp:TextBox>
+            &nbsp;
+            <asp:DropDownList ID="startTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            <asp:ListItem>00</asp:ListItem>
+            <asp:ListItem>01</asp:ListItem>
+            <asp:ListItem>02</asp:ListItem>
+            <asp:ListItem>03</asp:ListItem>
+            <asp:ListItem>04</asp:ListItem>
+            <asp:ListItem>05</asp:ListItem>
+            <asp:ListItem>06</asp:ListItem>
+            <asp:ListItem>07</asp:ListItem>
+            <asp:ListItem>08</asp:ListItem>
+            <asp:ListItem>09</asp:ListItem>
+            <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem>11</asp:ListItem>
+            <asp:ListItem>12</asp:ListItem>
+            <asp:ListItem>13</asp:ListItem>
+            <asp:ListItem>14</asp:ListItem>
+            <asp:ListItem>15</asp:ListItem>
+            <asp:ListItem>16</asp:ListItem>
+            <asp:ListItem>17</asp:ListItem>
+            <asp:ListItem>18</asp:ListItem>
+            <asp:ListItem>19</asp:ListItem>
+            <asp:ListItem>20</asp:ListItem>
+            <asp:ListItem>21</asp:ListItem>
+            <asp:ListItem>22</asp:ListItem>
+            <asp:ListItem>23</asp:ListItem>
+        </asp:DropDownList>
+            &nbsp;<asp:DropDownList ID="startTimeMin" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            <asp:ListItem>00</asp:ListItem>
+            <asp:ListItem>01</asp:ListItem>
+            <asp:ListItem>02</asp:ListItem>
+            <asp:ListItem>03</asp:ListItem>
+            <asp:ListItem>04</asp:ListItem>
+            <asp:ListItem>05</asp:ListItem>
+            <asp:ListItem>06</asp:ListItem>
+            <asp:ListItem>07</asp:ListItem>
+            <asp:ListItem>08</asp:ListItem>
+            <asp:ListItem>09</asp:ListItem>
+            <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem>11</asp:ListItem>
+            <asp:ListItem>12</asp:ListItem>
+            <asp:ListItem>13</asp:ListItem>
+            <asp:ListItem>14</asp:ListItem>
+            <asp:ListItem>15</asp:ListItem>
+            <asp:ListItem>16</asp:ListItem>
+            <asp:ListItem>17</asp:ListItem>
+            <asp:ListItem>18</asp:ListItem>
+            <asp:ListItem>19</asp:ListItem>
+            <asp:ListItem>20</asp:ListItem>
+            <asp:ListItem>21</asp:ListItem>
+            <asp:ListItem>22</asp:ListItem>
+            <asp:ListItem>23</asp:ListItem>
+            <asp:ListItem>24</asp:ListItem>
+            <asp:ListItem>25</asp:ListItem>
+            <asp:ListItem>26</asp:ListItem>
+            <asp:ListItem>27</asp:ListItem>
+            <asp:ListItem>28</asp:ListItem>
+            <asp:ListItem>29</asp:ListItem>
+            <asp:ListItem>30</asp:ListItem>
+            <asp:ListItem>31</asp:ListItem>
+            <asp:ListItem>32</asp:ListItem>
+            <asp:ListItem>33</asp:ListItem>
+            <asp:ListItem>34</asp:ListItem>
+            <asp:ListItem>35</asp:ListItem>
+            <asp:ListItem>36</asp:ListItem>
+            <asp:ListItem>37</asp:ListItem>
+            <asp:ListItem>38</asp:ListItem>
+            <asp:ListItem>39</asp:ListItem>
+            <asp:ListItem>40</asp:ListItem>
+            <asp:ListItem>41</asp:ListItem>
+            <asp:ListItem>42</asp:ListItem>
+            <asp:ListItem>43</asp:ListItem>
+            <asp:ListItem>44</asp:ListItem>
+            <asp:ListItem>45</asp:ListItem>
+            <asp:ListItem>46</asp:ListItem>
+            <asp:ListItem>47</asp:ListItem>
+            <asp:ListItem>48</asp:ListItem>
+            <asp:ListItem>49</asp:ListItem>
+            <asp:ListItem>50</asp:ListItem>
+            <asp:ListItem>51</asp:ListItem>
+            <asp:ListItem>52</asp:ListItem>
+            <asp:ListItem>53</asp:ListItem>
+            <asp:ListItem>54</asp:ListItem>
+            <asp:ListItem>55</asp:ListItem>
+            <asp:ListItem>56</asp:ListItem>
+            <asp:ListItem>57</asp:ListItem>
+            <asp:ListItem>58</asp:ListItem>
+            <asp:ListItem>59</asp:ListItem>
+        </asp:DropDownList>
+            &nbsp;<asp:DropDownList ID="startTimeSec" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            <asp:ListItem>00</asp:ListItem>
+            <asp:ListItem>01</asp:ListItem>
+            <asp:ListItem>02</asp:ListItem>
+            <asp:ListItem>03</asp:ListItem>
+            <asp:ListItem>04</asp:ListItem>
+            <asp:ListItem>05</asp:ListItem>
+            <asp:ListItem>06</asp:ListItem>
+            <asp:ListItem>07</asp:ListItem>
+            <asp:ListItem>08</asp:ListItem>
+            <asp:ListItem>09</asp:ListItem>
+            <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem>11</asp:ListItem>
+            <asp:ListItem>12</asp:ListItem>
+            <asp:ListItem>13</asp:ListItem>
+            <asp:ListItem>14</asp:ListItem>
+            <asp:ListItem>15</asp:ListItem>
+            <asp:ListItem>16</asp:ListItem>
+            <asp:ListItem>17</asp:ListItem>
+            <asp:ListItem>18</asp:ListItem>
+            <asp:ListItem>19</asp:ListItem>
+            <asp:ListItem>20</asp:ListItem>
+            <asp:ListItem>21</asp:ListItem>
+            <asp:ListItem>22</asp:ListItem>
+            <asp:ListItem>23</asp:ListItem>
+            <asp:ListItem>24</asp:ListItem>
+            <asp:ListItem>25</asp:ListItem>
+            <asp:ListItem>26</asp:ListItem>
+            <asp:ListItem>27</asp:ListItem>
+            <asp:ListItem>28</asp:ListItem>
+            <asp:ListItem>29</asp:ListItem>
+            <asp:ListItem>30</asp:ListItem>
+            <asp:ListItem>31</asp:ListItem>
+            <asp:ListItem>32</asp:ListItem>
+            <asp:ListItem>33</asp:ListItem>
+            <asp:ListItem>34</asp:ListItem>
+            <asp:ListItem>35</asp:ListItem>
+            <asp:ListItem>36</asp:ListItem>
+            <asp:ListItem>37</asp:ListItem>
+            <asp:ListItem>38</asp:ListItem>
+            <asp:ListItem>39</asp:ListItem>
+            <asp:ListItem>40</asp:ListItem>
+            <asp:ListItem>41</asp:ListItem>
+            <asp:ListItem>42</asp:ListItem>
+            <asp:ListItem>43</asp:ListItem>
+            <asp:ListItem>44</asp:ListItem>
+            <asp:ListItem>45</asp:ListItem>
+            <asp:ListItem>46</asp:ListItem>
+            <asp:ListItem>47</asp:ListItem>
+            <asp:ListItem>48</asp:ListItem>
+            <asp:ListItem>49</asp:ListItem>
+            <asp:ListItem>50</asp:ListItem>
+            <asp:ListItem>51</asp:ListItem>
+            <asp:ListItem>52</asp:ListItem>
+            <asp:ListItem>53</asp:ListItem>
+            <asp:ListItem>54</asp:ListItem>
+            <asp:ListItem>55</asp:ListItem>
+            <asp:ListItem>56</asp:ListItem>
+            <asp:ListItem>57</asp:ListItem>
+            <asp:ListItem>58</asp:ListItem>
+            <asp:ListItem>59</asp:ListItem>
+        </asp:DropDownList>
+            &nbsp;
+        <asp:Label ID="startTimeLabel" runat="server"></asp:Label>
+            <br />
+            <script type="text/javascript">
+                var picker = new Pikaday(
+                {
+                    field: document.getElementById('txtStartTime'),
+                    firstDay: 1,
+                    minDate: new Date('2017-01-01'),
+                    maxDate: new Date('2030-12-31'),
+                    yearRange: [2017, 2030],
+                    numberOfMonths: 1,
+                });
+            </script>
+                    <asp:TextBox ID="txtEndTime" runat="server" Height="10px" style="margin-left: 465px" Width="240px" autocomplete="off" AutoCompleteType="Disabled"></asp:TextBox>
+                    <script type="text/javascript">
                 var picker = new Pikaday(
                 {
                     field: document.getElementById('txtEndTime'),
@@ -323,8 +300,8 @@
                     numberOfMonths: 1,
                 });
             </script>
-                &nbsp;
-                <asp:DropDownList ID="endTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            &nbsp;
+            <asp:DropDownList ID="endTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -350,69 +327,7 @@
             <asp:ListItem>22</asp:ListItem>
             <asp:ListItem>23</asp:ListItem>
         </asp:DropDownList>
-                &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
-            <asp:ListItem>00</asp:ListItem>
-            <asp:ListItem>01</asp:ListItem>
-            <asp:ListItem>02</asp:ListItem>
-            <asp:ListItem>03</asp:ListItem>
-            <asp:ListItem>04</asp:ListItem>
-            <asp:ListItem>05</asp:ListItem>
-            <asp:ListItem>06</asp:ListItem>
-            <asp:ListItem>07</asp:ListItem>
-            <asp:ListItem>08</asp:ListItem>
-            <asp:ListItem>09</asp:ListItem>
-            <asp:ListItem>10</asp:ListItem>
-            <asp:ListItem>11</asp:ListItem>
-            <asp:ListItem>12</asp:ListItem>
-            <asp:ListItem>13</asp:ListItem>
-            <asp:ListItem>14</asp:ListItem>
-            <asp:ListItem>15</asp:ListItem>
-            <asp:ListItem>16</asp:ListItem>
-            <asp:ListItem>17</asp:ListItem>
-            <asp:ListItem>18</asp:ListItem>
-            <asp:ListItem>19</asp:ListItem>
-            <asp:ListItem>20</asp:ListItem>
-            <asp:ListItem>21</asp:ListItem>
-            <asp:ListItem>22</asp:ListItem>
-            <asp:ListItem>23</asp:ListItem>
-            <asp:ListItem>24</asp:ListItem>
-            <asp:ListItem>25</asp:ListItem>
-            <asp:ListItem>26</asp:ListItem>
-            <asp:ListItem>27</asp:ListItem>
-            <asp:ListItem>28</asp:ListItem>
-            <asp:ListItem>29</asp:ListItem>
-            <asp:ListItem>30</asp:ListItem>
-            <asp:ListItem>31</asp:ListItem>
-            <asp:ListItem>32</asp:ListItem>
-            <asp:ListItem>33</asp:ListItem>
-            <asp:ListItem>34</asp:ListItem>
-            <asp:ListItem>35</asp:ListItem>
-            <asp:ListItem>36</asp:ListItem>
-            <asp:ListItem>37</asp:ListItem>
-            <asp:ListItem>38</asp:ListItem>
-            <asp:ListItem>39</asp:ListItem>
-            <asp:ListItem>40</asp:ListItem>
-            <asp:ListItem>41</asp:ListItem>
-            <asp:ListItem>42</asp:ListItem>
-            <asp:ListItem>43</asp:ListItem>
-            <asp:ListItem>44</asp:ListItem>
-            <asp:ListItem>45</asp:ListItem>
-            <asp:ListItem>46</asp:ListItem>
-            <asp:ListItem>47</asp:ListItem>
-            <asp:ListItem>48</asp:ListItem>
-            <asp:ListItem>49</asp:ListItem>
-            <asp:ListItem>50</asp:ListItem>
-            <asp:ListItem>51</asp:ListItem>
-            <asp:ListItem>52</asp:ListItem>
-            <asp:ListItem>53</asp:ListItem>
-            <asp:ListItem>54</asp:ListItem>
-            <asp:ListItem>55</asp:ListItem>
-            <asp:ListItem>56</asp:ListItem>
-            <asp:ListItem>57</asp:ListItem>
-            <asp:ListItem>58</asp:ListItem>
-            <asp:ListItem>59</asp:ListItem>
-        </asp:DropDownList>
-                &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            &nbsp;<asp:DropDownList ID="endTimeMin" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
             <asp:ListItem>00</asp:ListItem>
             <asp:ListItem>01</asp:ListItem>
             <asp:ListItem>02</asp:ListItem>
@@ -474,13 +389,75 @@
             <asp:ListItem>58</asp:ListItem>
             <asp:ListItem>59</asp:ListItem>
         </asp:DropDownList>
-                &nbsp;
-                <asp:Label ID="endTimeLabel" runat="server"></asp:Label>
-                <br />
-                <asp:TextBox ID="txtUser" runat="server" style="margin-left: 565px" Width="240px" Height="10px"></asp:TextBox>
-                <br />
-                <asp:Button ID="searchBtn" runat="server" OnClick="SearchUser_Click" style="margin-left: 565px; margin-bottom: 7px;" Text="Search" Width="260px" Height="30px" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" CssClass="auto-style12" />
-                <br />
+            &nbsp;<asp:DropDownList ID="endTimeSec" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
+            <asp:ListItem>00</asp:ListItem>
+            <asp:ListItem>01</asp:ListItem>
+            <asp:ListItem>02</asp:ListItem>
+            <asp:ListItem>03</asp:ListItem>
+            <asp:ListItem>04</asp:ListItem>
+            <asp:ListItem>05</asp:ListItem>
+            <asp:ListItem>06</asp:ListItem>
+            <asp:ListItem>07</asp:ListItem>
+            <asp:ListItem>08</asp:ListItem>
+            <asp:ListItem>09</asp:ListItem>
+            <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem>11</asp:ListItem>
+            <asp:ListItem>12</asp:ListItem>
+            <asp:ListItem>13</asp:ListItem>
+            <asp:ListItem>14</asp:ListItem>
+            <asp:ListItem>15</asp:ListItem>
+            <asp:ListItem>16</asp:ListItem>
+            <asp:ListItem>17</asp:ListItem>
+            <asp:ListItem>18</asp:ListItem>
+            <asp:ListItem>19</asp:ListItem>
+            <asp:ListItem>20</asp:ListItem>
+            <asp:ListItem>21</asp:ListItem>
+            <asp:ListItem>22</asp:ListItem>
+            <asp:ListItem>23</asp:ListItem>
+            <asp:ListItem>24</asp:ListItem>
+            <asp:ListItem>25</asp:ListItem>
+            <asp:ListItem>26</asp:ListItem>
+            <asp:ListItem>27</asp:ListItem>
+            <asp:ListItem>28</asp:ListItem>
+            <asp:ListItem>29</asp:ListItem>
+            <asp:ListItem>30</asp:ListItem>
+            <asp:ListItem>31</asp:ListItem>
+            <asp:ListItem>32</asp:ListItem>
+            <asp:ListItem>33</asp:ListItem>
+            <asp:ListItem>34</asp:ListItem>
+            <asp:ListItem>35</asp:ListItem>
+            <asp:ListItem>36</asp:ListItem>
+            <asp:ListItem>37</asp:ListItem>
+            <asp:ListItem>38</asp:ListItem>
+            <asp:ListItem>39</asp:ListItem>
+            <asp:ListItem>40</asp:ListItem>
+            <asp:ListItem>41</asp:ListItem>
+            <asp:ListItem>42</asp:ListItem>
+            <asp:ListItem>43</asp:ListItem>
+            <asp:ListItem>44</asp:ListItem>
+            <asp:ListItem>45</asp:ListItem>
+            <asp:ListItem>46</asp:ListItem>
+            <asp:ListItem>47</asp:ListItem>
+            <asp:ListItem>48</asp:ListItem>
+            <asp:ListItem>49</asp:ListItem>
+            <asp:ListItem>50</asp:ListItem>
+            <asp:ListItem>51</asp:ListItem>
+            <asp:ListItem>52</asp:ListItem>
+            <asp:ListItem>53</asp:ListItem>
+            <asp:ListItem>54</asp:ListItem>
+            <asp:ListItem>55</asp:ListItem>
+            <asp:ListItem>56</asp:ListItem>
+            <asp:ListItem>57</asp:ListItem>
+            <asp:ListItem>58</asp:ListItem>
+            <asp:ListItem>59</asp:ListItem>
+        </asp:DropDownList>
+            &nbsp;
+        <asp:Label ID="endTimeLabel" runat="server"></asp:Label>
+            <br />
+            <asp:TextBox ID="txtUser" runat="server" style="margin-left: 565px" Width="240px" Height="10px"></asp:TextBox>
+            <br />
+            <asp:Button ID="searchBtn" runat="server" OnClick="SearchUser_Click" style="margin-left: 565px; margin-bottom: 7px;" Text="Search" Width="260px" Height="30px" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" CssClass="auto-style12" />
+        <br />
                     <asp:UpdatePanel ID="dataUpdatePanel" runat="server">
                         <ContentTemplate>
                             <asp:GridView ID="dataGridView" runat="server" AllowSorting="True" AutoGenerateColumns="False" AutoPostBack="False" Height="90px" OnSorting="gridView_Sorting" PageSize="20" style="margin-top: 0px" Width="1400px" CellPadding="4" Font-Names="Lato" ForeColor="#333333" GridLines="None">
@@ -535,7 +512,7 @@
                                     </td>
                                     <td class="auto-style8">
 
-                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" CausesValidation="False" />
+                                        <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" />
 
                                     </td>
                                     <td class="auto-style6">
@@ -548,16 +525,7 @@
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </asp:View>
-                <asp:View ID="View3" runat="server">
-                    <br />
-                <asp:Image ID="employeeImage" runat="server" CssClass="auto-style13" Height="300px" Width="300px" />
-                    <br />
-                <br />
-                    <asp:Button ID="SaveBtn" runat="server" CssClass="auto-style14" OnClick="SaveBtn_Click" Text="Save" Width="84px" />
-                <asp:FileUpload ID="ImageUpload" runat="server" CssClass="auto-style9" Width="213px" />
-                    <br />
-                </asp:View>
-                </asp:MultiView>
+            </asp:MultiView>
 
             
         

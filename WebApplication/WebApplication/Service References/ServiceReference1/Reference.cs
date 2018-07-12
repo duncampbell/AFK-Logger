@@ -221,9 +221,6 @@ namespace WebApplication.ServiceReference1 {
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Drawing.Image ProfilePicField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime TimeField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -271,19 +268,6 @@ namespace WebApplication.ServiceReference1 {
                 if ((object.ReferenceEquals(this.NameField, value) != true)) {
                     this.NameField = value;
                     this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Drawing.Image ProfilePic {
-            get {
-                return this.ProfilePicField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ProfilePicField, value) != true)) {
-                    this.ProfilePicField = value;
-                    this.RaisePropertyChanged("ProfilePic");
                 }
             }
         }
@@ -563,11 +547,11 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ClearAllDatabases", ReplyAction="http://tempuri.org/IService/ClearAllDatabasesResponse")]
         System.Threading.Tasks.Task ClearAllDatabasesAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/PopulateDataBase", ReplyAction="http://tempuri.org/IService/PopulateDataBaseResponse")]
-        void PopulateDataBase();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
+        void UpdateData();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/PopulateDataBase", ReplyAction="http://tempuri.org/IService/PopulateDataBaseResponse")]
-        System.Threading.Tasks.Task PopulateDataBaseAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateData", ReplyAction="http://tempuri.org/IService/UpdateDataResponse")]
+        System.Threading.Tasks.Task UpdateDataAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
         bool UpdateADUsernames();
@@ -718,12 +702,12 @@ namespace WebApplication.ServiceReference1 {
             return base.Channel.ClearAllDatabasesAsync();
         }
         
-        public void PopulateDataBase() {
-            base.Channel.PopulateDataBase();
+        public void UpdateData() {
+            base.Channel.UpdateData();
         }
         
-        public System.Threading.Tasks.Task PopulateDataBaseAsync() {
-            return base.Channel.PopulateDataBaseAsync();
+        public System.Threading.Tasks.Task UpdateDataAsync() {
+            return base.Channel.UpdateDataAsync();
         }
         
         public bool UpdateADUsernames() {

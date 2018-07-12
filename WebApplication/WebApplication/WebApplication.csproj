@@ -193,7 +193,6 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-<<<<<<< HEAD
     <None Include="Service References\ServiceReference1\AFKHostedService1.wsdl" />
     <None Include="Service References\ServiceReference1\AFKHostedService4.xsd">
       <SubType>Designer</SubType>
@@ -207,12 +206,6 @@
     <None Include="Service References\ServiceReference1\AFKHostedService43.xsd">
       <SubType>Designer</SubType>
     </None>
-=======
-    <None Include="Service References\ServiceReference1\AFKHostedService.disco" />
-    <None Include="Service References\ServiceReference1\AFKHostedService4.xsd">
-      <SubType>Designer</SubType>
-    </None>
->>>>>>> Duncan's-Branch
     <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
     <None Include="Service References\ServiceReference1\configuration.svcinfo" />
     <None Include="Service References\ServiceReference1\Reference.svcmap">
