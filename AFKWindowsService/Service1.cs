@@ -61,10 +61,8 @@ namespace AFKWindowsService
                     dBE.MachineName = machineName;
                     dBE.SessionID = changeDescription.SessionId.ToString();
                     dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = true;
-                    dBE.RemoteAccess = true;
+                    dBE.AutomaticLock = (changeDescription.Reason == SessionChangeReason.SessionUnlock|| changeDescription.Reason == SessionChangeReason.SessionLogon) ? false:true;
                     dBE.ETA = new TimeSpan(0,20,0);
-                    if(changeDescription.Reason == SessionChangeReason.ConsoleConnect || changeDescription.Reason == SessionChangeReason.ConsoleDisconnect) { dBE.RemoteAccess = false; }
 
                     c.AddServiceEntry(dBE);
                 }

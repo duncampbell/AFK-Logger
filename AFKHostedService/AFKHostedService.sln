@@ -21,9 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AFKApplet", "..\AFKApplet\A
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "..\WebApplication\WebApplication\WebApplication.csproj", "{1A51AA02-C4E2-4BB0-99DA-68E1E3CE1E7D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F699D2A3-E0FC-4434-A5C5-98885ACA8220} = {F699D2A3-E0FC-4434-A5C5-98885ACA8220}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
