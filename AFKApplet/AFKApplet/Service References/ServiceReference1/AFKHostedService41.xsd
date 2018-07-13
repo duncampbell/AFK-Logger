@@ -33,7 +33,9 @@
       <xs:element minOccurs="0" name="AtDesk" type="xs:boolean" />
       <xs:element minOccurs="0" name="Eta" type="ser:duration" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProfilePic" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Time" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Employee" nillable="true" type="tns:Employee" />
@@ -49,6 +51,7 @@
   <xs:element name="Device" nillable="true" type="tns:Device" />
   <xs:complexType name="User">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ProfilePic" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
     </xs:sequence>

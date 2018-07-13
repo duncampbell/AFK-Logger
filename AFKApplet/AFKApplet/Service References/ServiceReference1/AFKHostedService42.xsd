@@ -199,6 +199,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="UpdateUser">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="emp" nillable="true" type="q11:Employee" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="SendResult">
     <xs:complexType>
       <xs:sequence>
@@ -214,7 +226,7 @@
   <xs:element name="FinishDataBaseEntry">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q11:DataBaseEntry" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q12:DataBaseEntry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

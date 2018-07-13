@@ -20,6 +20,7 @@ namespace AFKHostedService
         private static Dictionary<string, IMyContractCallback> clients = new Dictionary<string, IMyContractCallback>();
         private static object locker = new object();
         IDocumentStore ds = new DocumentStore() { Urls = new[] { "http://192.168.10.153:8080" }, Database = "TestDB", Conventions = { } };
+        bool recentEntry = false;
         #endregion
 
         public AFKHostedService()
@@ -483,54 +484,86 @@ namespace AFKHostedService
 
         #region Add Methods
 
-        public void AddServiceEntry(DataBaseEntry entry)
+        public async void AddServiceEntry(DataBaseEntry entry)
         {
-            Trace.WriteLine("ADD SERVICE ENTRY ENTERED TRACE");
-            //Record log-off events immediately
-            if (entry.EventType == "SessionLogfOff")
+            Trace.WriteLine("ADD SERVICE ENTRY START RECENTENTRY: " + recentEntry);
+            if (!recentEntry) //Prevets double recording of lock events
             {
-                AddAppletEntry(entry);
-            }
-            else
-            {
-                var inactiveClients = new List<string>();
-                foreach (var client in clients)
+                Trace.WriteLine("ADD SERVICE ENTRY ENTERED TRACE");
+                Trace.WriteLine("EVENT TYPE: " + entry.EventType);
+                if (entry.EventType == "SessionLock" || entry.EventType == "SessionUnlock")
                 {
-                    if (client.Key.Substring(client.Key.Length-7) !=  "-Service")//stops services being called
-                    {   
-                        try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
+                    Trace.WriteLine("IF STATEMENT ENTERED");
+                    var inactiveClients = new List<string>();
+                    foreach (var client in clients)
+                    {
+                        Trace.WriteLine("CLIENT: " + client.Key + ": " + client.Value);
+                        if (client.Key.Substring(client.Key.Length - 7) != "-Service")//stops services being called
                         {
-                            //The applet then calls the AddAppletEntry method to complete the record
-                            client.Value.FinishDataBaseEntry(entry);
+                            Trace.WriteLine("SECOND IF ENTERED");
+                            try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
+                            {
+                                //The applet then calls the AddAppletEntry method to complete the record
+                                Trace.WriteLine("ATTEMPTING FINISHDATABASEENTRY");
+                                client.Value.FinishDataBaseEntry(entry);
+                                Trace.WriteLine("POST ATTEMPTING FINISHDATABASEENTRY");
+                            }
+                            catch
+                            {
+                                Trace.WriteLine("CLIENT CAUGHT");
+                                inactiveClients.Add(client.Key);
+                            }
+                        }
+                    }
+                    //removes inactive clients from client list
+                    if (inactiveClients.Count > 0)
+                    {
+                        foreach (var client in inactiveClients)
+                        {
+                            clients.Remove(client);
+                        }
+                    }
+                }
+                //Record log-off events immediately
+                else
+                {
+                    Trace.WriteLine("ATTEMPTING IMMEDIATE ADD");
+                    using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+                    {
+                        try
+                        {
+                            Trace.WriteLine("NEW ENTRY DEVICE ID: " + entry.DeviceID);
+                            //Find last entry for device
+                            DataBaseEntry dBE = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.DeviceID == entry.DeviceID).OrderByDescending(y => y.TimeOfEvent).FirstAsync();
+                            entry.UserID = dBE.UserID;
+                            entry.UserName = dBE.UserName;
+                            Trace.WriteLine("Last entry UserID: " + dBE.UserID + "\nLast entry UserName: " + dBE.UserName);
                         }
                         catch
                         {
-                            inactiveClients.Add(client.Key);
+
+                            //Must be the device's first entry or something
                         }
                     }
-                }
-                //removes inactive clients from client list
-                if (inactiveClients.Count > 0)
-                {
-                    foreach(var client in inactiveClients)
-                    {
-                        clients.Remove(client);
-                    }
-                }
+                    AddAppletEntry(entry);
+                    Trace.WriteLine("POST ATTEMPTING IMMEDIATE ADD");
+                } 
             }
+            recentEntry = false;
+            Trace.WriteLine("ADD SERVICE ENTRY START RECENTENTRY: " + recentEntry);
         }
 
         public async void AddAppletEntry(DataBaseEntry entry)
         {
+            //Prevent double-adding lock event
+            recentEntry = entry.AutomaticLock ? false:true;
             Trace.WriteLine("ADD APPLET ENTRY ENTERED TRACE");
             using (IAsyncDocumentSession s = ds.OpenAsyncSession())
             {
-                //Load UserIDs from db
-                IList<string> userIDs = await s.Query<Device>("Device_Search").Select(x => x.UserID).ToListAsync();
                 //Load DeviceIDs from db
                 IList<string> deviceIDs = await s.Query<Device>("Device_Search").Select(x => x.DeviceID).ToListAsync();
                 //Check that device and user exist
-                if (userIDs.Contains(entry.UserID) && deviceIDs.Contains(entry.DeviceID))
+                if (deviceIDs.Contains(entry.DeviceID))
                 {
                     //Add to db and save
                     await s.StoreAsync(entry);

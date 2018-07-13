@@ -79,6 +79,7 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
+
                 string x = employees.ElementAt(i).ProfilePic;
                 Random r = new Random();
                 
@@ -582,6 +583,7 @@ namespace WebApplication
 
         protected void imageCellButton_Click(object sender, EventArgs e)
         {
+
             string x = RowSelected.Value;
             int emp = Int32.Parse(x);
             Random r = new Random();
@@ -605,6 +607,7 @@ namespace WebApplication
                     ImageUpload.SaveAs(path);
                     Random r = new Random();
                     employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
+
                     ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
                     Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
                     //HttpResponse.RemoveOutputCacheItem("MainPage.aspx");
