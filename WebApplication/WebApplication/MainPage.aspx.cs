@@ -14,6 +14,7 @@ using System.ServiceModel.Security;
 using System.Net;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Collections;
 
 namespace WebApplication
 {
@@ -25,28 +26,49 @@ namespace WebApplication
         //List<DataBaseEntry> Entries;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
         List<Employee> employees;
-       
+      
 
         protected void Page_Load(object sender, EventArgs e)
         {
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
-
+            HttpResponse.RemoveOutputCacheItem("/WebsiteAppplication/MainPage.aspx");
+            ClearApplicationCache();
             if (!IsPostBack)
             {
+                
+                ViewState["Refresh"] = true;
                 ViewState["Index"] = 0;
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
+                pictureGrid.DataBind();
                 employeeGrid.DataBind();
+                ViewState["Refresh"] = true;
             }
             
         }
 
         #region Table/Grid Setups
-      
+
+        public DataTable CreateEmployeePictureTable()
+        {
+
+            emp = new DataTable();
+            emp.Columns.Add("PictureURL", typeof(string));
+            
+            employees = (List<Employee>)ViewState["Employees"];
+            for (int i = 0; i < employees.Count; i++)
+            {
+                DataRow oItem = emp.NewRow();
+                string pat = "Folder/" + employees.ElementAt(i).Name + ".PNG" ; 
+                oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString();
+                emp.Rows.Add(oItem);
+            }
+            return emp;
+        }
+
         public DataTable CreateEmployeeTable()
         {
             emp = new DataTable();
-            emp.Columns.Add("PictureURL", typeof(string));
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
@@ -58,34 +80,35 @@ namespace WebApplication
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
                 string x = employees.ElementAt(i).ProfilePic;
-                string pat = ResolveUrl("~/Folder/"+ x);
-                oItem[0] = pat;
-                oItem[1] = employees.ElementAt(i).Name;
+                Random r = new Random();
+                
+                
+                oItem[0] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
-                    oItem[2] = "At Desk";
+                    oItem[1] = "At Desk";
                     remaining = new TimeSpan(0, 0, 0);
                 }
                 else
                 {
                     if (remaining > new TimeSpan(0, 0, 0))
                     {
-                        oItem[2] = "Expected Back";
+                        oItem[1] = "Expected Back";
                     }
                     else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
-                        oItem[2] = "Out of Office";
+                        oItem[1] = "Out of Office";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                     else
                     {
-                        oItem[2] = "Expected back, but late";
+                        oItem[1] = "Expected back, but late";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                 }
 
-                oItem[3] = employees.ElementAt(i).Time;
-                oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
+                oItem[2] = employees.ElementAt(i).Time;
+                oItem[3] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
                 emp.Rows.Add(oItem);
             }
             
@@ -243,7 +266,7 @@ namespace WebApplication
         #region Timers
         protected void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            //ViewState["Employees"] = Proxy.GetEntriesForAlice();
+            ViewState["Employees"] = Proxy.GetEntriesForAlice();
             employeeGrid.DataBind();
         }
 
@@ -561,8 +584,9 @@ namespace WebApplication
         {
             string x = RowSelected.Value;
             int emp = Int32.Parse(x);
+            Random r = new Random();
             string img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string path ="Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
+            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);// + "?r=" + DateTime.Now.Ticks.ToString(); ;
             employeeImage.ImageUrl = path;
             PageNavigation.ActiveViewIndex = 2;
         }
@@ -574,23 +598,59 @@ namespace WebApplication
                 string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
                 if (extension == ".jpg" || extension == ".PNG" || extension == ".png" || extension == ".JPG" || extension == ".jpeg" || extension == ".JPEG")
                 {
-                    string path = Server.MapPath("~/Folder/");
                     string x = RowSelected.Value;
                     int emp = Int32.Parse(x);
                     string ImageName = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
-                    ImageUpload.SaveAs(path+ImageName);
-                    string pic = ImageName + "?r=" + DateTime.Now.Ticks.ToString();
-                    employeeImage.ImageUrl = "Folder/" + pic;
-                    ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = pic;
+                    string path = Server.MapPath("~/Folder/" + ImageName);
+                    ImageUpload.SaveAs(path);
+                    Random r = new Random();
+                    employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
+                    ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
                     Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
+                    //HttpResponse.RemoveOutputCacheItem("MainPage.aspx");
+                    
                 }
                 else
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('This is an incorrect file type.');", true);
                 }
+                pictureGrid.DataBind();
 
             }
            
+        }
+
+        public void ClearApplicationCache()
+
+        {
+            
+            
+            List<string> keys = new List<string>();
+
+            // retrieve application
+
+            IDictionaryEnumerator enumerator = Cache.GetEnumerator();
+
+            // copy all keys that currently exist in Cache
+
+            while (enumerator.MoveNext())
+
+            {
+
+                keys.Add(enumerator.Key.ToString());
+
+            }
+
+            // delete every key from cache
+
+            for (int i = 0; i < keys.Count; i++)
+
+            {
+
+                Cache.Remove(keys[i]);
+
+            }
+            
         }
     }
 }

@@ -51,6 +51,13 @@
         .auto-style14 {
             margin-left: 593px;
         }
+        .auto-style15 {
+            width: 1601px;
+            height: 36px;
+        }
+        .auto-style16 {
+            margin-right: 0px;
+        }
         </style>
 </head>
 <body style ="background: #fafeff">
@@ -89,41 +96,48 @@
                             <asp:AsyncPostBackTrigger ControlID = "etaTimer" />
                         </Triggers>
                         <ContentTemplate>
+                            <table border="0">
+                                <tr>
+                                    <td class="auto-style15">
+                                         <asp:GridView ID="pictureGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeePictureTable() %>" GridLines="None" Height="50px" OnRowDataBound="DataGridView_RowDataBound" PageSize="100" style="margin-top: 0px" Width="200px">
+                                            <Columns>
+                                                <asp:ImageField DataImageUrlField="PictureURL">
+                                                    <ControlStyle Height="200px" Width="200px" />
+                                                    <ItemStyle Height="200px" Width="200px" />
+                                                </asp:ImageField>
+                                            </Columns>
+                                            <HeaderStyle Font-Names="Lato" Font-Size="Medium" Wrap="True" />
+                                        </asp:GridView>
+                                    </td>
+                                    <td class="auto-style8">
+                                        <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeeTable() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" Height="50px" PageSize="100" style="margin-top: 0px" Width="1200px">
+                                            <Columns>
+                                                <asp:BoundField DataField="Status" ReadOnly="True" SortExpression="Status">
+                                                <ControlStyle Height="200px" />
+                                                <ItemStyle Width="300px" Height="200px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Name" ReadOnly="True" SortExpression="Name">
+                                                <ControlStyle Height="200px" Width="300px" />
+                                                <ItemStyle Width="250px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Time of Event" SortExpression="Time of Event">
+                                                <ControlStyle Height="200px" />
+                                                <HeaderStyle Width="200px" />
+                                                <ItemStyle Width="400px" Height="200px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="ETA" ReadOnly="True" SortExpression="ETA">
+                                                <ControlStyle Height="200px" />
+                                                <ItemStyle Width="250px" Height="200px" />
+                                                </asp:BoundField>
+                                            </Columns>
+                                            <HeaderStyle Font-Names="Lato" Font-Size="Medium" Wrap="True" />
+                                        </asp:GridView>
+
+                                    </td>
+                                </tr>
+                            </table>
                             <asp:Button ID="btn" runat="server" Value = "0"  Style ="visibility:hidden" ClientIDMode="Static" onClick="imageCellButton_Click" Width="147px"/>
                             
-                            <asp:GridView ID="employeeGrid" runat="server" DataSource='<%# CreateEmployeeTable() %>' AutoGenerateColumns="False" AutoPostBack="False" CellPadding="4" Font-Bold="False" Font-Names="Lato" ForeColor="#333333" GridLines="None" Height="50px" OnRowDataBound="DataGridView_RowDataBound" PageSize="100" style="margin-top: 0px" Width="1400px">
-                                <AlternatingRowStyle BackColor="White" />
-                                <Columns>
-                                    <asp:ImageField DataImageUrlField="PictureURL">
-                                        <ControlStyle Height="200px" Width="200px" />
-                                        <ItemStyle Height="200px" Width="200px" />
-                                    </asp:ImageField>
-                                    <asp:BoundField DataField="Name" HeaderText="Name" ReadOnly="True" SortExpression="Name">
-                                    <ControlStyle Width="0px" />
-                                    <ItemStyle Width="250px" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="Status">
-                                    <ItemStyle Width="300px" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="Time of Event" HeaderText="Time of Event" SortExpression="Time of Event">
-                                    <HeaderStyle Width="200px" />
-                                    <ItemStyle Width="400px" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="ETA" HeaderText="ETA" ReadOnly="True" SortExpression="ETA">
-                                    <ItemStyle Width="250px" />
-                                    </asp:BoundField>
-                                </Columns>
-                                <EditRowStyle BackColor="#2461BF" />
-                                <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                <HeaderStyle BackColor="#174669" Font-Bold="False" Font-Italic="False" Font-Names="Lato" Font-Overline="False" Font-Size="Medium" Font-Strikeout="False" Font-Underline="False" ForeColor="White" Wrap="True" />
-                                <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
-                                <RowStyle BackColor="#EFF3FB" />
-                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                <SortedAscendingCellStyle BackColor="#F5F7FB" />
-                                <SortedAscendingHeaderStyle BackColor="#6D95E1" />
-                                <SortedDescendingCellStyle BackColor="#E9EBEF" />
-                                <SortedDescendingHeaderStyle BackColor="#4870BE" />
-                            </asp:GridView>
                             <script type="text/javascript" >
                                 function CellClick(rowNum)
                                 {
