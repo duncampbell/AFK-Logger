@@ -57,9 +57,9 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
-                string x = employees.ElementAt(i).ProfilePic;
-                string pat = ResolveUrl("~/Folder/"+ x);
-                oItem[0] = pat;
+                string x = employees.ElementAt(i).Name + ".PNG";
+                 string pat = employees.ElementAt(i).ProfilePic;
+                oItem[0] =  pat;
                 oItem[1] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
@@ -243,7 +243,7 @@ namespace WebApplication
         #region Timers
         protected void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            //ViewState["Employees"] = Proxy.GetEntriesForAlice();
+            ViewState["Employees"] = Proxy.GetEntriesForAlice();
             employeeGrid.DataBind();
         }
 
@@ -559,10 +559,12 @@ namespace WebApplication
 
         protected void imageCellButton_Click(object sender, EventArgs e)
         {
+
             string x = RowSelected.Value;
             int emp = Int32.Parse(x);
+            Random r = new Random();
             string img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string path ="Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
+            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);// + "?r=" + DateTime.Now.Ticks.ToString(); ;
             employeeImage.ImageUrl = path;
             PageNavigation.ActiveViewIndex = 2;
         }
@@ -574,23 +576,21 @@ namespace WebApplication
                 string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
                 if (extension == ".jpg" || extension == ".PNG" || extension == ".png" || extension == ".JPG" || extension == ".jpeg" || extension == ".JPEG")
                 {
-                    string path = Server.MapPath("~/Folder/");
                     string x = RowSelected.Value;
                     int emp = Int32.Parse(x);
                     string ImageName = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
-                    ImageUpload.SaveAs(path+ImageName);
-                    string pic = ImageName + "?r=" + DateTime.Now.Ticks.ToString();
-                    employeeImage.ImageUrl = "Folder/" + pic;
-                    ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = pic;
+                    string path = Server.MapPath("~/Folder/" + ImageName);
+                    ImageUpload.SaveAs(path);
+                    Random r = new Random();
+                    employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
+                    ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName + "?" + r.Next(1, 10000);
                     Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
                 }
                 else
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('This is an incorrect file type.');", true);
                 }
-
             }
-           
-        }
+ }
     }
 }

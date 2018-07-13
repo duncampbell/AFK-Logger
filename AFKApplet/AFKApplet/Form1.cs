@@ -29,7 +29,8 @@ namespace AFKApplet
         InstanceContext iC;
         ServiceClient c;
 
-        bool recentEntry = false;
+        [DllImport("user32")]
+        public static extern void LockWorkStation();
 
         TimeSpan ETA;
         #endregion
@@ -111,7 +112,8 @@ namespace AFKApplet
 
                 MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            //TODO: add lock method
+            //Lock machine
+            LockWorkStation();
         }
 
         //Add device manually
@@ -267,11 +269,10 @@ namespace AFKApplet
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
             //Confirms deviceID is correct and prevents duplicate entry
-            if (this.deviceID == entry.DeviceID && sessionID == entry.SessionID &&  !recentEntry)
+            if (this.deviceID == entry.DeviceID && sessionID == entry.SessionID)
             {
                 entry.UserID = this.userID;
                 entry.UserName = userName;
-                recentEntry = false;
             }
             c.AddAppletEntryAsync(entry);
 

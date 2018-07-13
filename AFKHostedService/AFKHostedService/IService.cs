@@ -66,6 +66,7 @@ namespace AFKHostedService
         void UpdateData();
 
         #endregion
+
         #region Update Methods
         [OperationContract]
         Task<bool> UpdateADUsernames();
@@ -97,7 +98,7 @@ namespace AFKHostedService
 
         public Employee(DataBaseEntry x)
         {
-            if (x.EventType.Equals("SessionLock") || x.EventType.Equals("SessionLogOff") || x.EventType.Equals("AssumedAway") || x.RemoteAccess == true)//Change When We know session names
+            if (x.EventType.Equals("SessionLock") || x.EventType.Equals("SessionLogoff") || x.EventType.Equals("AssumedAway") || x.RemoteAccess == true || x.EventType.Equals("ConsoleDisconnect"))//Change When We know session names
             {
                 atDesk = false;
             }
