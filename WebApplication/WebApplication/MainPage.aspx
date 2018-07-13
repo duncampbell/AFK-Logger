@@ -21,6 +21,8 @@
             font-weight: normal;
             font-style: normal;
         }
+
+       
         .auto-style6 {
             width: 185px;
             height: 36px;
@@ -39,6 +41,7 @@
         }
         .auto-style9 {
             margin-left: 0px;
+            border: none;
         }
         .auto-style10 {
             width: 1400px;
@@ -48,11 +51,12 @@
         }
         .auto-style12 {
             margin-top: 0px;
+            border: none;
         }
         .auto-style15 {
             width: 100px;
             padding: 0px;
-             margin: 0;
+            margin: 0;
             margin-bottom:0;
             margin-top:0px;
             margin-left:0px;
@@ -71,16 +75,22 @@
 
         }
         .auto-style16 {
-            width: 151px;
+            width: 150px;
+            background-color:  #174669; 
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+           
         }
-        .auto-style17 {
-            margin-left: 550px;
-        }
-
+        
         .imageStyle {
             width: 100px;
             height: 100px;
-             margin: 0;
+            display: inline-block;
+             margin: 0px;
             margin-bottom:0px;
             margin-top:1px;
             margin-left:0px;
@@ -96,7 +106,7 @@
             border-right-width:0;
             border-bottom-width:0;
             border-top-width:0;
-            display: inline-block;
+            
         }
 
         .tableStyle{
@@ -139,6 +149,41 @@
             display: inline-block;
             
         }
+        .gridStyle2{
+            margin: 0;
+            margin-bottom:0;
+            margin-top:0px;
+            margin-left:0px;
+            margin-right:0px;
+            padding:0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            border:0;
+            border-width:0;
+            border-left-width:0;
+            border-right-width:0;
+            border-bottom-width:0;
+            border-top-width:0;
+            
+        }
+        .auto-style18 {
+            margin-left: 450px;
+        }
+        .auto-style20 {
+            border-style: none;
+            border-color: inherit;
+            border-width: medium;
+            width: 150px;
+            background-color: #174669;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 450px;
+            }
         </style>
 </head>
 <body style ="background: #fafeff">
@@ -165,7 +210,6 @@
             </asp:Menu>
         </asp:Panel>
         <asp:ScriptManager  ID="ScriptManager1" runat="server"></asp:ScriptManager>
-        
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
                 <asp:View ID="View2" runat="server">
                     <asp:Timer ID="updateTimer" runat="server" Interval ="3000" OnTick="UpdateTimer_Tick">
@@ -192,7 +236,7 @@
                                         </asp:GridView>
                                     </td>
                                     <td class ="auto-style15">
-                                        <asp:GridView ID="employeeGrid" runat="server" OnRowDataBound="DataGridView_RowDataBound" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeeTable() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" PageSize="100" style="margin-top: 0px" Width="1300px">
+                                        <asp:GridView ID="employeeGrid" runat="server" class ="gridStyle" OnRowDataBound="DataGridView_RowDataBound" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeesTable() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" PageSize="100" style="margin-top: 0px" Width="1300px">
                                             <Columns>
                                                 <asp:BoundField DataField="Name" ReadOnly="True" SortExpression="Name">
                                                 <ControlStyle Height="100px" Width="200px" />
@@ -620,6 +664,7 @@
                                 <SortedDescendingCellStyle BackColor="#E9EBEF" />
                                 <SortedDescendingHeaderStyle BackColor="#4870BE" />
                             </asp:GridView>
+                            
                             <table>
                                 <tr>
                                     <td class="auto-style7">
@@ -633,41 +678,74 @@
                                         <asp:Button ID="updateUsers" runat="server" BackColor="#174669" CssClass="auto-style9" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="updateUserNames" style="margin-top: 5px; margin-bottom: 7px;" Text="Update Users" Width="200px" />
 
                                     </td>
-                                    <td class="auto-style8">
-
+                                    <td class="auto-style9">
                                         <asp:Button ID="exportPageBtn" runat="server" BackColor="#174669" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportPage_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export Page" Width="200px" CssClass="auto-style9" CausesValidation="False" />
 
                                     </td>
-                                    <td class="auto-style6">
-
+                                    <td class="auto-style9">
                                         <asp:Button ID="exportAllBtn" runat="server" BackColor="#174669" CssClass="auto-style9" Font-Bold="True" Font-Names="Lato" Font-Size="Medium" ForeColor="White" Height="25px" OnClick="ExportAll_Click" style="margin-top: 5px; margin-bottom: 7px;" Text="Export All" Width="200px" />
 
                                     </td>
                                 </tr>
                             </table>
-                        </ContentTemplate>
+                            </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="exportPageBtn" />
+                            <asp:PostBackTrigger ControlID="exportAllBtn" />
+                        </Triggers>
+
                     </asp:UpdatePanel>
                 </asp:View>
                 <asp:View ID="View3" runat="server">
-                  
-                            <br />
-                  
-                            <asp:Image ID="employeeImage" runat="server" CssClass="auto-style17" Height="300px" Width="300px" />
                     <br />
-                <br />
-                    <asp:Button ID="SaveBtn" runat="server" CssClass="auto-style17" OnClick="SaveBtn_Click" Text="Upload" Width="150px" />
-                    <asp:FileUpload ID="ImageUpload" onchange ="__doPostBack('imageUploadingBtn','')" runat="server" style="display: none;" CssClass="auto-style9" Width="213px" />
-                    <script type="text/javascript" >
+                            <table class=" tableStyle">
+                                <tr>
+                                    <td>
+                                        <asp:Image ID="employeeImage" runat="server" Height="300px" Width="300px" CssClass="auto-style18" />
+                                    </td>
+                                    <td>
+                                        <asp:GridView ID="employeeGrid0" runat="server" CssClass="gridStyle2" AutoGenerateColumns="False" AutoPostBack="False"  DataSource="<%# CreateEmployeeGrid() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" Height="40px" OnRowDataBound="DataGridView_RowDataBound" PageSize="3" ShowHeader="False"  Width="200px" CellPadding="4" ForeColor="#333333">
+                                            <AlternatingRowStyle BackColor="White" />
+                                            <Columns>
+                                                <asp:BoundField DataField="Header">
+                                                <ControlStyle Height="0px" />
+                                                <HeaderStyle Height="0px" Width="100px" />
+                                                <ItemStyle Height="25px" HorizontalAlign="Left" VerticalAlign="Top" Width="100px" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="Employee">
+                                                <HeaderStyle Height="0px" Width="100px" />
+                                                <ItemStyle Height="25px" HorizontalAlign="Center" VerticalAlign="Top" Width="100px" />
+                                                </asp:BoundField>
+                                            </Columns>
+                                            <EditRowStyle BackColor="#2461BF" />
+                                            <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                            <HeaderStyle Font-Names="Lato" Font-Size="Medium" Wrap="True" BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                                            <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                                            <RowStyle BackColor="#EFF3FB" />
+                                            <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                                            <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                                            <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                                            <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                                            <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                                        </asp:GridView>
+                                        <asp:Image ID="statusImage" runat="server" Height="200px" Width="200px" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <asp:Button ID="SaveBtn" runat="server" CssClass="auto-style20" Font-Names="Lato" ForeColor="White" OnClick="SaveBtn_Click" Text="Upload" Width="150px" />
+                            <asp:FileUpload ID="ImageUpload" runat="server" CssClass="auto-style9" onchange="__doPostBack('imageUploadingBtn','')" Font-Names="Lato" style="display: none;" Width="213px" />
+                            <script type="text/javascript">
+
+
                         function showBrowseDialog() {
                             var fileuploadctrl = document.getElementById('ImageUpload');
                             fileuploadctrl.click();
                         }
                     </script>
-                    <input type="button" value="Browse" onclick="showBrowseDialog()" class="auto-style16" />
-                    <asp:Button ID="imageUploadingBtn" Style ="visibility:hidden"  runat="server" Text="Button" OnClick="imageUploadingBtn_Click" />
-                    <br />
-
-                
+                            <input type="button" value="Browse" onclick="showBrowseDialog()" class="auto-style16" />
+                            <asp:Button ID="imageUploadingBtn" runat="server" OnClick="imageUploadingBtn_Click" Style="visibility:hidden" Text="Button" />
+                           
                 </asp:View>
                 </asp:MultiView>
 

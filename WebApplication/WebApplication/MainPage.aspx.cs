@@ -34,6 +34,7 @@ namespace WebApplication
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
+                
                 ViewState["Index"] = 0;
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 pictureGrid.DataBind();
@@ -60,7 +61,7 @@ namespace WebApplication
             return emp;
         }
 
-        public DataTable CreateEmployeeTable()
+        public DataTable CreateEmployeesTable()
         {
             emp = new DataTable();
             emp.Columns.Add("Name");
@@ -111,6 +112,63 @@ namespace WebApplication
                 oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
                 emp.Rows.Add(oItem);
             }
+
+            return emp;
+        }
+
+        public DataTable CreateEmployeeGrid()
+        {
+            emp = new DataTable();
+            emp.Columns.Add("Header");
+            emp.Columns.Add("Employee");
+            TimeSpan remaining;
+            employees = (List<Employee>)ViewState["Employees"];
+            
+            DataRow oItem = emp.NewRow();
+            int row = Int32.Parse(RowSelected.Value);
+            remaining = remainingTime(employees.ElementAt(row));
+
+
+            oItem[0] = "Name";
+            oItem[1] = employees.ElementAt(row).Name;
+            emp.Rows.Add(oItem);
+
+            oItem = emp.NewRow();
+            oItem[0] = "Status";
+            if (employees.ElementAt(row).AtDesk)
+            {
+                oItem[1] = "At Desk";
+                statusImage.ImageUrl = "Folder/atDesk.PNG";
+                remaining = new TimeSpan(0, 0, 0);
+            }
+            else
+            {
+                if (remaining > new TimeSpan(0, 0, 0))
+                {
+                    oItem[1] = "Expected Back";
+                    statusImage.ImageUrl = "Folder/ExpectedBack.PNG";
+                }
+                else if (remaining < (-new TimeSpan(1, 0, 0)))
+                {
+                    oItem[1] = "Out of Office";
+                    statusImage.ImageUrl = "Folder/OutOfOffice.PNG";
+                    remaining = new TimeSpan(0, 0, 0);
+                }
+                else
+                {
+                    oItem[1] = "Expected back, but late";
+                    statusImage.ImageUrl = "Folder/Late.PNG";
+                    remaining = new TimeSpan(0, 0, 0);
+                }
+            }
+            emp.Rows.Add(oItem);
+
+            
+            oItem = emp.NewRow();
+            oItem[0] = "ETA";
+            oItem[1] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
+            emp.Rows.Add(oItem);
+            
 
             return emp;
         }
@@ -291,9 +349,6 @@ namespace WebApplication
                     ImageUpload.SaveAs(path);
                     Random r = new Random();
                     employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
-                    //((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
-                    // Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
-                    //HttpResponse.RemoveOutputCacheItem("MainPage.aspx");
                 }
                 else
                 {
@@ -365,15 +420,17 @@ namespace WebApplication
             }
             string FilePath = Server.MapPath("~");
             string FileName = "SessionLocks.csv";
-            // Creates the file on server
             File.WriteAllText(FilePath + FileName, sb.ToString());
-            //System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
             Response.Clear();
-            Response.ContentType = "application/CSV";
+            Response.AddHeader("Content-Type", "binary/octet-stream");
             Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-            Response.TransmitFile(Server.MapPath("~/" + FileName));
+            Response.TransmitFile(Server.MapPath("~/"+FileName));
+            Response.Flush();
             Response.End();
+           
         }
+
+      
 
         protected void ExportAll_Click(object sender, EventArgs e)
         {
@@ -605,6 +662,7 @@ namespace WebApplication
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                e.Row.Attributes.Add("OnClick", "CellClick(" + e.Row.RowIndex + ")");
                 List<Employee> employees = (List<Employee>)ViewState["Employees"];
                 TimeSpan remaining = remainingTime(employees.ElementAt(e.Row.RowIndex));
 
@@ -647,7 +705,8 @@ namespace WebApplication
             int emp = Int32.Parse(x);
             Random r = new Random();
             string img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);// + "?r=" + DateTime.Now.Ticks.ToString(); ;
+            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);
+            employeeGrid0.DataBind();
             employeeImage.ImageUrl = path;
             PageNavigation.ActiveViewIndex = 2;
         }
@@ -679,7 +738,6 @@ namespace WebApplication
                     ImageUpload.SaveAs(Server.MapPath("~/temp.PNG"));
                     HttpPostedFile z = ImageUpload.PostedFile;
                     byte[] x = ImageUpload.FileBytes;
-                    //System.Drawing.Image img = System.Drawing.Image.FromStream(z);
                     ViewState["ImageToSave"] = x;
                     Random r = new Random();
                     employeeImage.ImageUrl = "temp.PNG" + "?" + r.Next(1, 10000);

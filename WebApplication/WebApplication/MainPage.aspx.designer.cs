@@ -346,6 +346,24 @@ namespace WebApplication {
         protected global::System.Web.UI.WebControls.Image employeeImage;
         
         /// <summary>
+        /// employeeGrid0 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView employeeGrid0;
+        
+        /// <summary>
+        /// statusImage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image statusImage;
+        
+        /// <summary>
         /// SaveBtn control.
         /// </summary>
         /// <remarks>
