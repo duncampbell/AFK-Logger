@@ -14,6 +14,7 @@ namespace AFKHostedService
 {
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [System.ServiceModel.Activation.AspNetCompatibilityRequirements(RequirementsMode = System.ServiceModel.Activation.AspNetCompatibilityRequirementsMode.Required)]
     public class AFKHostedService : IService
     {
         #region Variable Declaration
@@ -27,11 +28,18 @@ namespace AFKHostedService
         {
             ds.Initialize();
             Trace.WriteLine("STARTING TRACE");
-            
+            try
+            {
+                Trace.WriteLine("USER: " + OperationContext.Current.ServiceSecurityContext.IsAnonymous);
+            }
+            catch(Exception e)
+            {
+                Trace.WriteLine("Error "  + e.Message);
+            }
         }
 
         #region Get Methods
-        [PrincipalPermission(SecurityAction.Demand,Role ="FOFX\\AFKLogAdmin")]
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
             int numResults = 0;

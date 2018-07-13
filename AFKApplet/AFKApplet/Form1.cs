@@ -14,7 +14,7 @@ using System.DirectoryServices.AccountManagement;
 
 namespace AFKApplet
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public partial class AFKAppletForm : Form, IServiceCallback
     {
         #region Variable Declaration
@@ -192,7 +192,7 @@ namespace AFKApplet
 
         private void AFKApplet_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized) { this.Hide(); }
+            if (this.WindowState == FormWindowState.Minimized) { this.Hide(); notifyIcon1.ShowBalloonTip(3); }
         }
 
         private void AFKAppletForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -201,11 +201,13 @@ namespace AFKApplet
             Hide();
             notifyIcon1.ShowBalloonTip(3);
         }
-               private void toolStripMenuItem1_Click(object sender, EventArgs e)
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //TODO: add website url once finalised
             System.Diagnostics.Process.Start("http://Google.com");
         }
+        
         #endregion
 
         #region Registry Methods
@@ -265,6 +267,7 @@ namespace AFKApplet
         #endregion
 
         #region Service Callback methods
+
         //Assigns ETA and UserID to DataBaseEntry and returns it
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
