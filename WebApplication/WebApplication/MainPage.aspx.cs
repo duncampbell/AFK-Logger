@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,28 +24,21 @@ namespace WebApplication
         ServiceReference1.ServiceClient Proxy;
         DataTable dt;
         DataTable emp;
-        //List<DataBaseEntry> Entries;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
         List<Employee> employees;
-      
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
-            HttpResponse.RemoveOutputCacheItem("/WebsiteAppplication/MainPage.aspx");
-            ClearApplicationCache();
             if (!IsPostBack)
             {
-                
-                ViewState["Refresh"] = true;
                 ViewState["Index"] = 0;
                 ViewState["Employees"] = Proxy.GetEntriesForAlice();
                 pictureGrid.DataBind();
                 employeeGrid.DataBind();
-                ViewState["Refresh"] = true;
             }
-            
         }
 
         #region Table/Grid Setups
@@ -54,12 +48,12 @@ namespace WebApplication
 
             emp = new DataTable();
             emp.Columns.Add("PictureURL", typeof(string));
-            
+
             employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
-                string pat = "Folder/" + employees.ElementAt(i).Name + ".PNG" ; 
+                string pat = "Folder/" + employees.ElementAt(i).Name + ".PNG";
                 oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString();
                 emp.Rows.Add(oItem);
             }
@@ -71,6 +65,7 @@ namespace WebApplication
             emp = new DataTable();
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
+            emp.Columns.Add("StatusPicture");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
             emp.Columns.Add("ETA");
             TimeSpan remaining;
@@ -82,12 +77,13 @@ namespace WebApplication
 
                 string x = employees.ElementAt(i).ProfilePic;
                 Random r = new Random();
-                
-                
+
+
                 oItem[0] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
                     oItem[1] = "At Desk";
+                    oItem[2] = "Folder/atDesk.PNG";
                     remaining = new TimeSpan(0, 0, 0);
                 }
                 else
@@ -95,24 +91,27 @@ namespace WebApplication
                     if (remaining > new TimeSpan(0, 0, 0))
                     {
                         oItem[1] = "Expected Back";
+                        oItem[2] = "Folder/ExpectedBack.PNG";
                     }
                     else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
                         oItem[1] = "Out of Office";
+                        oItem[2] = "Folder/OutOfOffice.PNG";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                     else
                     {
                         oItem[1] = "Expected back, but late";
+                        oItem[2] = "Folder/Late.PNG";
                         remaining = new TimeSpan(0, 0, 0);
                     }
                 }
 
-                oItem[2] = employees.ElementAt(i).Time;
-                oItem[3] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
+                oItem[3] = employees.ElementAt(i).Time;
+                oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
                 emp.Rows.Add(oItem);
             }
-            
+
             return emp;
         }
 
@@ -168,7 +167,8 @@ namespace WebApplication
 
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
 
-            if (Entries != null) { 
+            if (Entries != null)
+            {
                 for (int i = 0; i < Entries.Count && i < 20; i++)
                 {
                     DataRow oItem = dt.NewRow();
@@ -184,7 +184,7 @@ namespace WebApplication
             }
             return dt;
         }
-            
+
         public void populatePageMenu()
         {
             if (((List<DataBaseEntry>)ViewState["Entries"]).Count != 0)
@@ -220,7 +220,7 @@ namespace WebApplication
                 }
 
                 List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-                if (Entries.Count < 20 || ((int)ViewState["PageTotal"] == ((int)ViewState["Index"] / 20)+1))
+                if (Entries.Count < 20 || ((int)ViewState["PageTotal"] == ((int)ViewState["Index"] / 20) + 1))
                 {
                     int nextMenuItemNum = pageMenu.Items.Count;
                     pageMenu.Items[nextMenuItemNum - 2].Selectable = false;
@@ -253,7 +253,8 @@ namespace WebApplication
                     pageMenu.Items[pageMenu.Items.Count - 1].Selectable = true;
                 }
 
-            }else
+            }
+            else
             {
                 pageMenu.Visible = false;
                 exportAllBtn.Visible = false;
@@ -261,7 +262,7 @@ namespace WebApplication
                 updateUsers.Visible = false;
             }
         }
-        
+
         #endregion
 
         #region Timers
@@ -275,6 +276,32 @@ namespace WebApplication
         {
             employeeGrid.DataBind();
         }
+
+        protected void pictureTimer_Tick(object sender, EventArgs e)
+        {
+            if (ImageUpload.HasFile)
+            {
+                string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
+                if (extension == ".jpg" || extension == ".PNG" || extension == ".png" || extension == ".JPG" || extension == ".jpeg" || extension == ".JPEG")
+                {
+                    string x = RowSelected.Value;
+                    int emp = Int32.Parse(x);
+                    string ImageName = "Temp.PNG";
+                    string path = Server.MapPath("~/Folder/" + ImageName);
+                    ImageUpload.SaveAs(path);
+                    Random r = new Random();
+                    employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
+                    //((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
+                    // Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
+                    //HttpResponse.RemoveOutputCacheItem("MainPage.aspx");
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('This is an incorrect file type.');", true);
+                }
+            }
+        }
+
         #endregion
 
         #region Click Events
@@ -287,7 +314,8 @@ namespace WebApplication
                     ViewState["Index"] = (int)ViewState["Index"] - 20;
                 }
 
-            }else if (e.Item.Value == ">")
+            }
+            else if (e.Item.Value == ">")
             {
                 ViewState["Index"] = (int)ViewState["Index"] + 20;
             }
@@ -299,17 +327,17 @@ namespace WebApplication
             }
             else if (e.Item.Value == "<<")
             {
-                    ViewState["PageStart"] = (int)ViewState["PageStart"] - 5;
-                    ViewState["Index"] = ((int)ViewState["PageStart"] - 1) * 20;
+                ViewState["PageStart"] = (int)ViewState["PageStart"] - 5;
+                ViewState["Index"] = ((int)ViewState["PageStart"] - 1) * 20;
             }
             else
             {
                 int pageNum = Int32.Parse(e.Item.Value);
-                ViewState["Index"] = (pageNum-1) * 20;
+                ViewState["Index"] = (pageNum - 1) * 20;
             }
             dataGridView.DataBind();
         }
-        
+
         protected void ExportPage_Click(object sender, EventArgs e)
         {
             List<DataBaseEntry> ent = new List<DataBaseEntry>();
@@ -329,11 +357,11 @@ namespace WebApplication
                     ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
                     break;
             }
-            
+
             var sb = new StringBuilder();
             foreach (var data in ent)
             {
-                sb.AppendLine(data.UserName + "," + data.EventType + "," +data.UserID+ ", "  +data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+                sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
             string FilePath = Server.MapPath("~");
             string FileName = "SessionLocks.csv";
@@ -397,7 +425,8 @@ namespace WebApplication
                 Response.TransmitFile(Server.MapPath("~/" + FileName));
                 Response.End();
             }
-            else{
+            else
+            {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
             }
         }
@@ -576,7 +605,37 @@ namespace WebApplication
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                e.Row.Cells[0].Attributes.Add("OnClick", "CellClick("+e.Row.RowIndex+")");
+                List<Employee> employees = (List<Employee>)ViewState["Employees"];
+                TimeSpan remaining = remainingTime(employees.ElementAt(e.Row.RowIndex));
+
+                if (employees.ElementAt(e.Row.RowIndex).AtDesk)
+                {
+                    e.Row.BackColor = Color.FromName("#f2ffe6"); ;
+                }
+                else
+                {
+                    if (remaining > new TimeSpan(0, 0, 0))
+                    {
+                        e.Row.BackColor = Color.FromName("#ffffcc");
+                    }
+                    else if (remaining < (-new TimeSpan(1, 0, 0)))
+                    {
+                        e.Row.BackColor = Color.FromName("#ffe6e6");
+                    }
+                    else
+                    {
+                        e.Row.BackColor = Color.FromName("#ffe6cc");
+                    }
+                }
+
+            }
+        }
+
+        public void PictureGridView_RowDataBound(Object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Cells[0].Attributes.Add("OnClick", "CellClick(" + e.Row.RowIndex + ")");
             }
 
         }
@@ -595,65 +654,44 @@ namespace WebApplication
 
         protected void SaveBtn_Click(object sender, EventArgs e)
         {
+            string x = RowSelected.Value;
+            int emp = Int32.Parse(x);
+            string ImageName = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
+            string path = Server.MapPath("~/Folder/" + ImageName);
+            MemoryStream memstr = new MemoryStream((byte[])ViewState["ImageToSave"]);
+            System.Drawing.Image img = System.Drawing.Image.FromStream(memstr);
+            img.Save(path, ImageFormat.Png);
+            Random r = new Random();
+            ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
+            Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
+            pictureGrid.DataBind();
+            PageNavigation.ActiveViewIndex = 0;
+        }
+
+        protected void imageUploadingBtn_Click(object sender, EventArgs e)
+        {
             if (ImageUpload.HasFile)
             {
                 string extension = System.IO.Path.GetExtension(ImageUpload.FileName);
                 if (extension == ".jpg" || extension == ".PNG" || extension == ".png" || extension == ".JPG" || extension == ".jpeg" || extension == ".JPEG")
                 {
-                    string x = RowSelected.Value;
-                    int emp = Int32.Parse(x);
-                    string ImageName = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
-                    string path = Server.MapPath("~/Folder/" + ImageName);
-                    ImageUpload.SaveAs(path);
+                    string filename = Path.GetFileName(ImageUpload.FileName);
+                    ImageUpload.SaveAs(Server.MapPath("~/temp.PNG"));
+                    HttpPostedFile z = ImageUpload.PostedFile;
+                    byte[] x = ImageUpload.FileBytes;
+                    //System.Drawing.Image img = System.Drawing.Image.FromStream(z);
+                    ViewState["ImageToSave"] = x;
                     Random r = new Random();
-                    employeeImage.ImageUrl = "Folder/" + ImageName + "?" + r.Next(1, 10000);
+                    employeeImage.ImageUrl = "temp.PNG" + "?" + r.Next(1, 10000);
 
-                    ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
-                    Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
-                    //HttpResponse.RemoveOutputCacheItem("MainPage.aspx");
-                    
                 }
                 else
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('This is an incorrect file type.');", true);
                 }
-                pictureGrid.DataBind();
-
             }
-           
+
         }
 
-        public void ClearApplicationCache()
-
-        {
-            
-            
-            List<string> keys = new List<string>();
-
-            // retrieve application
-
-            IDictionaryEnumerator enumerator = Cache.GetEnumerator();
-
-            // copy all keys that currently exist in Cache
-
-            while (enumerator.MoveNext())
-
-            {
-
-                keys.Add(enumerator.Key.ToString());
-
-            }
-
-            // delete every key from cache
-
-            for (int i = 0; i < keys.Count; i++)
-
-            {
-
-                Cache.Remove(keys[i]);
-
-            }
-            
-        }
     }
 }

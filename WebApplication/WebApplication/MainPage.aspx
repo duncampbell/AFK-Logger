@@ -30,8 +30,12 @@
             height: 36px;
         }
         .auto-style8 {
-            height: 36px;
-            width: 168px;
+            width: 1300px;
+            padding: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
         }
         .auto-style9 {
             margin-left: 0px;
@@ -45,18 +49,95 @@
         .auto-style12 {
             margin-top: 0px;
         }
-        .auto-style13 {
-            margin-left: 590px;
-        }
-        .auto-style14 {
-            margin-left: 593px;
-        }
         .auto-style15 {
-            width: 1601px;
-            height: 36px;
+            width: 100px;
+            padding: 0px;
+             margin: 0;
+            margin-bottom:0;
+            margin-top:0px;
+            margin-left:0px;
+            margin-right:0px;
+            padding:0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            border:0;
+            border-width:0;
+            border-left-width:0;
+            border-right-width:0;
+            border-bottom-width:0;
+            border-top-width:0;
+
         }
         .auto-style16 {
-            margin-right: 0px;
+            width: 151px;
+        }
+        .auto-style17 {
+            margin-left: 550px;
+        }
+
+        .imageStyle {
+            width: 100px;
+            height: 100px;
+             margin: 0;
+            margin-bottom:0px;
+            margin-top:1px;
+            margin-left:0px;
+            margin-right:0px;
+            padding:0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            border:0;
+            border-width:0;
+            border-left-width:0;
+            border-right-width:0;
+            border-bottom-width:0;
+            border-top-width:0;
+            display: inline-block;
+        }
+
+        .tableStyle{
+            margin: 0;
+            margin-bottom:0;
+            margin-top:0px;
+            margin-left:0px;
+            margin-right:0px;
+            padding:0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            border:0;
+            border-width:0;
+            border-left-width:0;
+            border-right-width:0;
+            border-bottom-width:0;
+            border-top-width:0;
+            display: inline-block;
+        }
+
+        .gridStyle{
+            margin: 0;
+            margin-bottom:0;
+            margin-top:0px;
+            margin-left:0px;
+            margin-right:0px;
+            padding:0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            border:0;
+            border-width:0;
+            border-left-width:0;
+            border-right-width:0;
+            border-bottom-width:0;
+            border-top-width:0;
+            display: inline-block;
+            
         }
         </style>
 </head>
@@ -84,6 +165,7 @@
             </asp:Menu>
         </asp:Panel>
         <asp:ScriptManager  ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        
         <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
                 <asp:View ID="View2" runat="server">
                     <asp:Timer ID="updateTimer" runat="server" Interval ="3000" OnTick="UpdateTimer_Tick">
@@ -96,38 +178,41 @@
                             <asp:AsyncPostBackTrigger ControlID = "etaTimer" />
                         </Triggers>
                         <ContentTemplate>
-                            <table border="0">
+                            <table class="tableStyle">
                                 <tr>
-                                    <td class="auto-style15">
-                                         <asp:GridView ID="pictureGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeePictureTable() %>" GridLines="None" Height="50px" OnRowDataBound="DataGridView_RowDataBound" PageSize="100" style="margin-top: 0px" Width="200px">
+                                    <td class ="gridStyle">
+                                         <asp:GridView ID="pictureGrid" runat="server" class ="gridStyle" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeePictureTable() %>" GridLines="None" OnRowDataBound="PictureGridView_RowDataBound" PageSize="100" Width="100px">
                                             <Columns>
                                                 <asp:ImageField DataImageUrlField="PictureURL">
-                                                    <ControlStyle Height="200px" Width="200px" />
-                                                    <ItemStyle Height="200px" Width="200px" />
+                                                    <ControlStyle Height="100px" Width="100px" CssClass="imageStyle" />
+                                                    <ItemStyle Height="100px" Width="100px" CssClass="imageStyle" />
                                                 </asp:ImageField>
                                             </Columns>
                                             <HeaderStyle Font-Names="Lato" Font-Size="Medium" Wrap="True" />
                                         </asp:GridView>
                                     </td>
-                                    <td class="auto-style8">
-                                        <asp:GridView ID="employeeGrid" runat="server" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeeTable() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" Height="50px" PageSize="100" style="margin-top: 0px" Width="1200px">
+                                    <td class ="auto-style15">
+                                        <asp:GridView ID="employeeGrid" runat="server" OnRowDataBound="DataGridView_RowDataBound" AutoGenerateColumns="False" AutoPostBack="False" DataSource="<%# CreateEmployeeTable() %>" Font-Bold="False" Font-Names="Lato" GridLines="None" PageSize="100" style="margin-top: 0px" Width="1300px">
                                             <Columns>
-                                                <asp:BoundField DataField="Status" ReadOnly="True" SortExpression="Status">
-                                                <ControlStyle Height="200px" />
-                                                <ItemStyle Width="300px" Height="200px" />
-                                                </asp:BoundField>
                                                 <asp:BoundField DataField="Name" ReadOnly="True" SortExpression="Name">
-                                                <ControlStyle Height="200px" Width="300px" />
-                                                <ItemStyle Width="250px" />
+                                                <ControlStyle Height="100px" Width="200px" />
+                                                <ItemStyle Width="200px" Height="100px" HorizontalAlign="Center" VerticalAlign="Middle" />
                                                 </asp:BoundField>
+                                                <asp:BoundField DataField="Status" ReadOnly="True" SortExpression="Status">
+                                                <ControlStyle Height="100px" Width="400px" />
+                                                <ItemStyle Width="400px" Height="100px" HorizontalAlign="Center" VerticalAlign="Middle"/>
+                                                </asp:BoundField>
+                                                <asp:ImageField DataImageUrlField="StatusPicture">
+                                                    <ControlStyle Height="100px" Width="100px" CssClass="imageStyle" />
+                                                    <ItemStyle Width="100px" CssClass="imageStyle" />
+                                                </asp:ImageField>
                                                 <asp:BoundField DataField="Time of Event" SortExpression="Time of Event">
-                                                <ControlStyle Height="200px" />
-                                                <HeaderStyle Width="200px" />
-                                                <ItemStyle Width="400px" Height="200px" />
+                                                <ControlStyle Height="100px" Width="300px" />
+                                                <ItemStyle Width="300px" Height="100px" HorizontalAlign="Center" VerticalAlign="Middle"/>
                                                 </asp:BoundField>
                                                 <asp:BoundField DataField="ETA" ReadOnly="True" SortExpression="ETA">
-                                                <ControlStyle Height="200px" />
-                                                <ItemStyle Width="250px" Height="200px" />
+                                                <ControlStyle Height="300px" />
+                                                <ItemStyle Width="300px" Height="100px" HorizontalAlign="Center" VerticalAlign="Middle"/>
                                                 </asp:BoundField>
                                             </Columns>
                                             <HeaderStyle Font-Names="Lato" Font-Size="Medium" Wrap="True" />
@@ -564,13 +649,25 @@
                     </asp:UpdatePanel>
                 </asp:View>
                 <asp:View ID="View3" runat="server">
-                    <br />
-                <asp:Image ID="employeeImage" runat="server" CssClass="auto-style13" Height="300px" Width="300px" />
+                  
+                            <br />
+                  
+                            <asp:Image ID="employeeImage" runat="server" CssClass="auto-style17" Height="300px" Width="300px" />
                     <br />
                 <br />
-                    <asp:Button ID="SaveBtn" runat="server" CssClass="auto-style14" OnClick="SaveBtn_Click" Text="Upload" Width="84px" />
-                <asp:FileUpload ID="ImageUpload" runat="server" CssClass="auto-style9" Width="213px" />
+                    <asp:Button ID="SaveBtn" runat="server" CssClass="auto-style17" OnClick="SaveBtn_Click" Text="Upload" Width="150px" />
+                    <asp:FileUpload ID="ImageUpload" onchange ="__doPostBack('imageUploadingBtn','')" runat="server" style="display: none;" CssClass="auto-style9" Width="213px" />
+                    <script type="text/javascript" >
+                        function showBrowseDialog() {
+                            var fileuploadctrl = document.getElementById('ImageUpload');
+                            fileuploadctrl.click();
+                        }
+                    </script>
+                    <input type="button" value="Browse" onclick="showBrowseDialog()" class="auto-style16" />
+                    <asp:Button ID="imageUploadingBtn" Style ="visibility:hidden"  runat="server" Text="Button" OnClick="imageUploadingBtn_Click" />
                     <br />
+
+                
                 </asp:View>
                 </asp:MultiView>
 
