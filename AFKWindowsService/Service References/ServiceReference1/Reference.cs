@@ -221,7 +221,13 @@ namespace AFKWindowsService.ServiceReference1 {
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProfilePicField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime TimeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UserIDField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -273,6 +279,19 @@ namespace AFKWindowsService.ServiceReference1 {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProfilePic {
+            get {
+                return this.ProfilePicField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProfilePicField, value) != true)) {
+                    this.ProfilePicField = value;
+                    this.RaisePropertyChanged("ProfilePic");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.DateTime Time {
             get {
                 return this.TimeField;
@@ -281,6 +300,19 @@ namespace AFKWindowsService.ServiceReference1 {
                 if ((this.TimeField.Equals(value) != true)) {
                     this.TimeField = value;
                     this.RaisePropertyChanged("Time");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UserID {
+            get {
+                return this.UserIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UserIDField, value) != true)) {
+                    this.UserIDField = value;
+                    this.RaisePropertyChanged("UserID");
                 }
             }
         }
@@ -414,6 +446,9 @@ namespace AFKWindowsService.ServiceReference1 {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ProfilePicField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UserIDField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -426,6 +461,19 @@ namespace AFKWindowsService.ServiceReference1 {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProfilePic {
+            get {
+                return this.ProfilePicField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProfilePicField, value) != true)) {
+                    this.ProfilePicField = value;
+                    this.RaisePropertyChanged("ProfilePic");
+                }
             }
         }
         
@@ -558,6 +606,12 @@ namespace AFKWindowsService.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateADUsernames", ReplyAction="http://tempuri.org/IService/UpdateADUsernamesResponse")]
         System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateUser", ReplyAction="http://tempuri.org/IService/UpdateUserResponse")]
+        void UpdateUser(AFKWindowsService.ServiceReference1.Employee emp);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UpdateUser", ReplyAction="http://tempuri.org/IService/UpdateUserResponse")]
+        System.Threading.Tasks.Task UpdateUserAsync(AFKWindowsService.ServiceReference1.Employee emp);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -716,6 +770,14 @@ namespace AFKWindowsService.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> UpdateADUsernamesAsync() {
             return base.Channel.UpdateADUsernamesAsync();
+        }
+        
+        public void UpdateUser(AFKWindowsService.ServiceReference1.Employee emp) {
+            base.Channel.UpdateUser(emp);
+        }
+        
+        public System.Threading.Tasks.Task UpdateUserAsync(AFKWindowsService.ServiceReference1.Employee emp) {
+            return base.Channel.UpdateUserAsync(emp);
         }
     }
 }

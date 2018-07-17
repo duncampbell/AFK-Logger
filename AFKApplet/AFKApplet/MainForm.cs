@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using AFKApplet.ServiceReference1;
 using System.DirectoryServices.AccountManagement;
+using System.Diagnostics;
 
 namespace AFKApplet
 {
@@ -44,10 +45,10 @@ namespace AFKApplet
             userName = UserPrincipal.FindByIdentity(new PrincipalContext(ContextType.Domain), IdentityType.Sid, userID).DisplayName;
             sessionID = System.Diagnostics.Process.GetCurrentProcess().SessionId.ToString();
 
-
             iC = new InstanceContext(this);
-            c = new ServiceReference1.ServiceClient(iC);
+            c = new ServiceClient(iC, "WSDualHttpBinding_IService");
             c.RegisterClient(deviceID, false);
+            
 
             LoadETAPrefs();
 
@@ -56,6 +57,7 @@ namespace AFKApplet
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad2);
             hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad3);
 
+            
             //List<Employee> testList = c.GetEntriesForAlice();
         }
 
@@ -127,7 +129,8 @@ namespace AFKApplet
             d.UserName = Environment.UserName;
             d.VM = chkVM.Checked;
 
-            using (ServiceReference1.ServiceClient c = new ServiceReference1.ServiceClient(iC))
+
+            using (ServiceClient c = new ServiceClient(iC))
             {
                 if (c.AddDevice(d))
                 {
@@ -147,35 +150,6 @@ namespace AFKApplet
             splitContainer1.Panel2Collapsed = splitContainer1.Panel2Collapsed ? false : true;
             Size = splitContainer1.Panel2Collapsed ? new Size(278, 111) : new Size(278, 170);
         }
-
-        //TODO: remove for release
-        private void button1_Click(object sender, EventArgs e)
-        {
-            c.UpdateADUsernames();
-            //    try
-            //    {
-            //        //Create device
-            //        DataBaseEntry dBE = new DataBaseEntry();
-            //        dBE.EventType = "SessionUnlock";
-            //        dBE.UserID = userID;
-            //        dBE.DeviceID = deviceID;
-            //        dBE.TimeOfEvent = DateTime.Now;
-            //        dBE.AutomaticLock = false;
-            //        dBE.RemoteAccess = false;
-            //        dBE.ETA = TimeSpan.Zero;
-
-
-            //        //Send to API
-            //        await c.AddAppletEntryAsync(dBE);
-            //        //recentEntry = true;
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //        MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    }
-        }
-
 
         #endregion
 
@@ -204,10 +178,13 @@ namespace AFKApplet
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            //TODO: add website url once finalised
-            System.Diagnostics.Process.Start("http://Google.com");
+            System.Diagnostics.Process.Start("http://192.168.10.153:8081/AFKWebsite/MainPage");
         }
-        
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
         #endregion
 
         #region Registry Methods
@@ -294,8 +271,8 @@ namespace AFKApplet
         }
 
 
-        #endregion
 
+        #endregion
 
     }
 
@@ -397,6 +374,10 @@ namespace AFKApplet
         Shift = 4,
         Win = 8
     }
+
+    #endregion
+
+    #region Channel Restart
 
     #endregion
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="MnBhN/tA8NX0i8wEv35Uj/sQEEc=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="XGJJEGrWTi2XdlfH8rvYAtKWGj0=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="wsDualHttpBinding" name="WSDualHttpBinding_IService">
       <properties>
@@ -97,10 +97,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSDualHttpBinding_IService" contract="ServiceReference1.IService" bindingType="wsDualHttpBinding" address="http://192.168.10.153/AFKHostedService.svc" bindingConfiguration="WSDualHttpBinding_IService">
+    <endpoint name="WSDualHttpBinding_IService" contract="ServiceReference1.IService" bindingType="wsDualHttpBinding" address="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc" bindingConfiguration="WSDualHttpBinding_IService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://192.168.10.153/AFKHostedService.svc</serializedValue>
+          <serializedValue>http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

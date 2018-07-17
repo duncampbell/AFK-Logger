@@ -193,17 +193,17 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <None Include="Service References\ServiceReference1\AFKHostedService1.wsdl" />
-    <None Include="Service References\ServiceReference1\AFKHostedService4.xsd">
+    <None Include="Service References\ServiceReference1\AFKHostedService.wsdl" />
+    <None Include="Service References\ServiceReference1\AFKHostedService.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService41.xsd">
+    <None Include="Service References\ServiceReference1\AFKHostedService1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService42.xsd">
+    <None Include="Service References\ServiceReference1\AFKHostedService2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService43.xsd">
+    <None Include="Service References\ServiceReference1\AFKHostedService3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
@@ -212,7 +212,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\ServiceReference1\AFKHostedService1.disco" />
+    <None Include="Service References\ServiceReference1\AFKHostedService.disco" />
     <Content Include="Site.Master" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
