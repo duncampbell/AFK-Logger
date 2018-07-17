@@ -16,7 +16,6 @@ namespace AFKWindowsService
     {
         String deviceID;
         string machineName;
-        EventLog eL;
 
         public AFKLogger()
         {
@@ -26,21 +25,6 @@ namespace AFKWindowsService
             //Get unique device ID, the windows SID
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             machineName = Environment.MachineName;
-
-            #region Test Methods
-            //TESTING: creates device
-            InstanceContext iC = new System.ServiceModel.InstanceContext(this);
-            using (ServiceClient c = new ServiceClient(iC))
-            {
-                Device device = new Device();
-                device.DeviceID = deviceID;
-                device.DeviceName = Environment.MachineName;
-                device.UserName = Environment.UserName;
-                device.VM = false;
-
-                //c.AddDevice(device);
-            }
-            #endregion
 
         }
         protected override void OnStart(string[] args)
@@ -52,6 +36,7 @@ namespace AFKWindowsService
             try
             {
                 Trace.WriteLine("Session Changed. Details: " + changeDescription.Reason);
+
                 InstanceContext iC = new InstanceContext(this);
                 using (ServiceClient c = new ServiceClient(iC))
                 {
@@ -62,6 +47,7 @@ namespace AFKWindowsService
                     dBE.SessionID = changeDescription.SessionId.ToString();
                     dBE.TimeOfEvent = DateTime.Now;
                     dBE.AutomaticLock = (changeDescription.Reason == SessionChangeReason.SessionUnlock|| changeDescription.Reason == SessionChangeReason.SessionLogon) ? false:true;
+                    dBE.RemoteAccess = (changeDescription.Reason == SessionChangeReason.RemoteConnect || changeDescription.Reason == SessionChangeReason.RemoteDisconnect);
                     dBE.ETA = new TimeSpan(0,20,0);
 
                     c.AddServiceEntry(dBE);
@@ -69,7 +55,6 @@ namespace AFKWindowsService
             }
             catch (Exception e)
             {
-                eL.WriteEntry(e.Message);
             }
 
         }

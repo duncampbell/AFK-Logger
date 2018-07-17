@@ -11,8 +11,8 @@
 namespace AFKApplet.ServiceReference1 {
     using System.Runtime.Serialization;
     using System;
-    
-    
+    using System.ServiceModel;
+
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DataBaseEntry", Namespace="http://schemas.datacontract.org/2004/07/AFKHostedService")]
@@ -631,7 +631,10 @@ namespace AFKApplet.ServiceReference1 {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class ServiceClient : System.ServiceModel.DuplexClientBase<AFKApplet.ServiceReference1.IService>, AFKApplet.ServiceReference1.IService {
-        
+        private InstanceContext instanceContext;
+        private WSDualHttpBinding binding;
+        private string v;
+
         public ServiceClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
         }
@@ -651,7 +654,7 @@ namespace AFKApplet.ServiceReference1 {
         public ServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(callbackInstance, binding, remoteAddress) {
         }
-        
+
         public System.Tuple<System.Collections.Generic.List<AFKApplet.ServiceReference1.DataBaseEntry>, int> GetAllEntries(int indexStart, string sortField, string sortDirection) {
             return base.Channel.GetAllEntries(indexStart, sortField, sortDirection);
         }

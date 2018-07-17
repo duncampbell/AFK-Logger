@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/System" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/System" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://192.168.10.153:8081/TestDeployPackage/AFKHostedService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
+  <xs:import schemaLocation="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
   <xs:complexType name="TupleOfArrayOfDataBaseEntryintvHVz0_S93">
     <xs:annotation>
       <xs:appinfo>
