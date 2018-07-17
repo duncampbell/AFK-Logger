@@ -11,7 +11,7 @@ namespace UnitTests
     [TestClass]
     public class GettingTests : IServiceCallback
     {
-        
+        /*
         [TestMethod]
         public void getAllEntriesTestOne()
         {
@@ -273,7 +273,7 @@ namespace UnitTests
         
             //Assert.IsTrue(false);
         }
-
+        */
         public void SendResult(string test)
         {
            // throw new NotImplementedException();
