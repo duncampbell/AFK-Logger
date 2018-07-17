@@ -14,6 +14,7 @@ namespace AFKHostedService
 {
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [System.ServiceModel.Activation.AspNetCompatibilityRequirements(RequirementsMode = System.ServiceModel.Activation.AspNetCompatibilityRequirementsMode.Required)]
     public class AFKHostedService : IService
     {
         #region Variable Declaration
@@ -27,13 +28,20 @@ namespace AFKHostedService
         {
             ds.Initialize();
             Trace.WriteLine("STARTING TRACE");
-            
         }
 
         #region Get Methods
-        [PrincipalPermission(SecurityAction.Demand,Role ="FOFX\\AFKLogAdmin")]
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
+            try
+            {
+                Trace.WriteLine("USER: " + OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine("Error " + e.Message);
+            }
             int numResults = 0;
             QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
@@ -489,28 +497,36 @@ namespace AFKHostedService
             Trace.WriteLine("ADD SERVICE ENTRY START RECENTENTRY: " + recentEntry);
             if (!recentEntry) //Prevets double recording of lock events
             {
+
                 Trace.WriteLine("ADD SERVICE ENTRY ENTERED TRACE");
                 Trace.WriteLine("EVENT TYPE: " + entry.EventType);
+
                 if (entry.EventType == "SessionLock" || entry.EventType == "SessionUnlock")
                 {
                     Trace.WriteLine("IF STATEMENT ENTERED");
+
                     var inactiveClients = new List<string>();
                     foreach (var client in clients)
                     {
                         Trace.WriteLine("CLIENT: " + client.Key + ": " + client.Value);
+
                         if (client.Key.Substring(client.Key.Length - 7) != "-Service")//stops services being called
                         {
                             Trace.WriteLine("SECOND IF ENTERED");
+
                             try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
                             {
                                 //The applet then calls the AddAppletEntry method to complete the record
                                 Trace.WriteLine("ATTEMPTING FINISHDATABASEENTRY");
+
                                 client.Value.FinishDataBaseEntry(entry);
+
                                 Trace.WriteLine("POST ATTEMPTING FINISHDATABASEENTRY");
                             }
                             catch
                             {
                                 Trace.WriteLine("CLIENT CAUGHT");
+
                                 inactiveClients.Add(client.Key);
                             }
                         }
@@ -569,7 +585,6 @@ namespace AFKHostedService
                     await s.StoreAsync(entry);
                     await s.SaveChangesAsync();
                 }
-                Employee emp = new Employee(entry); //TODO: send employee to webpage
             }
         }
 
@@ -770,7 +785,7 @@ namespace AFKHostedService
                         catch(Exception e)
                         {
                             //Ignore missed matches for now
-                            //TODO: log
+                            Trace.WriteLine("Missed User: " + d.UserName + " " + d.UserID);
                         }
 
                     }

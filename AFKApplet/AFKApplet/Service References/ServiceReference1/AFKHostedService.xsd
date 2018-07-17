@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://192.168.10.153/AFKHostedService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System" />
-  <xs:import schemaLocation="http://192.168.10.153/AFKHostedService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
+  <xs:import schemaLocation="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System" />
+  <xs:import schemaLocation="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/AFKHostedService" />
   <xs:element name="GetAllEntries">
     <xs:complexType>
       <xs:sequence>
@@ -199,6 +199,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="UpdateUser">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="emp" nillable="true" type="q11:Employee" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateUserResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="SendResult">
     <xs:complexType>
       <xs:sequence>
@@ -214,7 +226,7 @@
   <xs:element name="FinishDataBaseEntry">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q11:DataBaseEntry" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/AFKHostedService" minOccurs="0" name="entry" nillable="true" type="q12:DataBaseEntry" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

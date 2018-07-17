@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d4303193-a391-480c-b056-d0a3fa1e8424" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AFKHostedService.xsd" MetadataType="Schema" ID="0cf3c8dc-0a1f-4e3f-be44-7d236af7b4fd" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AFKHostedService1.xsd" MetadataType="Schema" ID="f985678c-1484-403a-8c0f-5beea61da87f" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AFKHostedService.disco" MetadataType="Disco" ID="fcee77d7-19fc-43f3-87e1-d5d5e8d2fc41" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?disco" />
+    <MetadataFile FileName="AFKHostedService2.xsd" MetadataType="Schema" ID="41c6fd5e-2946-4563-ad51-9b0b482a1b8a" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AFKHostedService.wsdl" MetadataType="Wsdl" ID="e0d2560b-5ce2-480e-a6a7-a456d0073348" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?wsdl" />
+    <MetadataFile FileName="AFKHostedService3.xsd" MetadataType="Schema" ID="e93f73bc-7509-4ac9-9a8c-9d451810f0c5" SourceId="1" SourceUrl="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
