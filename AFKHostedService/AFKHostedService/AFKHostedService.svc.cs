@@ -798,6 +798,7 @@ namespace AFKHostedService
 
             return success;
         }
+
         public void UpdateUser(Employee emp)
         {
             try

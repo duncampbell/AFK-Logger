@@ -22,18 +22,14 @@ namespace WebApplication
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
-        DataTable dt;
-        DataTable emp;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
-        List<Employee> employees;
-
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
-                ViewState["NewImage"] = false;
                 etaTimer.Enabled = true;
                 updateTimer.Enabled = true;
                 ViewState["Index"] = 0;
@@ -41,7 +37,6 @@ namespace WebApplication
                 pictureGrid.DataBind();
                 employeeGrid.DataBind();
             }
-            
         }
 
         #region Table/Grid Setups
@@ -49,9 +44,9 @@ namespace WebApplication
         public DataTable CreateEmployeePictureTable()
         {
             // Binds the grid of employee pictures.
-            emp = new DataTable();
+            DataTable emp = new DataTable();
             emp.Columns.Add("PictureURL", typeof(string));
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
@@ -65,14 +60,14 @@ namespace WebApplication
         public DataTable CreateEmployeesTable()
         {
             //Binds Data for the Alice page entries
-            emp = new DataTable();
+            DataTable emp = new DataTable();
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("StatusPicture");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
             emp.Columns.Add("ETA");
             TimeSpan remaining;
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
@@ -118,11 +113,11 @@ namespace WebApplication
         public DataTable CreateEmployeeGrid()
         {
             //Binds Data for the single employee page
-            emp = new DataTable();
+            DataTable emp = new DataTable();
             emp.Columns.Add("Header");
             emp.Columns.Add("Employee");
             TimeSpan remaining;
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             DataRow oItem = emp.NewRow();
             int row = Int32.Parse(RowSelected.Value);
             remaining = remainingTime(employees.ElementAt(row));
@@ -204,7 +199,7 @@ namespace WebApplication
             }
             int index = (int)ViewState["Index"];
             int pageNum = (int)((index / 20) + 1);
-            dt = new DataTable();
+            DataTable dt = new DataTable();
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
             dt.Columns.Add("Machine Name");
@@ -308,9 +303,9 @@ namespace WebApplication
         #endregion
 
         #region Timers
-        protected void UpdateTimer_Tick(object sender, EventArgs e)
+        protected void refreshUsersTimer_Tick(object sender, EventArgs e)
         {
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             ViewState["Employees"] = Proxy.GetEntriesForAlice();
             if (employees.Count != ((List<Employee>)ViewState["Employees"]).Count)
             {
@@ -590,7 +585,6 @@ namespace WebApplication
             {
                 if (e.Item.Value == "1")
                 {
-                    ViewState["NewImage"] = false;
                     //throws exception if user isn't authorised
                     Proxy.GetAllEntries(0, "", "");
                     ViewState["State"] = "Normal";
@@ -609,7 +603,6 @@ namespace WebApplication
                     dataGridView.DataBind();
                 }else
                 {
-                    ViewState["NewImage"] = false;
                     etaTimer.Enabled = true;
                     updateTimer.Enabled = true;
                 }
@@ -636,7 +629,7 @@ namespace WebApplication
             EmployeeView.ActiveViewIndex = 1;
         }
 
-        protected void SaveBtn_Click(object sender, EventArgs e)
+        protected void uplodUserImageBtn_Click(object sender, EventArgs e)
         {
             string x = RowSelected.Value;
             int emp = Int32.Parse(x);
@@ -666,7 +659,6 @@ namespace WebApplication
                     ViewState["ImageToSave"] = x;
                     Random r = new Random();
                     employeeImage.ImageUrl = "temp.PNG" + "?" + r.Next(1, 10000);
-                    ViewState["NewImage"] = true;
                 }
                 else
                 {
@@ -781,15 +773,12 @@ namespace WebApplication
 
         public void SendResult(string test)
         {
-            //Ignore
+            //throw new NotImplementedException();
         }
 
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
-            //Ignore
+            //throw new NotImplementedException();
         }
-
-        
-        
-        }
+    }
 }

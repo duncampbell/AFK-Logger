@@ -277,7 +277,7 @@
 
     <asp:MultiView ID="PageNavigation" runat="server" ActiveViewIndex="0">
         <asp:View ID="AliceView" runat="server">
-            <asp:Timer ID="updateTimer" runat="server" Interval ="10000" OnTick="UpdateTimer_Tick" Enabled="False"></asp:Timer>
+            <asp:Timer ID="updateTimer" runat="server" Interval ="10000" OnTick="refreshUsersTimer_Tick" Enabled="False"></asp:Timer>
             <asp:Timer ID="etaTimer" runat="server" Interval ="1000" OnTick="etaTimer_Tick" Enabled="False"></asp:Timer>
             <asp:UpdatePanel ID="employeeUpdatePanel" runat="server">
                 <Triggers>
@@ -370,7 +370,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <asp:Button ID="SaveBtn" runat="server" CssClass="button" style="margin-left: 100px;" OnClick="SaveBtn_Click" Text="Upload"/>
+                                <asp:Button ID="SaveBtn" runat="server" CssClass="button" style="margin-left: 100px;" OnClick="uplodUserImageBtn_Click" Text="Upload"/>
                                 <asp:Button ID="browse" runat="server" Text="Browse" OnClientClick="javascript:showBrowseDialog()" CSSClass="button" />
                             </asp:panel>
                         </asp:View>
