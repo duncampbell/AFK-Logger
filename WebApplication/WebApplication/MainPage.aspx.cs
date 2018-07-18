@@ -460,6 +460,7 @@ namespace WebApplication
         protected void updateUserNames(object sender, EventArgs e)
         {
             Proxy.UpdateADUsernames();
+            dataGridView.DataBind();
         }
 
         protected void SearchUser_Click(object sender, EventArgs e)
