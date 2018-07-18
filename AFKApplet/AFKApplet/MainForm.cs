@@ -39,6 +39,9 @@ namespace AFKApplet
         public AFKAppletForm()
         {
             InitializeComponent();
+            Trace.Listeners.Add(new TextWriterTraceListener("TraceOutput.txt"));
+            Trace.AutoFlush = true;
+
             deviceID = new SecurityIdentifier((byte[])new DirectoryEntry(string.Format("WinNT://{0},Computer", Environment.MachineName)).Children.Cast<DirectoryEntry>().First().InvokeGet("objectSID"), 0).AccountDomainSid.ToString();
             machineName = Environment.MachineName;
             userID = WindowsIdentity.GetCurrent().User.Value;
@@ -47,16 +50,24 @@ namespace AFKApplet
 
             iC = new InstanceContext(this);
             c = new ServiceClient(iC, "WSDualHttpBinding_IService");
+            ((ICommunicationObject)c).Faulted += new EventHandler(ChannelFactory_Faulted);
             c.RegisterClient(deviceID, false);
-            
 
             LoadETAPrefs();
+            try
+            {
 
-            hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
-            hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad1);
-            hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad2);
-            hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad3);
+                hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
+                hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad1);
+                hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad2);
+                hook.RegisterHotKey(global::AFKApplet.ModifierKeys.Win, Keys.NumPad3);
 
+            }
+            catch (Exception)
+            {
+
+                //Ignore
+            }
             
             //List<Employee> testList = c.GetEntriesForAlice();
         }
@@ -104,10 +115,23 @@ namespace AFKApplet
                 dBE.RemoteAccess = false;
                 dBE.ETA = ETA;
 
+                try
+                {
+                    c.RegisterClient(deviceID, false);
+                    //Send to API
+                    await c.AddAppletEntryAsync(dBE);
+                }
+                catch(CommunicationException cError)
+                {
+                    if (c.State == CommunicationState.Faulted)
+                    {
+                        ChannelFactory_Faulted(this, new EventArgs());
+                    }
+                    else throw (cError);
+                }
 
-                //Send to API
-                await c.AddAppletEntryAsync(dBE);
-                //recentEntry = true;
+
+
             }
             catch (Exception ex)
             {
@@ -118,8 +142,7 @@ namespace AFKApplet
             LockWorkStation();
         }
 
-        //Add device manually
-        //TODO: remove from form and place in installer
+        //Add device manually TODO: remove from form and place in installer
         private void btnAddDevice_Click(object sender, EventArgs e)
         {
             Device d = new Device();
@@ -129,18 +152,16 @@ namespace AFKApplet
             d.UserName = Environment.UserName;
             d.VM = chkVM.Checked;
 
-
-            using (ServiceClient c = new ServiceClient(iC))
+            c.RegisterClient(deviceID, false);
+            if (c.AddDevice(d))
             {
-                if (c.AddDevice(d))
-                {
-                    MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID, "Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Device not added, either due to an error or because it already exists", "Device Not Added", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show("Device Added Succesfully" + "\nDevice ID: " + deviceID + "\nUserID: " + userID, "Device Successfully Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            else
+            {
+                MessageBox.Show("Device not added, either due to an error or because it already exists", "Device Not Added", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
 
         //Display ETA time textboxes
@@ -273,7 +294,21 @@ namespace AFKApplet
 
 
         #endregion
+        
+        #region Channel Restart
+        private void ChannelFactory_Faulted(object sender, EventArgs e)
+        {
+            
+            Trace.WriteLine("Channel Faulted " + DateTime.Now.ToShortDateString() + "  " + DateTime.Now.ToShortTimeString());
 
+
+            c = new ServiceClient(iC);
+            ((ICommunicationObject)c).Faulted += new EventHandler(ChannelFactory_Faulted);
+            c.RegisterClient(deviceID, false);
+            //c.ChannelFactory.CreateChannel();
+        }
+
+        #endregion
     }
 
     #region Keyboard Hook Classes
@@ -377,7 +412,5 @@ namespace AFKApplet
 
     #endregion
 
-    #region Channel Restart
 
-    #endregion
 }

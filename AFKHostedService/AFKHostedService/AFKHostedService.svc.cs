@@ -422,6 +422,7 @@ namespace AFKHostedService
                 // Connect To db
                 using (IAsyncDocumentSession s = ds.OpenAsyncSession())
                 {
+                    s.Advanced.MaxNumberOfRequestsPerSession=200;
                     //List of devices
                     List<Device> devices = await s.Query<Device>("Device_Search").ToListAsync();
                     //List of userIDs 
@@ -451,11 +452,12 @@ namespace AFKHostedService
                             Employee emp = new Employee(entry);
                             try
                             {
-                                emp.ProfilePic = s.Query<User>("User_Search").Where(x => x.UserID == emp.UserID).FirstOrDefault().ProfilePic;
+                                emp.ProfilePic = await s.Query<User>("User_Search").Where(x => x.UserID == emp.UserID).Select(y=>y.ProfilePic).FirstOrDefaultAsync();
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
 
+                                emp.ProfilePic = e.Message;
                                 //No profile pic for you
                             }
                             //Add to list
@@ -479,8 +481,8 @@ namespace AFKHostedService
             catch (Exception e)
             {
                 //Error Message as DataBaseEntry
-                Employee error = new Employee(new DataBaseEntry("Error", "Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero));
-                error.Name = "NoUserName";
+                Employee error = new Employee(new DataBaseEntry(e.Message, "Error", e.Message, "NoDeviceID", "NoMachineName", "NoSessionID", DateTime.Now, false, false, TimeSpan.Zero));
+                error.Name = e.Message;
                 ret.Add(error);
             }
 
@@ -498,21 +500,19 @@ namespace AFKHostedService
             if (!recentEntry) //Prevets double recording of lock events
             {
 
-                Trace.WriteLine("ADD SERVICE ENTRY ENTERED TRACE");
+                Trace.WriteLine("ADD SERVICE ENTRY ENTERED");
                 Trace.WriteLine("EVENT TYPE: " + entry.EventType);
 
                 if (entry.EventType == "SessionLock" || entry.EventType == "SessionUnlock")
                 {
-                    Trace.WriteLine("IF STATEMENT ENTERED");
 
                     var inactiveClients = new List<string>();
                     foreach (var client in clients)
                     {
-                        Trace.WriteLine("CLIENT: " + client.Key + ": " + client.Value);
+                        Trace.Write(client.Value);
 
                         if (client.Key.Substring(client.Key.Length - 7) != "-Service")//stops services being called
                         {
-                            Trace.WriteLine("SECOND IF ENTERED");
 
                             try//Tries to connect to client, if it fails it adds to inactiveClients to be removed
                             {
@@ -520,8 +520,6 @@ namespace AFKHostedService
                                 Trace.WriteLine("ATTEMPTING FINISHDATABASEENTRY");
 
                                 client.Value.FinishDataBaseEntry(entry);
-
-                                Trace.WriteLine("POST ATTEMPTING FINISHDATABASEENTRY");
                             }
                             catch
                             {
@@ -562,11 +560,9 @@ namespace AFKHostedService
                         }
                     }
                     AddAppletEntry(entry);
-                    Trace.WriteLine("POST ATTEMPTING IMMEDIATE ADD");
                 } 
             }
             recentEntry = false;
-            Trace.WriteLine("ADD SERVICE ENTRY START RECENTENTRY: " + recentEntry);
         }
 
         public async void AddAppletEntry(DataBaseEntry entry)
@@ -591,6 +587,10 @@ namespace AFKHostedService
         public bool AddDevice(Device device)
         {
             Trace.WriteLine("ADD DEVICE ENTERED TRACE");
+            User user = new User();
+            user.UserID  =device.UserID;
+            user.UserName =device.UserName;
+            user.ProfilePic = "Folder/Profile.png";
 
             bool success = false;
             //bool flag for the uniqueness of the device to be added
@@ -613,6 +613,7 @@ namespace AFKHostedService
                     if (unique)
                     {
                         s.Store(device);
+                        s.Store(user);
                         s.SaveChanges();
                     }
                 }

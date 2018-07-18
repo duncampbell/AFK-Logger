@@ -55,7 +55,7 @@ namespace WebApplication
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
-                string pat = "Folder/" + employees.ElementAt(i).Name + ".PNG";
+                string pat = employees.ElementAt(i).ProfilePic;
                 oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString();
                 emp.Rows.Add(oItem);
             }
@@ -406,16 +406,21 @@ namespace WebApplication
             {
                 sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
-            string FilePath = Server.MapPath("~");
+            /*string FilePath = Server.MapPath("~");
             string FileName = "SessionLocks.csv";
             File.WriteAllText(FilePath + FileName, sb.ToString());
-            Response.Clear();
             Response.AddHeader("Content-Type", "binary/octet-stream");
             Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
             Response.TransmitFile(Server.MapPath("~/"+FileName));
             Response.Flush();
             Response.End();
-           
+           */
+            string filename = "SessionLock";
+            Response.Clear();
+            Response.ContentType = "application/CSV";
+            Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
+            Response.Write(sb.ToString());
+            Response.End();
         }
         
         protected void ExportAll_Click(object sender, EventArgs e)
@@ -457,15 +462,20 @@ namespace WebApplication
                 {
                     sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
                 }
-                string FilePath = Server.MapPath("~");
-                string FileName = "SessionLocks.csv";
-                // Creates the file on server
-                File.WriteAllText(FilePath + FileName, sb.ToString());
-                //System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
+                /*string FilePath = Server.MapPath("~");
+           string FileName = "SessionLocks.csv";
+           File.WriteAllText(FilePath + FileName, sb.ToString());
+           Response.AddHeader("Content-Type", "binary/octet-stream");
+           Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
+           Response.TransmitFile(Server.MapPath("~/"+FileName));
+           Response.Flush();
+           Response.End();
+          */
+                string filename = "SessionLock";
                 Response.Clear();
                 Response.ContentType = "application/CSV";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-                Response.TransmitFile(Server.MapPath("~/" + FileName));
+                Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
+                Response.Write(sb.ToString());
                 Response.End();
             }
             else
@@ -646,7 +656,7 @@ namespace WebApplication
             int emp = Int32.Parse(x);
             Random r = new Random();
             string img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);
+            string path = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic + "?" + r.Next(1, 10000);
             personProfileGrid.DataBind();
             employeeImage.ImageUrl = path;
             EmployeeView.ActiveViewIndex = 1;
