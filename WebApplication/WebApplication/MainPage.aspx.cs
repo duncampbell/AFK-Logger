@@ -51,7 +51,9 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 string pat = employees.ElementAt(i).ProfilePic;
+
                 oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString(); //Uploads most recent picture
+
                 emp.Rows.Add(oItem);
             }
             return emp;
@@ -392,12 +394,14 @@ namespace WebApplication
             {
                 sb.AppendLine(data.UserName + "," + data.EventType + "," + data.MachineName + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
+
             string filename = "SessionLock";
             Response.Clear();
             Response.ContentType = "application/CSV";
             Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
             Response.Write(sb.ToString());
             Response.End();
+
         }
         
         protected void ExportAll_Click(object sender, EventArgs e)

@@ -2,10 +2,9 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<Product Id="*" Name="AFKLogger" Language="1033" Version="1.0.0.0" Manufacturer="FOFX Interns 2018" UpgradeCode="e3f895f1-ce2e-4881-bbc3-8c241b8a5fdf">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-
+    <Binary Id="CustomActions.dll" src="$(var.CustomActions.TargetDir)$(var.CustomActions.TargetName).CA.dll"/>
     <UI>
       <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER"/>
-      <!--<Property Id ="WixUI_Mode" Value="Custom"/>-->
       
       <UIRef Id="WixUI_InstallDir" />
         <Publish Dialog="WelcomeDlg"
@@ -28,6 +27,11 @@
 		<Feature Id="ProductFeature" Title="AFKSetup2" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
+
+
+    <InstallExecuteSequence>
+      <Custom Action="AddDeviceCA" After="InstallFiles"/>
+    </InstallExecuteSequence>
 	</Product>
 
 	<Fragment>
@@ -45,20 +49,20 @@
         <File Id="AFKApplet" Name="AFKApplet.exe"  Source="$(var.AFKApplet.TargetPath)" KeyPath="yes"/>
         <!--<Shortcut Id="AppletShortcut" Name="AFKApplet" Directory="ProgramMenuDir"/>-->
       </Component>
-      <Component Id="WindowsServiceComponent" Guid="7A9DA504-85EC-438C-B42D-AA594F39FA2B">
+      <!--<Component Id="WindowsServiceComponent" Guid="7A9DA504-85EC-438C-B42D-AA594F39FA2B">
        
         <File Id ="System.dll" Name="System.dll" Source="$(var.AFKWindowsService.TargetDir)System.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.Configuration.Install.dll" Name="System.Configuration.Install.dll" Source="$(var.AFKWindowsService.TargetDir)System.Configuration.Install.dll" KeyPath="no" Vital="yes"/> 
-        <File Id ="System.Runtime.Serialization.dll" Name="System.Runtime.Serialization.dll" Source="$(var.AFKWindowsService.TargetDir)System.Runtime.Serialization.dll" KeyPath="no" Vital="yes"/>
-
-
+        --><!--<File Id ="System.Core.dll" Name="System.Core.dll" Source="$(var.AFKWindowsService.TargetDir)System.Core.dll" KeyPath="no" Vital="yes"/>--><!--
+        <File Id ="System.Data.dll" Name="System.Data.dll" Source="$(var.AFKWindowsService.TargetDir)System.Data.dll" KeyPath="no" Vital="yes"/>
+        <File Id ="System.Data.DataSetExtensions.dll" Name="System.Data.DataSetExtensions.dll" Source="$(var.AFKWindowsService.TargetDir)System.Data.DataSetExtensions.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.DirectoryServices.dll" Name="System.DirectoryServices.dll" Source="$(var.AFKWindowsService.TargetDir)System.DirectoryServices.dll" KeyPath="no" Vital="yes"/>
+        <File Id ="System.Management.dll" Name="System.Management.dll" Source="$(var.AFKWindowsService.TargetDir)System.Management.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.Net.Http.dll" Name="System.Net.Http.dll" Source="$(var.AFKWindowsService.TargetDir)System.Net.Http.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.Runtime.Serialization.dll" Name="System.Runtime.Serialization.dll" Source="$(var.AFKWindowsService.TargetDir)System.Runtime.Serialization.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.ServiceModel.dll" Name="System.ServiceModel.dll" Source="$(var.AFKWindowsService.TargetDir)System.ServiceModel.dll" KeyPath="no" Vital="yes"/>
         <File Id ="System.ServiceProcess.dll" Name="System.ServiceProcess.dll" Source="$(var.AFKWindowsService.TargetDir)System.ServiceProcess.dll" KeyPath="no" Vital="yes"/>
-        <!--<File Id ="System.ServiceProcess.dll" Name="System.ServiceProcess.dll" Source="$(var.AFKWindowsService.TargetDir)System.ServiceProcess.dll" KeyPath="no" Vital="yes"/>-->
-
+        <File Id ="System.Xml.dll" Name="System.Xml.dll" Source="$(var.AFKWindowsService.TargetDir)System.Xml.dll" KeyPath="no" Vital="yes"/>
         
 
         
@@ -79,7 +83,14 @@
             ServiceStop="yes" />
         </ServiceInstall>
         <ServiceControl Id="ServiceControll" Name="AFKWindowsService"   Remove="both" Start="install" Stop="uninstall" Wait="no"/>
-      </Component>
+      </Component>-->
     </ComponentGroup>
 	</Fragment>
+
+  <Fragment>
+    <CustomAction Id="AddDeviceCA" BinaryKey="CustomActions.dll" DllEntry="AddDeviceCA" Execute="immediate" Return="check"/>
+    <CustomAction Id="StartServiceCA" BinaryKey="CustomActions.dll" DllEntry="StartServiceCA" Execute="immediate" Return="ignore"/>
+    <CustomAction Id="StartAppletCA" BinaryKey="CustomActions.dll" DllEntry="StartAppletCA" Execute="deferred" Return="ignore"/>
+  </Fragment> 
+  
 </Wix>

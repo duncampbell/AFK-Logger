@@ -16,6 +16,7 @@ namespace AFKWindowsService
     {
         String deviceID;
         string machineName;
+        ServiceClient c;
 
         public AFKLogger()
         {
@@ -38,20 +39,31 @@ namespace AFKWindowsService
                 Trace.WriteLine("Session Changed. Details: " + changeDescription.Reason);
 
                 InstanceContext iC = new InstanceContext(this);
-                using (ServiceClient c = new ServiceClient(iC))
-                {
-                    DataBaseEntry dBE = new DataBaseEntry();
-                    dBE.EventType = changeDescription.Reason.ToString();
-                    dBE.DeviceID = deviceID;
-                    dBE.MachineName = machineName;
-                    dBE.SessionID = changeDescription.SessionId.ToString();
-                    dBE.TimeOfEvent = DateTime.Now;
-                    dBE.AutomaticLock = (changeDescription.Reason == SessionChangeReason.SessionUnlock|| changeDescription.Reason == SessionChangeReason.SessionLogon) ? false:true;
-                    dBE.RemoteAccess = (changeDescription.Reason == SessionChangeReason.RemoteConnect || changeDescription.Reason == SessionChangeReason.RemoteDisconnect);
-                    dBE.ETA = new TimeSpan(0,20,0);
+                c = new ServiceClient(iC);
+                c.ChannelFactory.Faulted += new EventHandler(ChannelFactory_Faulted);
 
+                DataBaseEntry dBE = new DataBaseEntry();
+                dBE.EventType = changeDescription.Reason.ToString();
+                dBE.DeviceID = deviceID;
+                dBE.MachineName = machineName;
+                dBE.SessionID = changeDescription.SessionId.ToString();
+                dBE.TimeOfEvent = DateTime.Now;
+                dBE.AutomaticLock = (changeDescription.Reason == SessionChangeReason.SessionUnlock|| changeDescription.Reason == SessionChangeReason.SessionLogon) ? false:true;
+                dBE.RemoteAccess = (changeDescription.Reason == SessionChangeReason.RemoteConnect || changeDescription.Reason == SessionChangeReason.RemoteDisconnect);
+                dBE.ETA = new TimeSpan(0,20,0);
+
+                try
+                {
                     c.AddServiceEntry(dBE);
                 }
+                catch(CommunicationException cError)
+                {
+                    if (c.State == CommunicationState.Faulted)
+                    {
+                        ChannelFactory_Faulted(this, new EventArgs());
+                    }
+                }
+                
             }
             catch (Exception e)
             {
@@ -59,6 +71,11 @@ namespace AFKWindowsService
 
         }
 
+        private void ChannelFactory_Faulted(object sender, EventArgs e)
+        {
+            c.ChannelFactory.CreateChannel();
+            c.ChannelFactory.Faulted += ChannelFactory_Faulted;
+        }
         protected override void OnStop()
         {
         }

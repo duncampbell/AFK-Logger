@@ -191,6 +191,7 @@ namespace AFKHostedService
             remoteAccess = RemoteAccess;
             eta = ETA;
             sessionID = SessionID;
+            machineName = MachineName;
         }
 
         [DataMember]
