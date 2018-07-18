@@ -7,7 +7,7 @@ namespace UnitTests
     [TestClass]
     public class ClassTests
     {
-
+        /*
         [TestMethod]
         public void DataBaseEntryTest()
         {
@@ -45,7 +45,7 @@ namespace UnitTests
             Assert.IsFalse(entryLocked.AtDesk);
             Assert.IsTrue(entryUnlocked.AtDesk);
         }
-
+        */
         [TestMethod]
         public void DeviceEntryTest()
         {

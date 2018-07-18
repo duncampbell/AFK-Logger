@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/AFKHostedService" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/AFKHostedService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:64626/AFKHostedService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://192.168.10.153:8081/AFKAPI/AFKHostedService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
   <xs:complexType name="ArrayOfDataBaseEntry">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="DataBaseEntry" nillable="true" type="tns:DataBaseEntry" />
@@ -33,7 +33,9 @@
       <xs:element minOccurs="0" name="AtDesk" type="xs:boolean" />
       <xs:element minOccurs="0" name="Eta" type="ser:duration" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProfilePic" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Time" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Employee" nillable="true" type="tns:Employee" />
@@ -49,6 +51,7 @@
   <xs:element name="Device" nillable="true" type="tns:Device" />
   <xs:complexType name="User">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ProfilePic" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UserID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
     </xs:sequence>
