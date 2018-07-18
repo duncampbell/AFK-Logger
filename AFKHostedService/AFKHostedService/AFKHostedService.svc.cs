@@ -591,7 +591,6 @@ namespace AFKHostedService
         public bool AddDevice(Device device)
         {
             Trace.WriteLine("ADD DEVICE ENTERED TRACE");
-
             bool success = false;
             //bool flag for the uniqueness of the device to be added
             bool unique = true;
@@ -799,6 +798,7 @@ namespace AFKHostedService
 
             return success;
         }
+
         public void UpdateUser(Employee emp)
         {
             try

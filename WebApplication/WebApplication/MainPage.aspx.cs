@@ -22,18 +22,14 @@ namespace WebApplication
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
-        DataTable dt;
-        DataTable emp;
         Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
-        List<Employee> employees;
-
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             InstanceContext context = new InstanceContext(this);
             Proxy = new ServiceReference1.ServiceClient(context);
             if (!IsPostBack)
             {
-                ViewState["NewImage"] = false;
                 etaTimer.Enabled = true;
                 updateTimer.Enabled = true;
                 ViewState["Index"] = 0;
@@ -41,22 +37,21 @@ namespace WebApplication
                 pictureGrid.DataBind();
                 employeeGrid.DataBind();
             }
-            
         }
 
         #region Table/Grid Setups
 
         public DataTable CreateEmployeePictureTable()
         {
-            emp = new DataTable();
+            // Binds the grid of employee pictures.
+            DataTable emp = new DataTable();
             emp.Columns.Add("PictureURL", typeof(string));
-
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
-                string pat = "Folder/" + employees.ElementAt(i).Name + ".PNG";
-                oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString();
+                string pat = employees.ElementAt(i).ProfilePic;
+                oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString(); //Uploads most recent picture
                 emp.Rows.Add(oItem);
             }
             return emp;
@@ -64,23 +59,21 @@ namespace WebApplication
 
         public DataTable CreateEmployeesTable()
         {
-            emp = new DataTable();
+            //Binds Data for the Alice page entries
+            DataTable emp = new DataTable();
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("StatusPicture");
             emp.Columns.Add("Time of Event", typeof(System.DateTime));
             emp.Columns.Add("ETA");
             TimeSpan remaining;
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             for (int i = 0; i < employees.Count; i++)
             {
                 DataRow oItem = emp.NewRow();
                 remaining = remainingTime(employees.ElementAt(i));
-
                 string x = employees.ElementAt(i).ProfilePic;
                 Random r = new Random();
-
-
                 oItem[0] = employees.ElementAt(i).Name;
                 if (employees.ElementAt(i).AtDesk)
                 {
@@ -119,16 +112,16 @@ namespace WebApplication
 
         public DataTable CreateEmployeeGrid()
         {
-            emp = new DataTable();
+            //Binds Data for the single employee page
+            DataTable emp = new DataTable();
             emp.Columns.Add("Header");
             emp.Columns.Add("Employee");
             TimeSpan remaining;
-            employees = (List<Employee>)ViewState["Employees"];
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             DataRow oItem = emp.NewRow();
             int row = Int32.Parse(RowSelected.Value);
             remaining = remainingTime(employees.ElementAt(row));
             NameLbl.Text = employees.ElementAt(row).Name;
-
             oItem = emp.NewRow();
             oItem[0] = "Status: ";
             if (employees.ElementAt(row).AtDesk)
@@ -158,23 +151,19 @@ namespace WebApplication
                 }
             }
             emp.Rows.Add(oItem);
-
-            
             oItem = emp.NewRow();
             oItem[0] = "ETA: ";
             oItem[1] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
             emp.Rows.Add(oItem);
-            
-
             return emp;
         }
 
         public DataTable CreateHistoricalGrid()
         {
+            //Binds Data for the Historical page entries
             Tuple<List<DataBaseEntry>, int> ent;
             switch ((string)ViewState["State"])
             {
-
                 case "Normal":
                     ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]);
                     ViewState["Entries"] = ent.Item1;
@@ -210,7 +199,7 @@ namespace WebApplication
             }
             int index = (int)ViewState["Index"];
             int pageNum = (int)((index / 20) + 1);
-            dt = new DataTable();
+            DataTable dt = new DataTable();
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
             dt.Columns.Add("Machine Name");
@@ -218,9 +207,7 @@ namespace WebApplication
             dt.Columns.Add("Automatic");
             dt.Columns.Add("Remote");
             dt.Columns.Add("ETA", typeof(System.TimeSpan));
-
             List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
-
             if (Entries != null)
             {
                 for (int i = 0; i < Entries.Count && i < 20; i++)
@@ -239,8 +226,9 @@ namespace WebApplication
             return dt;
         }
 
-        public void populatePageMenu()
+        private void populatePageMenu()
         {
+            //Deals with the custom paging menu on the historical page.
             if (((List<DataBaseEntry>)ViewState["Entries"]).Count != 0)
             {
                 pageMenu.Visible = true;
@@ -262,8 +250,6 @@ namespace WebApplication
                 pageMenu.Items.Add(childItm);
                 childItm = new MenuItem(">>");
                 pageMenu.Items.Add(childItm);
-
-
                 if ((int)ViewState["Index"] == 0)
                 {
                     pageMenu.Items[1].Selectable = false;
@@ -272,7 +258,6 @@ namespace WebApplication
                 {
                     pageMenu.Items[1].Selectable = true;
                 }
-
                 List<DataBaseEntry> Entries = (List<DataBaseEntry>)ViewState["Entries"];
                 if (Entries.Count < 20 || ((int)ViewState["PageTotal"] == ((int)ViewState["Index"] / 20) + 1))
                 {
@@ -297,7 +282,6 @@ namespace WebApplication
                 {
                     pageMenu.Items[0].Selectable = true;
                 }
-
                 if (((int)ViewState["PageTotal"] - (int)ViewState["PageStart"] + 1) <= 5)
                 {
                     pageMenu.Items[pageMenu.Items.Count - 1].Selectable = false;
@@ -306,7 +290,6 @@ namespace WebApplication
                 {
                     pageMenu.Items[pageMenu.Items.Count - 1].Selectable = true;
                 }
-
             }
             else
             {
@@ -320,9 +303,14 @@ namespace WebApplication
         #endregion
 
         #region Timers
-        protected void UpdateTimer_Tick(object sender, EventArgs e)
+        protected void refreshUsersTimer_Tick(object sender, EventArgs e)
         {
+            List<Employee> employees = (List<Employee>)ViewState["Employees"];
             ViewState["Employees"] = Proxy.GetEntriesForAlice();
+            if (employees.Count != ((List<Employee>)ViewState["Employees"]).Count)
+            {
+                pictureGrid.DataBind();
+            }
             if (EmployeeView.ActiveViewIndex == 0)
             {
                 employeeGrid.DataBind();
@@ -356,7 +344,6 @@ namespace WebApplication
                 {
                     ViewState["Index"] = (int)ViewState["Index"] - 20;
                 }
-
             }
             else if (e.Item.Value == ">")
             {
@@ -386,7 +373,6 @@ namespace WebApplication
             List<DataBaseEntry> ent = new List<DataBaseEntry>();
             switch ((string)ViewState["State"])
             {
-
                 case "Normal":
                     ent = Proxy.GetAllEntries((int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
                     break;
@@ -400,22 +386,18 @@ namespace WebApplication
                     ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (int)ViewState["Index"], (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
                     break;
             }
-
             var sb = new StringBuilder();
+            sb.AppendLine("Username,Event Type,Machine Name,Time of Event,Automatic Lock,Remote Access,ETA");
             foreach (var data in ent)
             {
-                sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+                sb.AppendLine(data.UserName + "," + data.EventType + "," + data.MachineName + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
-            string FilePath = Server.MapPath("~");
-            string FileName = "SessionLocks.csv";
-            File.WriteAllText(FilePath + FileName, sb.ToString());
+            string filename = "SessionLock";
             Response.Clear();
-            Response.AddHeader("Content-Type", "binary/octet-stream");
-            Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-            Response.TransmitFile(Server.MapPath("~/"+FileName));
-            Response.Flush();
+            Response.ContentType = "application/CSV";
+            Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
+            Response.Write(sb.ToString());
             Response.End();
-           
         }
         
         protected void ExportAll_Click(object sender, EventArgs e)
@@ -451,21 +433,17 @@ namespace WebApplication
                         }
                         break;
                 }
-
                 var sb = new StringBuilder();
+                sb.AppendLine("Username,Event Type,Machine Name,Time of Event,Automatic Lock,Remote Access,ETA");
                 foreach (var data in ent)
                 {
-                    sb.AppendLine(data.UserName + "," + data.EventType + "," + data.UserID + ", " + data.DeviceID + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
+                    sb.AppendLine(data.UserName + "," + data.EventType + "," + data.MachineName + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
                 }
-                string FilePath = Server.MapPath("~");
-                string FileName = "SessionLocks.csv";
-                // Creates the file on server
-                File.WriteAllText(FilePath + FileName, sb.ToString());
-                //System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
+                string filename = "SessionLock";
                 Response.Clear();
                 Response.ContentType = "application/CSV";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=" + FileName);
-                Response.TransmitFile(Server.MapPath("~/" + FileName));
+                Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
+                Response.Write(sb.ToString());
                 Response.End();
             }
             else
@@ -477,6 +455,7 @@ namespace WebApplication
         protected void updateUserNames(object sender, EventArgs e)
         {
             Proxy.UpdateADUsernames();
+            dataGridView.DataBind();
         }
 
         protected void SearchUser_Click(object sender, EventArgs e)
@@ -606,7 +585,6 @@ namespace WebApplication
             {
                 if (e.Item.Value == "1")
                 {
-                    ViewState["NewImage"] = false;
                     //throws exception if user isn't authorised
                     Proxy.GetAllEntries(0, "", "");
                     ViewState["State"] = "Normal";
@@ -625,7 +603,6 @@ namespace WebApplication
                     dataGridView.DataBind();
                 }else
                 {
-                    ViewState["NewImage"] = false;
                     etaTimer.Enabled = true;
                     updateTimer.Enabled = true;
                 }
@@ -646,15 +623,14 @@ namespace WebApplication
             int emp = Int32.Parse(x);
             Random r = new Random();
             string img = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic;
-            string path = "Folder/" + ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG" + "?" + r.Next(1, 10000);
+            string path = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic + "?" + r.Next(1, 10000);
             personProfileGrid.DataBind();
             employeeImage.ImageUrl = path;
             EmployeeView.ActiveViewIndex = 1;
         }
 
-        protected void SaveBtn_Click(object sender, EventArgs e)
+        protected void uplodUserImageBtn_Click(object sender, EventArgs e)
         {
-            
             string x = RowSelected.Value;
             int emp = Int32.Parse(x);
             string ImageName = ((List<Employee>)ViewState["Employees"]).ElementAt(emp).Name + ".PNG";
@@ -666,7 +642,7 @@ namespace WebApplication
             ((List<Employee>)ViewState["Employees"]).ElementAt(emp).ProfilePic = "Folder/" + ImageName;
             Proxy.UpdateUser(((List<Employee>)ViewState["Employees"]).ElementAt(emp));
             pictureGrid.DataBind();
-            PageNavigation.ActiveViewIndex = 0;
+            EmployeeView.ActiveViewIndex = 0;
         }
         
         protected void imageUploadingBtn_Click(object sender, EventArgs e)
@@ -683,7 +659,6 @@ namespace WebApplication
                     ViewState["ImageToSave"] = x;
                     Random r = new Random();
                     employeeImage.ImageUrl = "temp.PNG" + "?" + r.Next(1, 10000);
-                    ViewState["NewImage"] = true;
                 }
                 else
                 {
@@ -735,28 +710,43 @@ namespace WebApplication
 
                 if (employees.ElementAt(Int32.Parse(RowSelected.Value)).AtDesk)
                 {
-                    divEmployee.BackColor = Color.FromName("#f2ffe6");
-                    statusImage.BackColor = Color.FromName("#f2ffe6");
+                    if (divEmployee.BackColor != Color.FromName("#f2ffe6"))
+                    {
+                        divEmployee.BackColor = Color.FromName("#f2ffe6");
+                        statusImage.BackColor = Color.FromName("#f2ffe6");
+                        
+                    }
                     e.Row.BackColor = Color.FromName("#f2ffe6");
                 }
                 else
                 {
                     if (remaining > new TimeSpan(0, 0, 0))
                     {
-                        divEmployee.BackColor = Color.FromName("#ffffcc");
-                        statusImage.BackColor = Color.FromName("#ffffcc");
+                        if (divEmployee.BackColor != Color.FromName("#ffffcc"))
+                        {
+                            divEmployee.BackColor = Color.FromName("#ffffcc");
+                            statusImage.BackColor = Color.FromName("#ffffcc");
+
+                        }
                         e.Row.BackColor = Color.FromName("#ffffcc");
                     }
                     else if (remaining < (-new TimeSpan(1, 0, 0)))
                     {
-                        divEmployee.BackColor = Color.FromName("#ffe6e6");
-                        statusImage.BackColor = Color.FromName("#ffe6e6");
+                        if (divEmployee.BackColor != Color.FromName("#ffe6e6"))
+                        {
+                            divEmployee.BackColor = Color.FromName("#ffe6e6");
+                            statusImage.BackColor = Color.FromName("#ffe6e6");
+                        }
                         e.Row.BackColor = Color.FromName("#ffe6e6");
                     }
                     else
                     {
-                        divEmployee.BackColor = Color.FromName("#ffe6cc");
-                        statusImage.BackColor = Color.FromName("#ffe6cc");
+                        if (divEmployee.BackColor != Color.FromName("#ffe6cc"))
+                        {
+                            divEmployee.BackColor = Color.FromName("#ffe6cc");
+                            statusImage.BackColor = Color.FromName("#ffe6cc");
+                            
+                        }
                         e.Row.BackColor = Color.FromName("#ffe6cc");
                     }
                 }
@@ -775,7 +765,7 @@ namespace WebApplication
 
         #endregion
 
-        public TimeSpan remainingTime(Employee em)
+        private TimeSpan remainingTime(Employee em)
         {
             TimeSpan remaining = em.Eta - (DateTime.Now - em.Time);
             return remaining;
@@ -783,15 +773,12 @@ namespace WebApplication
 
         public void SendResult(string test)
         {
-            //Ignore
+            //throw new NotImplementedException();
         }
 
         public void FinishDataBaseEntry(DataBaseEntry entry)
         {
-            //Ignore
+            //throw new NotImplementedException();
         }
-
-        
-        
-        }
+    }
 }
