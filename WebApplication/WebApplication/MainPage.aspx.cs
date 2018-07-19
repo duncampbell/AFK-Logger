@@ -405,10 +405,10 @@ namespace WebApplication
         
         protected void ExportAll_Click(object sender, EventArgs e)
         {
-            //if ((int)ViewState["PageTotal"] < 100)
-            //{
+            if ((int)ViewState["PageTotal"] < 100)
+            {
                 List<DataBaseEntry> ent = new List<DataBaseEntry>();
-                /* switch ((string)ViewState["State"])
+                 switch ((string)ViewState["State"])
                  {
 
                      case "Normal":
@@ -435,8 +435,7 @@ namespace WebApplication
                              ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
                          }
                          break;
-                 }*/
-                ent = Proxy.ExportEntries();
+                 }
                 var sb = new StringBuilder();
                 sb.AppendLine("Username,Event Type,Machine Name,Time of Event,Automatic Lock,Remote Access,ETA");
                 foreach (var data in ent)
@@ -449,11 +448,10 @@ namespace WebApplication
                 Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
                 Response.Write(sb.ToString());
                 Response.End();
-            //}
-           // else
-           /// {
-               // ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
-           // }
+            }
+           else {
+               ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
+          }
         }
 
         protected void updateUserNames(object sender, EventArgs e)
