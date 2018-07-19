@@ -547,6 +547,12 @@ namespace WebApplication.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetEntriesForAlice", ReplyAction="http://tempuri.org/IService/GetEntriesForAliceResponse")]
         System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ExportEntries", ReplyAction="http://tempuri.org/IService/ExportEntriesResponse")]
+        System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> ExportEntries();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ExportEntries", ReplyAction="http://tempuri.org/IService/ExportEntriesResponse")]
+        System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> ExportEntriesAsync();
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService/AddServiceEntry")]
         void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry);
         
@@ -690,6 +696,14 @@ namespace WebApplication.ServiceReference1 {
         
         public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.Employee>> GetEntriesForAliceAsync() {
             return base.Channel.GetEntriesForAliceAsync();
+        }
+        
+        public System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry> ExportEntries() {
+            return base.Channel.ExportEntries();
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.Generic.List<WebApplication.ServiceReference1.DataBaseEntry>> ExportEntriesAsync() {
+            return base.Channel.ExportEntriesAsync();
         }
         
         public void AddServiceEntry(WebApplication.ServiceReference1.DataBaseEntry entry) {

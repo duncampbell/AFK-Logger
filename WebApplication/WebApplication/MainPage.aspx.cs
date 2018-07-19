@@ -16,6 +16,7 @@ using System.Net;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections;
+using System.Globalization;
 
 namespace WebApplication
 {
@@ -64,7 +65,7 @@ namespace WebApplication
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("StatusPicture");
-            emp.Columns.Add("Time of Event", typeof(System.DateTime));
+            emp.Columns.Add("Time of Event");
             emp.Columns.Add("ETA");
             TimeSpan remaining;
             List<Employee> employees = (List<Employee>)ViewState["Employees"];
@@ -102,7 +103,8 @@ namespace WebApplication
                     }
                 }
 
-                oItem[3] = employees.ElementAt(i).Time;
+                string formattedDate = employees.ElementAt(i).Time.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                oItem[3] = formattedDate; ;
                 oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
                 emp.Rows.Add(oItem);
             }
@@ -203,7 +205,7 @@ namespace WebApplication
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
             dt.Columns.Add("Machine Name");
-            dt.Columns.Add("Time of Event", typeof(System.DateTime));
+            dt.Columns.Add("Time of Event");
             dt.Columns.Add("Automatic");
             dt.Columns.Add("Remote");
             dt.Columns.Add("ETA", typeof(System.TimeSpan));
@@ -216,7 +218,8 @@ namespace WebApplication
                     oItem[0] = Entries.ElementAt(i).UserName;
                     oItem[1] = Entries.ElementAt(i).EventType;
                     oItem[2] = Entries.ElementAt(i).MachineName;
-                    oItem[3] = Entries.ElementAt(i).TimeOfEvent;
+                    string formattedDate = Entries.ElementAt(i).TimeOfEvent.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    oItem[3] = formattedDate;
                     oItem[4] = Entries.ElementAt(i).AutomaticLock;
                     oItem[5] = Entries.ElementAt(i).RemoteAccess;
                     oItem[6] = Entries.ElementAt(i).ETA;
@@ -402,37 +405,38 @@ namespace WebApplication
         
         protected void ExportAll_Click(object sender, EventArgs e)
         {
-            if ((int)ViewState["PageTotal"] < 100)
-            {
+            //if ((int)ViewState["PageTotal"] < 100)
+            //{
                 List<DataBaseEntry> ent = new List<DataBaseEntry>();
-                switch ((string)ViewState["State"])
-                {
+                /* switch ((string)ViewState["State"])
+                 {
 
-                    case "Normal":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
-                        }
-                        break;
-                    case "SearchName":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                    case "SearchTime":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                    case "SearchNameTime":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                }
+                     case "Normal":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
+                         }
+                         break;
+                     case "SearchName":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                     case "SearchTime":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                     case "SearchNameTime":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                 }*/
+                ent = Proxy.ExportEntries();
                 var sb = new StringBuilder();
                 sb.AppendLine("Username,Event Type,Machine Name,Time of Event,Automatic Lock,Remote Access,ETA");
                 foreach (var data in ent)
@@ -445,11 +449,11 @@ namespace WebApplication
                 Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
                 Response.Write(sb.ToString());
                 Response.End();
-            }
-            else
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
-            }
+            //}
+           // else
+           /// {
+               // ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
+           // }
         }
 
         protected void updateUserNames(object sender, EventArgs e)

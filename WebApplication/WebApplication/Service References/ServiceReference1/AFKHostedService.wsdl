@@ -333,6 +333,52 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_ExportEntries_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IService_ExportEntries_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm" />
+          <sp:Header Name="ChannelInstance" Namespace="http://schemas.microsoft.com/ws/2005/02/duplex" />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
   <wsp:Policy wsu:Id="WSDualHttpBinding_IService_AddServiceEntry_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -923,6 +969,12 @@
   <wsdl:message name="IService_GetEntriesForAlice_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetEntriesForAliceResponse" />
   </wsdl:message>
+  <wsdl:message name="IService_ExportEntries_InputMessage">
+    <wsdl:part name="parameters" element="tns:ExportEntries" />
+  </wsdl:message>
+  <wsdl:message name="IService_ExportEntries_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ExportEntriesResponse" />
+  </wsdl:message>
   <wsdl:message name="IService_AddServiceEntry_InputMessage">
     <wsdl:part name="parameters" element="tns:AddServiceEntry" />
   </wsdl:message>
@@ -1015,6 +1067,10 @@
     <wsdl:operation name="GetEntriesForAlice">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/GetEntriesForAlice" message="tns:IService_GetEntriesForAlice_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService/GetEntriesForAliceResponse" message="tns:IService_GetEntriesForAlice_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ExportEntries">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService/ExportEntries" message="tns:IService_ExportEntries_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService/ExportEntriesResponse" message="tns:IService_ExportEntries_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="AddServiceEntry">
       <wsdl:input wsaw:Action="http://tempuri.org/IService/AddServiceEntry" message="tns:IService_AddServiceEntry_InputMessage" />
@@ -1122,6 +1178,17 @@
       </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSDualHttpBinding_IService_GetEntriesForAlice_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExportEntries">
+      <soap12:operation soapAction="http://tempuri.org/IService/ExportEntries" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_ExportEntries_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IService_ExportEntries_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
