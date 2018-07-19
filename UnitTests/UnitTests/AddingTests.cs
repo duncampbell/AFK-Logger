@@ -42,7 +42,7 @@ namespace UnitTests
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\duncanc\Documents\WriteLines.txt");
             //Proxy.AddAppletEntry(z);
 
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 5000; i++) {
                 DataBaseEntry x;
                 string[] parts = lines[0].Split(':');
                 if (yes)

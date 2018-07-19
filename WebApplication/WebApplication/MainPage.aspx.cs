@@ -23,7 +23,6 @@ namespace WebApplication
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
-        Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
        
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -470,6 +469,8 @@ namespace WebApplication
             string userName = txtUser.Text;
             DateTime start = new DateTime();
             DateTime end = new DateTime();
+            
+
             if (userName == "" && startInput == "" && endInput == "")//Search Blank
             {
                 ViewState["TypeSort"] = "Descending";
@@ -486,10 +487,10 @@ namespace WebApplication
                 bool searchable = true;
                 try
                 {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = startInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     int hour = Int32.Parse(startTimeHour.Text);
                     start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                     ViewState["StartTime"] = start;
@@ -501,10 +502,10 @@ namespace WebApplication
                 }
                 try
                 {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = endInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     int hour = Int32.Parse(startTimeHour.Text);
                     end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                     ViewState["EndTime"] = end;
@@ -524,10 +525,10 @@ namespace WebApplication
                 bool searchable = true;
                 try
                 {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = startInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                     ViewState["StartTime"] = start;
                 }
@@ -539,10 +540,10 @@ namespace WebApplication
 
                 try
                 {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = endInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                     ViewState["EndTime"] = end;
                 }

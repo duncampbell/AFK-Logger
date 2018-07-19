@@ -544,6 +544,7 @@
                             <br />
                             <asp:TextBox ID="txtEndTime" runat="server" CSSClass="textField" style="margin-left: 465px" AutoCompleteType="Disabled"></asp:TextBox>
                             &nbsp;
+                            <%-- <input type="datetime-local"  /> --%>
                             <asp:DropDownList ID="endTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
                                             <asp:ListItem>00</asp:ListItem>
                                             <asp:ListItem>01</asp:ListItem>
