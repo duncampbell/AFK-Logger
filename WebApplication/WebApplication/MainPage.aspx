@@ -5,11 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
    
 <head runat="server" >
-    <title></title>
+    <title>AFKLogger</title>
+    <script src="moment.js"></script>
     <script src="Scripts/pikaday.js"></script>
     <link href="css/theme.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
+    
     <link href="css/pikaday.css" rel="stylesheet" />
+    <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
     <style type="text/css">
         @font-face {
             font-family: "Lato";
@@ -541,6 +544,7 @@
                             <br />
                             <asp:TextBox ID="txtEndTime" runat="server" CSSClass="textField" style="margin-left: 465px" AutoCompleteType="Disabled"></asp:TextBox>
                             &nbsp;
+                            <%-- <input type="datetime-local"  /> --%>
                             <asp:DropDownList ID="endTimeHour" runat="server" Height="30px" style="margin-left: 0px; margin-top: 0px; margin-bottom: 7px" Width="60px">
                                             <asp:ListItem>00</asp:ListItem>
                                             <asp:ListItem>01</asp:ListItem>
@@ -786,6 +790,31 @@
                             maxDate: new Date('2030-12-31'),
                             yearRange: [2017, 2030],
                             numberOfMonths: 1,
+                            format: 'DD/MM/YYYY',
+                            toString(date, format) {
+                                // you should do formatting based on the passed format,
+                                // but we will just return 'D/M/YYYY' for simplicity
+                                const day = date.getDate();
+                                const month = date.getMonth() + 1;
+                                const year = date.getFullYear();
+                                if (date.getDate() < 10 && date.getMonth() < 10) {
+                                    return `0${day}/0${month}/${year}`;
+                                } else if (date.getMonth() < 10) {
+                                    return `${day}/0${month}/${year}`;
+                                } else if (date.getDate()) {
+                                    return `0${day}/${month}/${year}`;
+                                } else {
+                                    return `${day}/${month}/${year}`;
+                                }
+                            },
+                            parse(dateString, format) {
+                                // dateString is the result of `toString` method
+                                const parts = dateString.split('/');
+                                const day = parseInt(parts[0], 10);
+                                const month = parseInt(parts[1] - 1, 10);
+                                const year = parseInt(parts[1], 10);
+                                return new Date(year, month, day);
+                            }
                         });
                     </script>
 
@@ -797,6 +826,31 @@
                             maxDate: new Date('2030-12-31'),
                             yearRange: [2017, 2030],
                             numberOfMonths: 1,
+                            format: 'DD/MM/YYYY',
+                            toString(date, format) {
+                                // you should do formatting based on the passed format,
+                                // but we will just return 'D/M/YYYY' for simplicity
+                                const day = date.getDate();
+                                const month = date.getMonth() + 1;
+                                const year = date.getFullYear();
+                                if (date.getDate() < 10 && date.getMonth() < 10) {
+                                    return `0${day}/0${month}/${year}`;
+                                }else if(date.getMonth() < 10){
+                                    return `${day}/0${month}/${year}`;
+                                }else if(date.getDate()){
+                                    return `0${day}/${month}/${year}`;
+                                }else{
+                                    return `${day}/${month}/${year}`;
+                                }
+                            },
+                            parse(dateString, format) {
+                                // dateString is the result of `toString` method
+                                const parts = dateString.split('/');
+                                const day = parseInt(parts[0], 10);
+                                const month = parseInt(parts[1] - 1, 10);
+                                const year = parseInt(parts[1], 10);
+                                return new Date(year, month, day);
+                            }
                         });
                     </script>
 
