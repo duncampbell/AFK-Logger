@@ -32,6 +32,7 @@ namespace UnitTests
                 file.WriteLine(z.UserName + ":" + z.EventType + ":" + z.UserID + ":" + z.DeviceID + ":" + z.MachineName + ":" + z.SessionID + ":" + z.TimeOfEvent + ":" + z.AutomaticLock + ":" + z.RemoteAccess + ":" + z.ETA);
             }
         }
+
         [TestMethod]
         public void addEntries()
         {
@@ -40,21 +41,23 @@ namespace UnitTests
             ServiceReference1.ServiceClient Proxy = new ServiceReference1.ServiceClient(context);
             string[] lines = System.IO.File.ReadAllLines(@"C:\Users\duncanc\Documents\WriteLines.txt");
             //Proxy.AddAppletEntry(z);
-            foreach (string line in lines)
-            {
+
+            for (int i = 0; i < 5000; i++) {
                 DataBaseEntry x;
-                string[] parts = line.Split(':');
+                string[] parts = lines[0].Split(':');
                 if (yes)
                 {
-                   x = new DataBaseEntry(parts[0], "SessionUnlock", parts[2], parts[3], parts[4], parts[5], DateTime.Now, false, false, new TimeSpan(0,0,0));
+                    x = new DataBaseEntry(parts[0], "SessionUnlock", parts[2], parts[3], parts[4], parts[5], DateTime.Now, false, false, new TimeSpan(0, 0, 0));
                 }
                 else
                 {
-                    x = new DataBaseEntry(parts[0], "SessionLock", parts[2], parts[3], parts[4], parts[5], DateTime.Now, false, false, new TimeSpan(0,5,0));
+                    x = new DataBaseEntry(parts[0], "SessionLock", parts[2], parts[3], parts[4], parts[5], DateTime.Now, false, false, new TimeSpan(0, 5, 0));
                 }
                 yes = !yes;
                 Proxy.AddAppletEntry(x);
-            }
+            }   
+            
+            
 
         }
 

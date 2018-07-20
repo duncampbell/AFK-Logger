@@ -16,13 +16,13 @@ using System.Net;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections;
+using System.Globalization;
 
 namespace WebApplication
 {
     public partial class MainPage : System.Web.UI.Page, IServiceCallback
     {
         ServiceReference1.ServiceClient Proxy;
-        Dictionary<string, int> months = new Dictionary<string, int>() { { "Jan", 1 }, { "Feb", 2 }, { "Mar", 3 }, { "Apr", 4 }, { "May", 5 }, { "Jun", 6 }, { "Jul", 7 }, { "Aug", 8 }, { "Sep", 9 }, { "Oct", 10 }, { "Nov", 11 }, { "Dec", 12 } };
        
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -51,9 +51,7 @@ namespace WebApplication
             {
                 DataRow oItem = emp.NewRow();
                 string pat = employees.ElementAt(i).ProfilePic;
-
                 oItem[0] = pat + "?r=" + DateTime.Now.Ticks.ToString(); //Uploads most recent picture
-
                 emp.Rows.Add(oItem);
             }
             return emp;
@@ -66,7 +64,7 @@ namespace WebApplication
             emp.Columns.Add("Name");
             emp.Columns.Add("Status");
             emp.Columns.Add("StatusPicture");
-            emp.Columns.Add("Time of Event", typeof(System.DateTime));
+            emp.Columns.Add("Time of Event");
             emp.Columns.Add("ETA");
             TimeSpan remaining;
             List<Employee> employees = (List<Employee>)ViewState["Employees"];
@@ -104,7 +102,8 @@ namespace WebApplication
                     }
                 }
 
-                oItem[3] = employees.ElementAt(i).Time;
+                string formattedDate = employees.ElementAt(i).Time.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                oItem[3] = formattedDate; ;
                 oItem[4] = string.Format("{0:00}:{1:00}:{2:00}", (int)remaining.TotalHours, remaining.Minutes, remaining.Seconds);
                 emp.Rows.Add(oItem);
             }
@@ -205,7 +204,7 @@ namespace WebApplication
             dt.Columns.Add("User Name");
             dt.Columns.Add("Event Type");
             dt.Columns.Add("Machine Name");
-            dt.Columns.Add("Time of Event", typeof(System.DateTime));
+            dt.Columns.Add("Time of Event");
             dt.Columns.Add("Automatic");
             dt.Columns.Add("Remote");
             dt.Columns.Add("ETA", typeof(System.TimeSpan));
@@ -218,7 +217,8 @@ namespace WebApplication
                     oItem[0] = Entries.ElementAt(i).UserName;
                     oItem[1] = Entries.ElementAt(i).EventType;
                     oItem[2] = Entries.ElementAt(i).MachineName;
-                    oItem[3] = Entries.ElementAt(i).TimeOfEvent;
+                    string formattedDate = Entries.ElementAt(i).TimeOfEvent.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    oItem[3] = formattedDate;
                     oItem[4] = Entries.ElementAt(i).AutomaticLock;
                     oItem[5] = Entries.ElementAt(i).RemoteAccess;
                     oItem[6] = Entries.ElementAt(i).ETA;
@@ -394,14 +394,12 @@ namespace WebApplication
             {
                 sb.AppendLine(data.UserName + "," + data.EventType + "," + data.MachineName + ", " + data.TimeOfEvent + ", " + data.AutomaticLock + ", " + data.RemoteAccess + ", " + data.ETA);
             }
-
             string filename = "SessionLock";
             Response.Clear();
             Response.ContentType = "application/CSV";
             Response.AddHeader("content-disposition", "attachment; filename=\"" + filename + ".csv\"");
             Response.Write(sb.ToString());
             Response.End();
-
         }
         
         protected void ExportAll_Click(object sender, EventArgs e)
@@ -409,34 +407,34 @@ namespace WebApplication
             if ((int)ViewState["PageTotal"] < 100)
             {
                 List<DataBaseEntry> ent = new List<DataBaseEntry>();
-                switch ((string)ViewState["State"])
-                {
+                 switch ((string)ViewState["State"])
+                 {
 
-                    case "Normal":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
-                        }
-                        break;
-                    case "SearchName":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                    case "SearchTime":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                    case "SearchNameTime":
-                        for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
-                        {
-                            ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
-                        }
-                        break;
-                }
+                     case "Normal":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent.AddRange(Proxy.GetAllEntries((i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1);
+                         }
+                         break;
+                     case "SearchName":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesOfUser((string)ViewState["UserName"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                     case "SearchTime":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesBetween((DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                     case "SearchNameTime":
+                         for (int i = 0; i < (int)ViewState["PageTotal"]; i++)
+                         {
+                             ent = Proxy.GetEntriesBetweenForUser((string)ViewState["UserName"], (DateTime)ViewState["StartTime"], (DateTime)ViewState["EndTime"], (i * 20), (string)ViewState["SortOn"], (string)ViewState["TypeSort"]).Item1;
+                         }
+                         break;
+                 }
                 var sb = new StringBuilder();
                 sb.AppendLine("Username,Event Type,Machine Name,Time of Event,Automatic Lock,Remote Access,ETA");
                 foreach (var data in ent)
@@ -450,10 +448,9 @@ namespace WebApplication
                 Response.Write(sb.ToString());
                 Response.End();
             }
-            else
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
-            }
+           else {
+               ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowStatus", "javascript:alert('There are too many records to export.');", true);
+          }
         }
 
         protected void updateUserNames(object sender, EventArgs e)
@@ -472,6 +469,8 @@ namespace WebApplication
             string userName = txtUser.Text;
             DateTime start = new DateTime();
             DateTime end = new DateTime();
+            
+
             if (userName == "" && startInput == "" && endInput == "")//Search Blank
             {
                 ViewState["TypeSort"] = "Descending";
@@ -488,10 +487,10 @@ namespace WebApplication
                 bool searchable = true;
                 try
                 {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = startInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     int hour = Int32.Parse(startTimeHour.Text);
                     start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                     ViewState["StartTime"] = start;
@@ -503,10 +502,10 @@ namespace WebApplication
                 }
                 try
                 {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = endInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     int hour = Int32.Parse(startTimeHour.Text);
                     end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                     ViewState["EndTime"] = end;
@@ -526,10 +525,10 @@ namespace WebApplication
                 bool searchable = true;
                 try
                 {
-                    string[] tokens = startInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = startInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     start = new DateTime(year, month, day, Int32.Parse(startTimeHour.Text), Int32.Parse(startTimeMin.Text), Int32.Parse(startTimeSec.Text));
                     ViewState["StartTime"] = start;
                 }
@@ -541,10 +540,10 @@ namespace WebApplication
 
                 try
                 {
-                    string[] tokens = endInput.Split(' ');
-                    int day = Int32.Parse(tokens[2]);
-                    int month = months[tokens[1]];
-                    int year = Int32.Parse(tokens[3]);
+                    string[] tokens = endInput.Split('/');
+                    int day = Int32.Parse(tokens[0]);
+                    int month = Int32.Parse(tokens[1]);
+                    int year = Int32.Parse(tokens[2]);
                     end = new DateTime(year, month, day, Int32.Parse(endTimeHour.Text), Int32.Parse(endTimeMin.Text), Int32.Parse(endTimeSec.Text));
                     ViewState["EndTime"] = end;
                 }
