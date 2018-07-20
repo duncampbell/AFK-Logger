@@ -34,14 +34,14 @@ namespace AFKHostedService
         [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
         public async Task<Tuple<List<DataBaseEntry>, int>> GetAllEntries(int indexStart, string sortField, string sortDirection)
         {
-            try
-            {
-                Trace.WriteLine("USER: " + OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name);
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine("Error " + e.Message);
-            }
+            //try
+            //{
+            //    Trace.WriteLine("USER: " + OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name);
+            //}
+            //catch (Exception e)
+            //{
+            //    Trace.WriteLine("Error " + e.Message);
+            //}
             int numResults = 0;
             QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
@@ -137,6 +137,7 @@ namespace AFKHostedService
             int numResults = 0;
             QueryStatistics stats = new QueryStatistics();
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
+            string[] userTerms = UserName.Split(' ');
             try
             {
                 //Connect to database
@@ -150,31 +151,32 @@ namespace AFKHostedService
                             switch (sortField)
                             {
                                 case "UserName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x=>x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    //ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "MachineName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms)).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
@@ -182,36 +184,36 @@ namespace AFKHostedService
                             switch (sortField)
                             {
                                 case "UserName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "MachineName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms)).OrderByDescending(x=>x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*"+UserName+"*").OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms)).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ",userTerms)).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                     }
-                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).Search(x => x.UserName, "*" + UserName + "*").ToListAsync();
+                    await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().Statistics(out stats).WhereLucene("UserName", string.Join(" AND ", userTerms)).ToListAsync();
                     numResults = stats.TotalResults;
                 }
 
@@ -325,6 +327,7 @@ namespace AFKHostedService
             List<DataBaseEntry> ret = new List<DataBaseEntry>();
             int numResults = 0;
             QueryStatistics stats = new QueryStatistics();
+            string[] userTerms = UserName.Split(' ');
             try
             {
                 //Connect to database
@@ -336,31 +339,33 @@ namespace AFKHostedService
                             switch (sortField)
                             {
                                 case "UserName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    Trace.WriteLine("UserName:" + string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start + " AND TimeOfEvent < " + end);
+                                    //ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "MachineName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start + " AND TimeOfEvent < " + end).OrderBy(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderBy(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
@@ -368,36 +373,36 @@ namespace AFKHostedService
                             switch (sortField)
                             {
                                 case "UserName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.UserName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "EventType":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.EventType).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "UserID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.UserID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "MachineName":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Where(x => x.UserName == UserName && x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start + " AND TimeOfEvent < " + end).OrderByDescending(x => x.MachineName).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "DeviceID":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.DeviceID).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "TimeOfEvent":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.TimeOfEvent).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "AutomaticLock":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.AutomaticLock).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "ETA":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.ETA).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                                 case "RemoteAccess":
-                                    ret = await s.Query<DataBaseEntry>("DataBaseEntry_Search").Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
+                                    ret = await  s.Advanced.AsyncDocumentQuery<DataBaseEntry>().WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start +" AND TimeOfEvent < " + end).OrderByDescending(x => x.RemoteAccess).Skip(indexStart).Take(20).ToListAsync();
                                     break;
                             }
                             break;
                     }
-                    await s.Query<DataBaseEntry>("DataBaseEntry_Search").Statistics(out stats).Search(x => x.UserName, "*" + UserName + "*").Where(x => x.TimeOfEvent >= start && x.TimeOfEvent <= end).ToListAsync();
+                    await s.Advanced.AsyncDocumentQuery<DataBaseEntry>().Statistics(out stats).WhereLucene("UserName", string.Join(" AND ", userTerms) + " AND TimeOfEvent > " + start + " AND TimeOfEvent < " + end).ToListAsync();
                     numResults = stats.TotalResults;
                 }
             }
@@ -490,6 +495,16 @@ namespace AFKHostedService
 
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Role = "FOFX\\AFKLogAdmin")]
+        public async Task<List<DataBaseEntry>> ExportEntries()
+        {
+            using (IAsyncDocumentSession s = ds.OpenAsyncSession())
+            {
+                return await s.Query<DataBaseEntry>("DataBaseEntry_Search").ToListAsync();
+
+            }
+        }
+
         #endregion
 
         #region Add Methods
@@ -501,7 +516,7 @@ namespace AFKHostedService
             {
 
                 Trace.WriteLine("ADD SERVICE ENTRY ENTERED");
-                Trace.WriteLine("EVENT TYPE: " + entry.EventType);
+                Trace.WriteLine("EVENT TYPE: " + entry.EventType + " User: " + entry.UserName + " Machine: " + entry.MachineName);
 
                 if (entry.EventType == "SessionLock" || entry.EventType == "SessionUnlock")
                 {
@@ -509,7 +524,7 @@ namespace AFKHostedService
                     var inactiveClients = new List<string>();
                     foreach (var client in clients)
                     {
-                        Trace.Write(client.Value);
+                        Trace.Write(client.Key);
 
                         if (client.Key.Substring(client.Key.Length - 7) != "-Service")//stops services being called
                         {

@@ -49,7 +49,7 @@ namespace AFKApplet
             sessionID = System.Diagnostics.Process.GetCurrentProcess().SessionId.ToString();
 
             iC = new InstanceContext(this);
-            c = new ServiceClient(iC, "WSDualHttpBinding_IService");
+            c = new ServiceClient(iC);
             ((ICommunicationObject)c).Faulted += new EventHandler(ChannelFactory_Faulted);
             c.RegisterClient(deviceID, false);
 
@@ -119,7 +119,7 @@ namespace AFKApplet
                 {
                     c.RegisterClient(deviceID, false);
                     //Send to API
-                    await c.AddAppletEntryAsync(dBE);
+                    c.AddAppletEntry(dBE);
                 }
                 catch(CommunicationException cError)
                 {
@@ -136,7 +136,7 @@ namespace AFKApplet
             catch (Exception ex)
             {
 
-                MessageBox.Show("Program encountered the following error: " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Program encountered the following error: " +e.GetType()+ " " + ex.Message, "Progam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             //Lock machine
             LockWorkStation();
@@ -274,8 +274,9 @@ namespace AFKApplet
             {
                 entry.UserID = this.userID;
                 entry.UserName = userName;
+                c.AddAppletEntryAsync(entry);
             }
-            c.AddAppletEntryAsync(entry);
+
 
         }
 
@@ -301,13 +302,13 @@ namespace AFKApplet
             
             Trace.WriteLine("Channel Faulted " + DateTime.Now.ToShortDateString() + "  " + DateTime.Now.ToShortTimeString());
 
-
+            c.Abort();
             c = new ServiceClient(iC);
             ((ICommunicationObject)c).Faulted += new EventHandler(ChannelFactory_Faulted);
             c.RegisterClient(deviceID, false);
             //c.ChannelFactory.CreateChannel();
         }
-
+        
         #endregion
     }
 

@@ -31,6 +31,9 @@ namespace AFKHostedService
         [OperationContract]
         Task<List<Employee>> GetEntriesForAlice();
 
+        [OperationContract]
+        Task<List<DataBaseEntry>> ExportEntries();
+
         #endregion
 
         #region Add Methods
